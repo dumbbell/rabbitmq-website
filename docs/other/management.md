@@ -101,9 +101,9 @@ The management plugin is included in the RabbitMQ
 distribution. Like any other [plugin](./plugins.html), it must
 be enabled before it can be used. That's done using [rabbitmq-plugins](man/rabbitmq-plugins.8.html):
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_management
-</pre>
+```
 
 Node restart is not required after plugin activation.
 
@@ -282,12 +282,12 @@ set_user_tags](./man/rabbitmqctl.8.html#set_user_tags) should be used to give th
 The following example creates a user with complete access to the management UI/HTTP API (as in,
 all virtual hosts and management features):
 
-<pre class="lang-bash">
+```bash
 # create a user
 rabbitmqctl add_user full_access s3crEt
 # tag the user with "administrator" for full management UI and HTTP API access
 rabbitmqctl set_user_tags full_access administrator
-</pre>
+```
 
 
 ## <a id="oauth2-authentication" class="anchor" href="#oauth2-authentication">Authenticating with OAuth 2</a>
@@ -312,13 +312,13 @@ then a *client_secret* **must** be configured using the `oauth_client_secret` se
 
 To redirect users to the UAA server to authenticate, use the following configuration:
 
-<pre class="lang-ini">
+```ini
 management.oauth_enabled = true
 management.oauth_client_id = rabbit_user_client
 management.oauth_client_secret = rabbit_user_client
 management.oauth_provider_url = https://my-uaa-server-host:8443/uaa
 management.oauth_scopes = openid profile rabbitmq.*
-</pre>
+```
 
 > **Important**: UAA supports regular expression in scopes, e.g. `rabbitmq.*`. The above configuration
 assumes that the `resource_server_id` configured in the oauth2 backend matches the value `rabbitmq`.
@@ -333,35 +333,35 @@ When using `management.oauth_enabled = true`, it is still possible to authentica
 with [HTTP basic authentication](https://en.wikipedia.org/wiki/Basic_access_authentication)
 against the HTTP API. This means both of the following examples will work:
 
-<pre class="lang-bash">
+```bash
 # swap &lt;token&gt; for an actual token
 curl -i -u ignored:&lt;token&gt; http://localhost:15672/api/vhosts
-</pre>
+```
 
 as well as
 
-<pre class="lang-bash">
+```bash
 curl -i --header "authorization: Basic &lt;encoded credentials&gt;" http://localhost:15672/api/vhosts
-</pre>
+```
 
 To switch to authenticate using OAuth 2 exclusively for management UI access, set the
 `management.disable_basic_auth` configuration key to `true`:
 
-<pre class="lang-ini">
+```ini
 management.disable_basic_auth = true
 management.oauth_client_id = rabbit_user_client
 management.oauth_client_secret = rabbit_user_client
 management.oauth_provider_url = https://my-uaa-server-host:8443/uaa
 management.oauth_scopes = openid profile rabbitmq.*
-</pre>
+```
 
 When setting `management.disable_basic_auth` to `true`, only the `Bearer` (token-based) authorization method will
 work, for example:
 
-<pre class="lang-bash">
+```bash
 # swap &lt;token&gt; for an actual token
 curl -i --header "authorization: Bearer &lt;token&gt;" http://localhost:15672/api/vhosts
-</pre>
+```
 
 This is true for all endpoints except `GET /definitions` and `POST /definitions`. Those
 endpoints require the token to be passed in the `token` query string parameter.
@@ -408,11 +408,11 @@ However, there are scenarios where users prefer to be automatically redirected t
 RabbitMQ exposes a new setting called `management.oauth_initiated_logon_type` whose default value `sp_initiated`.
 To enable an **Identity-Provider initiated logon** you set it to `idp_initiated`.
 
-<pre class="lang-ini">
+```ini
 management.oauth_enabled = true
 management.oauth_initiated_logon_type = idp_initiated
 management.oauth_provider_url = https://my-web-portal
-</pre>
+```
 
 With the previous settings, the management UI exposes the HTTP endpoint `/login` which accepts `content-type: application/x-www-form-urlencoded` and it expects the JWT token in the `access_token` form field. This is the endpoint where the Web portal will redirect users to the management UI.
 Additionally, RabbitMQ also accepts a JWT token in the HTTP `Authorization` header when the user lands on the management UI.
@@ -467,17 +467,17 @@ the standard minimum for any HTTP-based service.
 If RabbitMQ HTTP API access is configured for the root location (`/`),
 the location must not have a slash at the end:
 
-<pre class="lang-nginxconf">
+```nginxconf
 # trailing slash in the location must be omitted only if default RabbitMQ virtual host is used
 location / {
     proxy_pass http://rabbitmq-host:15672;
 }
-</pre>
+```
 
 If a different location will be used to proxy requests to the HTTP API,
 a [URI rewrite](https://nginx.org/en/docs/http/ngx_http_rewrite_module.html#rewrite) rule must be used:
 
-<pre class="lang-nginxconf">
+```nginxconf
 # these rewrites are only if default RabbitMQ virtual host is used
 location ~* /rabbitmq/api/(.*?)/(.*) {
     proxy_pass http://rabbitmq-host:15672/api/$1/%2F/$2?$query_string;
@@ -487,7 +487,7 @@ location ~* /rabbitmq/(.*) {
     rewrite ^/rabbitmq/(.*)$ /$1 break;
     proxy_pass http://rabbitmq-host:15672;
 }
-</pre>
+```
 
 
 #### Apache
@@ -495,18 +495,18 @@ location ~* /rabbitmq/(.*) {
 To support encoded slashes in URIs, Apache requires users to explicitly enable
 [`AllowEncodedSlashes`](https://httpd.apache.org/docs/2.4/mod/core.html).
 
-<pre class="lang-apacheconf">
+```apacheconf
 # required only if default RabbitMQ virtual host is used
 AllowEncodedSlashes On
-</pre>
+```
 
 for the Apache virtual host. The location also needs a [`nocanon` setting](https://httpd.apache.org/docs/2.4/mod/mod_proxy.html):
 
-<pre class="lang-apacheconf">
+```apacheconf
 ProxyPassReverse http://rabbitmq-host:15672/
 # "nocanon" is required only if default RabbitMQ virtual host is used
 ProxyPass http://rabbitmq-host:15672/ nocanon
-</pre>
+```
 
 ## <a id="configuration" class="anchor" href="#configuration">Configuration</a>
 
@@ -525,26 +525,26 @@ retain support for clients that can only use HTTP (without TLS).
 
 The port is configured using the `management.tcp.port` key:
 
-<pre class="lang-ini">
+```ini
 management.tcp.port = 15672
-</pre>
+```
 
 It is possible to configure what interface the API endpoint will use, similarly
 to [messaging protocol listeners](./networking.html#interfaces), using
 the `management.tcp.ip` key:
 
-<pre class="lang-ini">
+```ini
 management.tcp.ip = 0.0.0.0
-</pre>
+```
 
 To check what interface and port is used by a running node, use
 `rabbitmq-diagnostics`:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics -s listeners
 # => Interface: [::], port: 15672, protocol: http, purpose: HTTP API
 # => Interface: [::], port: 15671, protocol: https, purpose: HTTP API over TLS (HTTPS)
-</pre>
+```
 
 or [tools such as `lsof`, `ss` or `netstat`](troubleshooting-networking.html#ports).
 
@@ -553,18 +553,18 @@ or [tools such as `lsof`, `ss` or `netstat`](troubleshooting-networking.html#por
 The management plugin can be configured to use HTTPS. See the guide [on TLS](ssl.html)
 to learn more about certificate authorities, certificates and private key files.
 
-<pre class="lang-ini">
+```ini
 management.ssl.port       = 15671
 management.ssl.cacertfile = /path/to/ca_certificate.pem
 management.ssl.certfile   = /path/to/server_certificate.pem
 management.ssl.keyfile    = /path/to/server_key.pem
 ## This key must only be used if private key is password protected
 # management.ssl.password   = bunnies
-</pre>
+```
 
 More [TLS options](ssl.html) can be configured for the HTTPS listener.
 
-<pre class="lang-ini">
+```ini
 management.ssl.port       = 15671
 management.ssl.cacertfile = /path/to/ca_certificate.pem
 management.ssl.certfile   = /path/to/server_certificate.pem
@@ -598,11 +598,11 @@ management.ssl.ciphers.9 = DHE-RSA-AES256-GCM-SHA384
 ## See https://www.rabbitmq.com/ssl.html#peer-verification for details.
 # management.ssl.verify = verify_peer
 # management.ssl.fail_if_no_peer_cert = true
-</pre>
+```
 
 The above example in the [classic config format](./configure.html#erlang-term-config-file):
 
-<pre class="lang-erlang">
+```erlang
 [
  {rabbitmq_management,
   [
@@ -636,20 +636,20 @@ The above example in the [classic config format](./configure.html#erlang-term-co
               ]}
   ]}
 ].
-</pre>
+```
 
 ### <a id="multiple-listeners" class="anchor" href="#multiple-listeners">Using HTTP and HTTPS Together</a>
 
 It is possible to use both HTTP and HTTPS on different ports:
 
-<pre class="lang-ini">
+```ini
 management.tcp.port       = 15672
 
 management.ssl.port       = 15671
 management.ssl.cacertfile = /path/to/ca_certificate.pem
 management.ssl.certfile   = /path/to/server_certificate.pem
 management.ssl.keyfile    = /path/to/server_key.pem
-</pre>
+```
 
 The same configuration keys can be used to configure a single listener (just HTTP or HTTPS)
 and match those used by the [Web STOMP](./web-stomp.html) and [Web MQTT](./web-mqtt.html).
@@ -664,10 +664,10 @@ Most of the options were introduced in RabbitMQ 3.7.9.
 
 Response compression is enabled by default. To enable it explicitly, use `management.tcp.compress`:
 
-<pre class="lang-ini">
+```ini
 # For RabbitMQ 3.7.9 and later versions
 management.tcp.compress = true
-</pre>
+```
 
 #### Client Inactivity Timeouts
 
@@ -693,23 +693,23 @@ the timeout and inactivity values used by the load balancer.
 
 Here are some example configuration snippets that modify the timeouts:
 
-<pre class="lang-ini">
+```ini
 # For RabbitMQ 3.7.9 and later versions.
 #
 # Configures HTTP (non-encrypted) listener timeouts
 management.tcp.idle_timeout       = 120000
 management.tcp.inactivity_timeout = 120000
 management.tcp.request_timeout    = 10000
-</pre>
+```
 
-<pre class="lang-ini">
+```ini
 # For RabbitMQ 3.7.9 and later versions.
 #
 # Configures HTTPS (TLS-enabled) listener timeouts
 management.ssl.idle_timeout       = 120000
 management.ssl.inactivity_timeout = 120000
 management.ssl.request_timeout    = 10000
-</pre>
+```
 
 All values are in milliseconds. Their defaults vary:
 
@@ -730,9 +730,9 @@ To create simple access logs of requests to the HTTP API,
 set the value of the `management.http_log_dir` key to
 the path of a directory in which logs can be created:
 
-<pre class="lang-ini">
+```ini
 management.http_log_dir = /path/to/folder
-</pre>
+```
 
 For the change to have an effect, restart the plugin or the node.
 
@@ -749,10 +749,10 @@ entities such as [connections](connections.html), [channels](channels.html), [qu
 In order to do so, set the value of the `collect_statistics_interval` configuration key
 to the desired interval in milliseconds and restart the node:
 
-<pre class="lang-ini">
+```ini
 # 15s
 collect_statistics_interval = 15000
-</pre>
+```
 
 
 ### <a id="rates-mode" class="anchor" href="#rates-mode">Message Rates</a>
@@ -775,10 +775,10 @@ consumption of the plugin.
 The message rate mode is controlled by the
 `management.rates_mode` configuration key:
 
-<pre class="lang-ini">
+```ini
 # supported values: basic, detailed, none
 management.rates_mode = basic
-</pre>
+```
 
 Supported values are `basic` (the default), `detailed`, and `none`.
 
@@ -797,7 +797,7 @@ There are three policies:
 
 Below is a configuration example:
 
-<pre class="lang-ini">
+```ini
 management.sample_retention_policies.global.minute  = 5
 management.sample_retention_policies.global.hour    = 60
 management.sample_retention_policies.global.day = 1200
@@ -806,7 +806,7 @@ management.sample_retention_policies.basic.minute = 5
 management.sample_retention_policies.basic.hour   = 60
 
 management.sample_retention_policies.detailed.10 = 5
-</pre>
+```
 
 The configuration in the example above retains global
 data at a 5 second resolution (sampling happens every 5 seconds) for a minute,
@@ -825,9 +825,9 @@ It is possible to disable the statistics in the UI and [HTTP API](#http-api) in 
 In order to completely disable the internal metrics collection, the `disable_metrics_collector` flag must be set in the `rabbitmq_management_agent` plugin.
 The [Prometheus plugin](./prometheus.html) will still work even if collection is disabled.
 
-<pre class="lang-ini">
+```ini
 management_agent.disable_metrics_collector = true
-</pre>
+```
 
 Disabling the metrics collection is the preferred option if it is being used with an external monitoring system, as this reduced the overhead that statistics collection and aggregation causes in the broker. If the statistics are only temporary disabled, or are not required in some [HTTP API](#http-api) queries, the aggregation of the stats can be disabled in the `rabbitmq_management` plugin. The disable flag can be also passed as part of the query string in the URI.
 
@@ -835,49 +835,49 @@ As at the moment the [Prometheus plugin](./prometheus.html) cannot report indivi
 
 Below is a configuration example that disables the statistics but returns individual queue totals in the `queues` page:
 
-<pre class="lang-ini">
+```ini
 management.disable_stats = true
 management.enable_queue_totals = true
-</pre>
+```
 
 ### <a id="csp" class="anchor" href="#csp">Content Security Policy (CSP)</a>
 
 It is possible to configure what [CSP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) value
 is used by HTTP API responses. The default value is `script-src 'self' 'unsafe-eval' 'unsafe-inline'; object-src 'self'`:
 
-<pre class="lang-ini">
+```ini
 management.csp.policy = script-src 'self' 'unsafe-eval' 'unsafe-inline'; object-src 'self'
-</pre>
+```
 
 The value can be any valid CSP header string:
 
-<pre class="lang-ini">
+```ini
 management.csp.policy = default-src https://rabbitmq.eng.example.local
-</pre>
+```
 
 Wildcards are also allowed:
 
-<pre class="lang-ini">
+```ini
 management.csp.policy = default-src 'self' *.eng.example.local
-</pre>
+```
 
 A CSP policy [`frame-ancestors` directive](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors) can be used
 to prevent frame embedding of the management UI, mitigating
 certain types of cross-frame scripting attacks:
 
-<pre class="lang-ini">
+```ini
 # prohibits iframe embedding of the UI
 management.csp.policy = frame-ancestors 'none'
-</pre>
+```
 
 ### <a id="hsts" class="anchor" href="#hsts">Strict Transport Security (HSTS)</a>
 
 It is possible to configure what [Strict Transport Security header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security) value
 is used by HTTP API responses:
 
-<pre class="lang-ini">
+```ini
 management.hsts.policy = max-age=31536000; includeSubDomains
-</pre>
+```
 
 ### <a id="cors" class="anchor" href="#cors">Cross-origin Resource Sharing (CORS)</a>
 
@@ -885,28 +885,28 @@ The management UI application will by default refuse access to
 websites hosted on origins different from its own using the [Cross-Origin Resource Sharing](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) mechanism,
 also known as CORS. It is possible to white list origins:
 
-<pre class="lang-ini">
+```ini
 management.cors.allow_origins.1 = https://origin1.org
 management.cors.allow_origins.2 = https://origin2.org
-</pre>
+```
 
 It is possible to allow any origin to use the API using a wildcard.
 This is <strong>highly discouraged</strong> for deployments where the UI
 application may be exposed to the public.
 
-<pre class="lang-ini">
+```ini
 management.cors.allow_origins.1 = *
-</pre>
+```
 
 The CORS pre-flight requests are cached by the browser.
 The management plugin defines a timeout of 30 minutes
 by default. The value can be changed. It is configured in seconds:
 
-<pre class="lang-ini">
+```ini
 management.cors.allow_origins.1 = https://origin1.org
 management.cors.allow_origins.2 = https://origin2.org
 management.cors.max_age         = 3600
-</pre>
+```
 
 ### <a id="other-security-headers" class="anchor" href="#other-security-headers">Other Security-related Headers</a>
 
@@ -920,22 +920,22 @@ The supported headers are:
  * [`X-Xss-Protection`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection)
  * [`X-Content-Type-Options`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options)
 
-<pre class="lang-ini">
+```ini
 management.headers.content_type_options = nosniff
 management.headers.xss_protection = 1; mode=block
 management.headers.frame_options = DENY
-</pre>
+```
 
 They can be combined with the aforementioned CORS, HSTS, CSP headers:
 
-<pre class="lang-ini">
+```ini
 management.hsts.policy = max-age=31536000; includeSubDomains
 management.csp.policy = default-src 'self'; script-src 'self' 'unsafe-eval'
 
 management.headers.content_type_options = nosniff
 management.headers.xss_protection = 1; mode=block
 management.headers.frame_options = DENY
-</pre>
+```
 
 ### <a id="login-session-timeout" class="anchor" href="#login-session-timeout">Login Session Timeout</a>
 
@@ -948,9 +948,9 @@ session in minutes. When the time is up, the user will be signed out.
 
 The following example sets the session timeout to 1 hour:
 
-<pre class="lang-ini">
+```ini
 management.login_session_timeout = 60
-</pre>
+```
 
 ### <a id="path-prefix" class="anchor" href="#path-prefix">Path Prefix</a>
 
@@ -968,9 +968,9 @@ The management UI login page will have the URI
 `host:port/my-prefix/` - note that the
 trailing slash is <em>required</em> in this case.
 
-<pre class="lang-ini">
+```ini
 management.path_prefix = /my-prefix
-</pre>
+```
 
 ### <a id="example-config" class="anchor" href="#example-config">Example</a>
 
@@ -979,7 +979,7 @@ on request logging, increases the statistics interval to
 10 seconds and explicitly sets some other relevant parameters
 to their default values, would look like this:
 
-<pre class="lang-ini">
+```ini
 listeners.tcp.default = 5672
 
 collect_statistics_interval = 10000
@@ -1012,7 +1012,7 @@ management.sample_retention_policies.basic.minute   = 5
 management.sample_retention_policies.basic.hour = 60
 
 management.sample_retention_policies.detailed.10 = 5
-</pre>
+```
 
 
 ## <a id="load-definitions" class="anchor" href="#load-definitions">Loading Definitions (Schema) at Startup</a>
@@ -1058,12 +1058,12 @@ conforms with RFC 1738. The following sample Apache configuration
 illustrates the minimum necessary directives to coax Apache into
 conformance. It assumes a management web UI on the default port of 15672:
 
-<pre class="lang-ini">
+```ini
 AllowEncodedSlashes      NoDecode
 ProxyPass         "/api" http://localhost:15672/api nocanon
 ProxyPass         "/"    http://localhost:15672/
 ProxyPassReverse  "/"    http://localhost:15672/
-</pre>
+```
 
 
 ## <a id="reset-stats" class="anchor" href="#reset-stats">Restarting Statistics Database</a>
@@ -1077,23 +1077,23 @@ containing a fraction of stats recorded on this node.
 It is possible to restart the stats database on a given node using
 `rabbitmqctl` or an HTTP API endpoint:
 
-<pre class="lang-plaintext">
+```plaintext
 DELETE /api/reset/:node
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl eval 'rabbit_mgmt_storage:reset().'
-</pre>
+```
 
 To reset the entire statistics database on all nodes, use
 
-<pre class="lang-plaintext">
+```plaintext
 DELETE /api/reset
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl eval 'rabbit_mgmt_storage:reset_all().'
-</pre>
+```
 
 
 ## <a id="memory" class="anchor" href="#memory">Memory Usage Analysis and Memory Management</a>
@@ -1117,10 +1117,10 @@ retention policies.
 Entities that emit stats (connections, channels, queues, nodes) do so periodically.
 The interval can be configured using the `collect_statistics_interval` key:
 
-<pre class="lang-ini">
+```ini
 # sets the interval to 30 seconds
 collect_statistics_interval = 30000
-</pre>
+```
 
 Increasing the interval value to 30-60s will reduce CPU footprint and peak memory
 consumption for systems with large amounts of connections, channels and queues.
@@ -1137,9 +1137,9 @@ The statistics interval can also be changed at runtime. Doing so will have no
 effect on existing connections, channels or queues. Only new stats
 emitting entities are affected.
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl eval 'application:set_env(rabbit, collect_statistics_interval, 60000).'
-</pre>
+```
 
 The statistics database can be restarted (see above) and thus forced to release all memory.
 Management UI's Overview page contains buttons that reset stats database for individual nodes as well as

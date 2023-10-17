@@ -34,17 +34,17 @@ server from source.
 
 First, get the source code from [our GitHub repositories](github.html):
 
-<pre class="lang-bash">
+```bash
 git clone https://github.com/rabbitmq/rabbitmq-server.git rabbitmq
-</pre>
+```
 
 Then, use GNU Make to pull down dependencies and build the server and all plugins
 that ship with the RabbitMQ distribution:
 
-<pre class="lang-bash">
+```bash
 cd rabbitmq
 make
-</pre>
+```
 
 
 ## <a id="prerequisites" class="anchor" href="#prerequisites">Required Libraries and Tools</a>
@@ -127,16 +127,16 @@ Other interesting `Makefile` targets include
         but this location can be overridden by setting the
         Makefile variable <code>TEST_TMPDIR</code>:
 
-<pre class="lang-bash">
+```bash
 make run-broker TEST_TMPDIR="/some/other/location/for/rabbitmq-test-instances"
-</pre>
+```
 
         The Erlang node name can also be changed by setting
         <code>RABBITMQ_NODENAME</code>:
 
-<pre class="lang-bash">
+```bash
 make run-broker RABBITMQ_NODENAME=rmq
-</pre>
+```
 
         See <a href="./configure.html">Configuration guide</a> for other
         variables that may be useful.

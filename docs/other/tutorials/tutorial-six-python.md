@@ -47,11 +47,11 @@ To illustrate how an RPC service could be used we're going to
 create a simple client class. It's going to expose a method named `call`
 which sends an RPC request and blocks until the answer is received:
 
-<pre class="lang-python">
+```python
 fibonacci_rpc = FibonacciRpcClient()
 result = fibonacci_rpc.call(4)
 print(f"fib(4) is {result}")
-</pre>
+```
 
 > #### A note on RPC
 >
@@ -81,7 +81,7 @@ message and a server replies with a response message. In order to
 receive a response the client needs to send a 'callback' queue address with the
 request. Let's try it:
 
-<pre class="lang-python">
+```python
 result = channel.queue_declare(queue='', exclusive=True)
 callback_queue = result.method.queue
 
@@ -93,7 +93,7 @@ channel.basic_publish(exchange='',
                       body=request)
 
 # ... and some code to read a response message from the callback_queue ...
-</pre>
+```
 
 > #### Message properties
 >
@@ -216,7 +216,7 @@ Putting it all together
 
 `rpc_server.py` ([source](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/python/rpc_server.py))
 
-<pre class="lang-python">
+```python
 #!/usr/bin/env python
 import pika
 
@@ -253,7 +253,7 @@ channel.basic_consume(queue='rpc_queue', on_message_callback=on_request)
 
 print(" [x] Awaiting RPC requests")
 channel.start_consuming()
-</pre>
+```
 
 The server code is rather straightforward:
 
@@ -272,7 +272,7 @@ The server code is rather straightforward:
 
 `rpc_client.py` ([source](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/python/rpc_client.py))
 
-<pre class="lang-python">
+```python
 #!/usr/bin/env python
 import pika
 import uuid
@@ -321,7 +321,7 @@ fibonacci_rpc = FibonacciRpcClient()
 print(" [x] Requesting fib(30)")
 response = fibonacci_rpc.call(30)
 print(f" [.] Got {response}")
-</pre>
+```
 
 The client code is slightly more involved:
 
@@ -345,17 +345,17 @@ The client code is slightly more involved:
 
 Our RPC service is now ready. We can start the server:
 
-<pre class="lang-bash">
+```bash
 python rpc_server.py
 # => [x] Awaiting RPC requests
-</pre>
+```
 
 To request a fibonacci number run the client:
 
-<pre class="lang-python">
+```python
 python rpc_client.py
 # => [x] Requesting fib(30)
-</pre>
+```
 
 The presented design is not the only possible implementation of an RPC
 service, but it has some important advantages:

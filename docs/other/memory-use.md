@@ -70,15 +70,15 @@ further in this guide.
 
 The following configuration example uses the `rss` strategy:
 
-<pre class="lang-ini">
+```ini
 vm_memory_calculation_strategy = rss
-</pre>
+```
 
 Similarly, for the `allocated` strategy, use:
 
-<pre class="lang-ini">
+```ini
 vm_memory_calculation_strategy = allocated
-</pre>
+```
 
 To find out what strategy a node uses, see its [effective configuration](configure.html).
 
@@ -119,7 +119,7 @@ Plugins and runtime versions may affect this.
 
 A common way of producing memory breakdown is via `rabbitmq-diagnostics memory_breakdown`.
 
-<pre class="lang-ini">
+```ini
 quorum_queue_procs: 0.4181 gb (28.8%)
 binary: 0.4129 gb (28.44%)
 allocated_unused: 0.1959 gb (13.49%)
@@ -141,7 +141,7 @@ msg_index: 0.0002 gb (0.01%)
 queue_procs: 0.0002 gb (0.01%)
 queue_slave_procs: 0.0 gb (0.0%)
 reserved_unallocated: 0.0 gb (0.0%)
-</pre>
+```
 
 <table>
   <thead>
@@ -331,7 +331,7 @@ things in the system (e.g. connections, queues):
 It is possible to produce memory use breakdown over [HTTP API](./management.html)
 by issuing a `GET` request to the `/api/nodes/{node}/memory` endpoint.
 
-<pre class="lang-json">
+```json
 curl -s -u guest:guest http://127.0.0.1:15672/api/nodes/rabbit@mercurio/memory | python -m json.tool
 
 {
@@ -356,7 +356,7 @@ curl -s -u guest:guest http://127.0.0.1:15672/api/nodes/rabbit@mercurio/memory |
         "total": 89870336
     }
 }
-</pre>
+```
 
 It is also possible to retrieve a relative breakdown using the
 `GET` request to the `/api/nodes/{node}/memory` endpoint.
@@ -364,7 +364,7 @@ Note that reported relative values are rounded to integers. This endpoint is
 intended to be used for relative comparison (identifying top contributing categories),
 not precise calculations.
 
-<pre class="lang-json">
+```json
 curl -s -u guest:guest http://127.0.0.1:15672/api/nodes/rabbit@mercurio/memory/relative | python -m json.tool
 
 {
@@ -391,7 +391,7 @@ curl -s -u guest:guest http://127.0.0.1:15672/api/nodes/rabbit@mercurio/memory/r
         "total": 100
     }
 }
-</pre>
+```
 
 
 ## <a id="breakdown-categories" class="anchor" href="#breakdown-categories">Memory Breakdown Categories</a>
@@ -408,9 +408,9 @@ Channels also consume RAM. By optimising how many channels applications use, tha
 can be decreased. It is possible to cap the max number of channels on a connection using
 the `channel_max` configuration setting:
 
-<pre class="lang-ini">
+```ini
 channel_max = 16
-</pre>
+```
 
 Note that some libraries and tools that build on top of RabbitMQ clients may implicitly require
 a certain number of channels. Finding an optimal value is usually a matter of trial and error.
@@ -471,19 +471,19 @@ With some workloads binary data heap can be garbage collected infrequently.
 couple of commands forces collection and reports top processes that released most
 binary heap references:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl eval 'recon:bin_leak(10).'
 
 rabbitmqctl force_gc
-</pre>
+```
 
 With RabbitMQ versions that do not provide `rabbitmqctl force_gc`, use
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl eval 'recon:bin_leak(10).'
 
 rabbitmqctl eval '[garbage_collect(P) || P &lt;- processes()].'
-</pre>
+```
 
 ### <a id="breakdown-ets-tables" class="anchor" href="#breakdown-ets-tables">Other ETS tables</a>
 
@@ -508,9 +508,9 @@ time.
 
 The plugin ships with RabbitMQ. Enable it with
 
-<pre class="lang-bash">
+```bash
 [sudo] rabbitmq-plugins enable rabbitmq_top
-</pre>
+```
 
 The plugin adds new administrative tabs to the [management UI](./management.html). One
 tab displays top processes by one of the metrics:
@@ -583,9 +583,9 @@ by the kernel when it detects that the system runs low on available memory.
 In non-containerized environments (e.g. RabbitMQ nodes run in virtual machines or on bare metal hardware),
 use
 
-<pre class="lang-bash">
+```bash
 cat /proc/meminfo | grep -we "Cached"
-</pre>
+```
 
 to inspect the size of the kernel page cache.
 
@@ -594,10 +594,10 @@ to inspect the size of the kernel page cache.
 In containerized environments such as Kubernetes, the following two `/sys` pseudo filesystem
 paths can be used to inspect both RSS and page cache footprint:
 
-<pre class="lang-bash">
+```bash
 cat /sys/fs/cgroup/memory/memory.stat
 cat /sys/fs/cgroup/memory/memory.usage_in_bytes
-</pre>
+```
 
 The two key metrics are named `rss` (for resident set size) and `cache` (for page cache).
 
@@ -637,7 +637,7 @@ This ensures that no queue can block other queues.
 
 The memory use of a single queue can be obtained via the HTTP API:
 
-<pre class="lang-json">
+```json
 curl -s -u guest:guest http://127.0.0.1:15672/api/queues/%2f/queue-name |
   python -m json.tool
 
@@ -648,7 +648,7 @@ curl -s -u guest:guest http://127.0.0.1:15672/api/queues/%2f/queue-name |
     "message_bytes_ram": 2153429941,
     ...
 }
-</pre>
+```
 
  * `memory`: memory used by the queue process, accounts for message metadata (at least 720 bytes per message), does not account for message payloads over 64 bytes
  * `message_bytes_ram`: memory used by the message payloads, regardless of the size

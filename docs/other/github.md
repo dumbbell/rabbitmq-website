@@ -119,17 +119,17 @@ snapshot are tagged.
 For example, if you are using RabbitMQ server version 3.11.5,
 then examining the output of <code>git tag</code> yields:
 
-<pre class="lang-bash">
+```bash
 git tag
 # omitted for brevity
 # => v3.11.3
 # => v3.11.4
 # => v3.11.5
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 git checkout v3.11.5
-</pre>
+```
 
 At this point, you could proceed with compiling the plugin
 as explained in the plugin's documentation.

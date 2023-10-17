@@ -58,15 +58,15 @@ To specify an AE using policy, add the key 'alternate-exchange'
 to a policy definition and make sure that the policy matches the exchange(s)
 that need the AE defined. For example:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_policy AE "^my-direct$" '{"alternate-exchange":"my-ae"}' --apply-to exchanges
-</pre>
+```
 
 Or, on Windows:
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat set_policy AE "^my-direct$" "{""alternate-exchange"":""my-ae""}" --apply-to exchanges
-</pre>
+```
 
 This will apply an AE of "my-ae" to the exchange called
 "my-direct". Policies can also be defined using the management
@@ -92,7 +92,7 @@ exchange and <em>write</em> permissions on the AE.
 
 For example:
 
-<pre class="lang-java">
+```java
 Map&lt;String, Object&gt; args = new HashMap&lt;String, Object&gt;();
 args.put("alternate-exchange", "my-ae");
 channel.exchangeDeclare("my-direct", "direct", false, false, args);
@@ -101,7 +101,7 @@ channel.queueDeclare("routed");
 channel.queueBind("routed", "my-direct", "key1");
 channel.queueDeclare("unrouted");
 channel.queueBind("unrouted", "my-ae", "");
-</pre>
+```
 
 In the above fragment of Java code we create a direct
 exchange 'my-direct' that is configured with an AE called

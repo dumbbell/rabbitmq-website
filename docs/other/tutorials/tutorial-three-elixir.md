@@ -90,9 +90,9 @@ There are a few exchange types available: `direct`, `topic`, `headers`
 and `fanout`. We'll focus on the last one -- the fanout. Let's create
 an exchange of that type, and call it `logs`:
 
-<pre class="lang-elixir">
+```elixir
 AMQP.Exchange.declare(channel, "logs", :fanout)
-</pre>
+```
 
 The fanout exchange is very simple. As you can probably guess from the
 name, it just broadcasts all the messages it receives to all the
@@ -103,9 +103,9 @@ queues it knows. And that's exactly what we need for our logger.
 >
 > To list the exchanges on the server you can run the ever useful `rabbitmqctl`:
 >
-> <pre class="lang-bash">
+> ```bash
 > sudo rabbitmqctl list_exchanges
-> </pre>
+> ```
 >
 > In this list there will be some `amq.*` exchanges and the default (unnamed)
 > exchange. These are created by default, but it is unlikely you'll need to
@@ -120,9 +120,9 @@ queues it knows. And that's exactly what we need for our logger.
 >
 > Recall how we published a message before:
 >
-> <pre class="lang-elixir">
+> ```elixir
 >     AMQP.Basic.publish(channel, "", "hello", message)
-> </pre>
+> ```
 >
 > The [second parameter](http://hexdocs.pm/amqp/AMQP.Basic.html#publish/5) is the name of the exchange.
 > The empty string denotes the default or _nameless_ exchange: messages are
@@ -130,9 +130,9 @@ queues it knows. And that's exactly what we need for our logger.
 
 Now, we can publish to our named exchange instead:
 
-<pre class="lang-elixir">
+```elixir
 AMQP.Basic.publish(channel, "logs", "", message)
-</pre>
+```
 
 Temporary queues
 ----------------
@@ -153,9 +153,9 @@ do it we could create a queue with a random name, or, even better -
 let the server choose a random queue name for us. We can do this by not
 supplying the `queue` parameter to [`AMQP.Queue.declare`](http://hexdocs.pm/amqp/AMQP.Queue.html#declare/3):
 
-<pre class="lang-elixir">
+```elixir
 {:ok, %{queue: queue_name}} = AMQP.Queue.declare(channel)
-</pre>
+```
 
 At this point `queue_name` contains a random queue name. For example
 it may look like `amq.gen-JzTY20BRgKO-HjmUJj0wLg`.
@@ -163,9 +163,9 @@ it may look like `amq.gen-JzTY20BRgKO-HjmUJj0wLg`.
 Secondly, once the consumer connection is closed, the queue should be
 deleted. There's an `exclusive` flag for that:
 
-<pre class="lang-elixir">
+```elixir
 {:ok, %{queue: queue_name}} = AMQP.Queue.declare(channel, "", exclusive: true)
-</pre>
+```
 
 You can learn more about the `exclusive` flag and other queue
 properties in the [guide on queues](../queues.html).
@@ -199,18 +199,18 @@ We've already created a fanout exchange and a queue. Now we need to
 tell the exchange to send messages to our queue. That relationship
 between exchange and a queue is called a _binding_.
 
-<pre class="lang-elixir">
+```elixir
 AMQP.Queue.bind(channel, queue_name, "logs")
-</pre>
+```
 
 From now on the `logs` exchange will append messages to our queue.
 
 > #### Listing bindings
 >
 > You can list existing bindings using, you guessed it,
-> <pre class="lang-bash">
+> ```bash
 > rabbitmqctl list_bindings
-> </pre>
+> ```
 
 
 Putting it all together
@@ -256,7 +256,7 @@ nameless one. We need to supply a `routing_key` when sending, but its
 value is ignored for `fanout` exchanges. Here goes the code for
 `emit_log.exs` script:
 
-<pre class="lang-elixir">
+```elixir
 {:ok, connection} = AMQP.Connection.open
 {:ok, channel} = AMQP.Channel.open(connection)
 
@@ -271,7 +271,7 @@ AMQP.Basic.publish(channel, "logs", "", message)
 IO.puts " [x] Sent '#{message}'"
 
 AMQP.Connection.close(connection)
-</pre>
+```
 
 [(emit_log.exs source)](http://github.com/rabbitmq/rabbitmq-tutorials/blob/main/elixir/emit_log.exs)
 
@@ -284,7 +284,7 @@ but that's okay for us; if no consumer is listening yet we can safely discard th
 
 The code for `receive_logs.exs`:
 
-<pre class="lang-elixir">
+```elixir
 defmodule ReceiveLogs do
   def wait_for_messages(channel) do
     receive do
@@ -306,40 +306,40 @@ AMQP.Basic.consume(channel, queue_name, nil, no_ack: true)
 IO.puts " [*] Waiting for messages. To exit press CTRL+C, CTRL+C"
 
 ReceiveLogs.wait_for_messages(channel)
-</pre>
+```
 
 [(receive_logs.exs source)](http://github.com/rabbitmq/rabbitmq-tutorials/blob/main/elixir/receive_logs.exs)
 
 
 We're done. If you want to save logs to a file, just open a console and type:
 
-<pre class="lang-bash">
+```bash
 mix run receive_logs.exs > logs_from_rabbit.log
-</pre>
+```
 
 If you wish to see the logs on your screen, spawn a new terminal and run:
 
-<pre class="lang-bash">
+```bash
 mix run receive_logs.exs
-</pre>
+```
 
 And of course, to emit logs type:
 
-<pre class="lang-bash">
+```bash
 mix run emit_log.exs
-</pre>
+```
 
 Using `rabbitmqctl list_bindings` you can verify that the code actually
 creates bindings and queues as we want. With two `receive_logs.exs`
 programs running you should see something like:
 
-<pre class="lang-bash">
+```bash
 sudo rabbitmqctl list_bindings
 # => Listing bindings ...
 # => logs    exchange        amq.gen-JzTY20BRgKO-HjmUJj0wLg  queue           []
 # => logs    exchange        amq.gen-vso0PVvyiRIL2WoV3i48Yg  queue           []
 # => ...done.
-</pre>
+```
 
 The interpretation of the result is straightforward: data from
 exchange `logs` goes to two queues with server-assigned names. And

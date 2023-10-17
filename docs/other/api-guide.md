@@ -107,16 +107,16 @@ The core API classes are `Connection`
 and `Channel`, representing an AMQP 0-9-1 connection and
 channel, respectively. They are typically imported before used:
 
-<pre class="lang-java">
+```java
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
-</pre>
+```
 
 ## <a id="connecting" class="anchor" href="#connecting">Connecting to RabbitMQ</a>
 
 The following code connects to a RabbitMQ node using the given parameters (host name, port number, etc):
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 // "guest"/"guest" by default, limited to localhost connections
 factory.setUsername(userName);
@@ -126,7 +126,7 @@ factory.setHost(hostName);
 factory.setPort(portNumber);
 
 Connection conn = factory.newConnection();
-</pre>
+```
 
 All of these parameters have sensible defaults for a RabbitMQ
 node running locally.
@@ -176,11 +176,11 @@ remains unassigned prior to creating a connection:
 
 Alternatively, [URIs](uri-spec.html) may be used:
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 factory.setUri("amqp://userName:password@hostName:portNumber/virtualHost");
 Connection conn = factory.newConnection();
-</pre>
+```
 
 All of these parameters have sensible defaults for a stock
 RabbitMQ server running locally.
@@ -195,9 +195,9 @@ the name will be mentioned in RabbitMQ node logs as well as [management UI](./ma
 
 The `Connection` interface can then be used to open a channel:
 
-<pre class="lang-java">
+```java
 Channel channel = conn.createChannel();
-</pre>
+```
 
 The channel can now be used to send and receive messages, as described in subsequent sections.
 
@@ -211,11 +211,11 @@ node if the original one is down.
 To use multiple of endpoint, provide a list of `Address`es to `ConnectionFactory#newConnection`.
 An `Address` represents a hostname and port pair.
 
-<pre class="lang-java">
+```java
 Address[] addrArr = new Address[]{ new Address(hostname1, portnumber1)
                                  , new Address(hostname2, portnumber2)};
 Connection conn = factory.newConnection(addrArr);
-</pre>
+```
 
 will attempt to connect to `hostname1:portnumber1`, and if
 that fails to `hostname2:portnumber2`. The connection returned is
@@ -235,10 +235,10 @@ If you want more control over the host to connect to, see
 
 To disconnect, simply close the channel and the connection:
 
-<pre class="lang-java">
+```java
 channel.close();
 conn.close();
-</pre>
+```
 
 Note that closing the channel may be considered good practice, but is not strictly necessary here - it will be done
 automatically anyway when the underlying connection is closed.
@@ -284,12 +284,12 @@ RabbitMQ Java client's [`ConnectionFactory#newConnection` method overrides](http
 accept a client-provided connection name. Here's a modified connection example used above
 which provides such a name:
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 factory.setUri("amqp://userName:password@hostName:portNumber/virtualHost");
 // provides a custom connection name
 Connection conn = factory.newConnection("app:audit component:event-consumer");
-</pre>
+```
 
 
 ## <a id="exchanges-and-queues" class="anchor" href="#exchanges-and-queues">Using Exchanges and Queues</a>
@@ -302,9 +302,10 @@ simply ensures that one of that name exists, creating it if necessary.
 Continuing the previous example, the following code declares an exchange and a [server-named queue](./queues.html#server-named-queues),
 then binds them together.
 
-<pre class="lang-java">channel.exchangeDeclare(exchangeName, "direct", true);
+```java
+channel.exchangeDeclare(exchangeName, "direct", true);
 String queueName = channel.queueDeclare().getQueue();
-channel.queueBind(queueName, exchangeName, routingKey);</pre>
+channel.queueBind(queueName, exchangeName, routingKey);```
 
 This will actively declare the following objects,
 both of which can be customised by using additional parameters.
@@ -322,9 +323,10 @@ other client can use it (exclusive) and will be cleaned up
 automatically (autodelete). If several clients want to share a queue
 with a well-known name, this code would be appropriate:
 
-<pre class="lang-java">channel.exchangeDeclare(exchangeName, "direct", true);
+```java
+channel.exchangeDeclare(exchangeName, "direct", true);
 channel.queueDeclare(queueName, true, false, false, null);
-channel.queueBind(queueName, exchangeName, routingKey);</pre>
+channel.queueBind(queueName, exchangeName, routingKey);```
 
 This will actively declare:
 
@@ -352,13 +354,13 @@ channels for passive declarations.
 `Channel#queueDeclarePassive` and `Channel#exchangeDeclarePassive` are the
 methods used for passive declaration. The following example demonstrates `Channel#queueDeclarePassive`:
 
-<pre class="lang-java">
+```java
 Queue.DeclareOk response = channel.queueDeclarePassive("queue-name");
 // returns the number of messages in Ready state in the queue
 response.getMessageCount();
 // returns the number of consumers the queue has
 response.getConsumerCount();
-</pre>
+```
 
 `Channel#exchangeDeclarePassive`'s return value contains no useful information. Therefore
 if the method returns and no channel exceptions occurs, it means that the exchange does exist.
@@ -369,7 +371,8 @@ Some common operations also have a "no wait" version which won't wait for server
 response. For example, to declare a queue and instruct the server to not send any
 response, use
 
-<pre class="lang-java">channel.queueDeclareNoWait(queueName, true, false, false, null);</pre>
+```java
+channel.queueDeclareNoWait(queueName, true, false, false, null);```
 
 The "no wait" versions are more efficient but offer lower safety guarantees, e.g. they
 are more dependent on the [heartbeat mechanism](./heartbeats.html) for detection of failed operations.
@@ -380,44 +383,48 @@ with high topology (queue, binding) churn.
 
 A queue or exchange can be explicitly deleted:
 
-<pre class="lang-java">channel.queueDelete("queue-name")</pre>
+```java
+channel.queueDelete("queue-name")```
 
 It is possible to delete a queue only if it is empty:
 
-<pre class="lang-java">channel.queueDelete("queue-name", false, true)</pre>
+```java
+channel.queueDelete("queue-name", false, true)```
 
 or if it is not used (does not have any consumers):
 
-<pre class="lang-java">channel.queueDelete("queue-name", true, false)</pre>
+```java
+channel.queueDelete("queue-name", true, false)```
 
 A queue can be purged (all of its messages deleted):
 
-<pre class="lang-java">channel.queuePurge("queue-name")</pre>
+```java
+channel.queuePurge("queue-name")```
 
 
 ## <a id="publishing" class="anchor" href="#publishing">Publishing Messages</a>
 
 To publish a message to an exchange, use `Channel.basicPublish` as follows:
 
-<pre class="lang-java">
+```java
 byte[] messageBodyBytes = "Hello, world!".getBytes();
 channel.basicPublish(exchangeName, routingKey, null, messageBodyBytes);
-</pre>
+```
 
 For fine control, use overloaded variants to specify the `mandatory` flag,
 or send messages with pre-set message properties (see the [Publishers guide](./publishers.html) for details):
 
-<pre class="lang-java">
+```java
 channel.basicPublish(exchangeName, routingKey, mandatory,
                      MessageProperties.PERSISTENT_TEXT_PLAIN,
                      messageBodyBytes);
-</pre>
+```
 
 This sends a message with delivery mode 2 (persistent), priority 1
 and content-type "text/plain". Use the `Builder` class to build a
 message properties object with as many properties as needed, for example:
 
-<pre class="lang-java">
+```java
 channel.basicPublish(exchangeName, routingKey,
              new AMQP.BasicProperties.Builder()
                .contentType("text/plain")
@@ -426,11 +433,11 @@ channel.basicPublish(exchangeName, routingKey,
                .userId("bob")
                .build(),
                messageBodyBytes);
-</pre>
+```
 
 This example publishes a message with custom headers:
 
-<pre class="lang-java">
+```java
 Map&lt;String, Object&gt; headers = new HashMap&lt;String, Object&gt;();
 headers.put("latitude",  51.5252949);
 headers.put("longitude", -0.0905493);
@@ -440,17 +447,17 @@ channel.basicPublish(exchangeName, routingKey,
                .headers(headers)
                .build(),
                messageBodyBytes);
-</pre>
+```
 
 This example publishes a message with expiration:
 
-<pre class="lang-java">
+```java
 channel.basicPublish(exchangeName, routingKey,
              new AMQP.BasicProperties.Builder()
                .expiration("60000")
                .build(),
                messageBodyBytes);
-</pre>
+```
 
 This is just a brief set of examples that does not demonstrate every
 supported property.
@@ -525,10 +532,10 @@ can be safe.
 
 ## <a id="consuming" class="anchor" href="#consuming">Receiving Messages by Subscription ("Push API")</a>
 
-<pre class="lang-java">
+```java
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
-</pre>
+```
 
 The most efficient way to receive messages is to set up a
 subscription using the `Consumer`
@@ -557,7 +564,7 @@ subclass the convenience class `DefaultConsumer`.
 An object of this subclass can be passed on a `basicConsume`
 call to set up the subscription:
 
-<pre class="lang-java">
+```java
 boolean autoAck = false;
 channel.basicConsume(queueName, autoAck, "myConsumerTag",
      new DefaultConsumer(channel) {
@@ -575,7 +582,7 @@ channel.basicConsume(queueName, autoAck, "myConsumerTag",
              channel.basicAck(deliveryTag, false);
          }
      });
-</pre>
+```
 
 Here, since we specified `autoAck = false`,
 it is necessary to acknowledge messages delivered to the `Consumer`,
@@ -595,7 +602,8 @@ respectively.
 
 You can explicitly cancel a particular `Consumer` with
 `Channel.basicCancel`:
-<pre class="lang-java">channel.basicCancel(consumerTag);</pre>
+```java
+channel.basicCancel(consumerTag);```
 
 passing the consumer tag.
 
@@ -638,7 +646,7 @@ To "pull" a message, use the `Channel.basicGet` method.  The returned value is a
 instance of `GetResponse`, from which the header information (properties)
 and message body can be extracted:
 
-<pre class="lang-java">
+```java
 boolean autoAck = false;
 GetResponse response = channel.basicGet(queueName, autoAck);
 if (response == null) {
@@ -648,16 +656,16 @@ if (response == null) {
     byte[] body = response.getBody();
     long deliveryTag = response.getEnvelope().getDeliveryTag();
     // ...
-</pre>
+```
 
 and since this example uses [manual acknowledgements](./confirms.html) (the `autoAck = false` above),
 you must also call `Channel.basicAck` to acknowledge that you have successfully received the message:
 
-<pre class="lang-java">
+```java
 // ...
 channel.basicAck(method.deliveryTag, false); // acknowledge receipt of the message
 }
-</pre>
+```
 
 
 ## <a id="returning" class="anchor" href="#returning">Handling unroutable messages</a>
@@ -672,7 +680,7 @@ interface and call `Channel.addReturnListener`.
 If the client has not configured a return listener for a particular channel,
 then the associated returned messages will be silently dropped.
 
-<pre class="lang-java">
+```java
 channel.addReturnListener(new ReturnListener() {
     public void handleReturn(int replyCode,
                                   String replyText,
@@ -683,7 +691,7 @@ channel.addReturnListener(new ReturnListener() {
     throws IOException {
         ...
     }
-});</pre>
+});```
 
 A return listener will be called, for example, if the client publishes a message with
 the "mandatory" flag set to an exchange of "direct" type which is not bound to a queue.
@@ -736,7 +744,8 @@ following shutdown-related methods:
 
 Simple usage of listeners would look like:
 
-<pre class="lang-java">import com.rabbitmq.client.ShutdownSignalException;
+```java
+import com.rabbitmq.client.ShutdownSignalException;
 import com.rabbitmq.client.ShutdownListener;
 
 connection.addShutdownListener(new ShutdownListener() {
@@ -745,7 +754,7 @@ connection.addShutdownListener(new ShutdownListener() {
         ...
     }
 });
-</pre>
+```
 
 ### <a id="shutdown-cause" class="anchor" href="#shutdown-cause">Information about the circumstances of a shutdown</a>
 
@@ -768,7 +777,8 @@ was some exception in the library, such as a network
 communication failure, in which case that exception can
 be retrieved with `getCause()`).
 
-<pre class="lang-java">public void shutdownCompleted(ShutdownSignalException cause)
+```java
+public void shutdownCompleted(ShutdownSignalException cause)
 {
   if (cause.isHardError())
   {
@@ -783,7 +793,7 @@ be retrieved with `getCause()`).
     Channel ch = (Channel)cause.getReference();
     ...
   }
-}</pre>
+}```
 
 ### <a id="shutdown-atomicity" class="anchor" href="#shutdown-atomicity">Atomicity and use of the isOpen() method</a>
 
@@ -794,7 +804,8 @@ be retrieved with `getCause()`).
  following code illustrates the possibility of race
  conditions:
 
-<pre class="lang-java">public void brokenMethod(Channel channel)
+```java
+public void brokenMethod(Channel channel)
 {
     if (channel.isOpen())
     {
@@ -805,7 +816,7 @@ be retrieved with `getCause()`).
         channel.basicQos(1);
     }
 }
-</pre>
+```
 
 Instead, we should normally ignore such checking, and
 simply attempt the action desired. If during the
@@ -818,7 +829,7 @@ broker closes the connection unexpectedly, or
 `ShutdownSignalException`, when broker
 initiated clean close.
 
-<pre class="lang-java">
+```java
 public void validMethod(Channel channel)
 {
     try {
@@ -834,7 +845,7 @@ public void validMethod(Channel channel)
         ...
     }
 }
-</pre>
+```
 
 
 ## <a id="advanced-connection" class="anchor" href="#advanced-connection">Advanced Connection options</a>
@@ -848,10 +859,10 @@ by default. If greater control is required supply an `ExecutorService` on the
 used instead. Here is an example where a larger thread pool is
 supplied than is normally allocated:
 
-<pre class="lang-java">
+```java
 ExecutorService es = Executors.newFixedThreadPool(20);
 Connection conn = factory.newConnection(es);
-</pre>
+```
 
 Both `Executors` and `ExecutorService` classes
 are in the `java.util.concurrent` package.
@@ -884,19 +895,19 @@ activity may occasionally occur.
 It is possible to use an implementation of `AddressResolver` to change the endpoint resolution algorithm
 used at connection time:
 
-<pre class="lang-java">
+```java
 Connection conn = factory.newConnection(addressResolver);
-</pre>
+```
 
 The `AddressResolver` interface is like the following:
 
-<pre class="lang-java">
+```java
 public interface AddressResolver {
 
   List&lt;Address&gt; getAddresses() throws IOException;
 
 }
-</pre>
+```
 
 Just like with [a list of endpoints](#endpoints-list),
 the first `Address` returned will be tried first, then
@@ -940,12 +951,12 @@ an appropriate method to instantiate threads, e.g. GAE's `ThreadManager`.
 
 Below is an example for Google App Engine.
 
-<pre class="lang-java">
+```java
 import com.google.appengine.api.ThreadManager;
 
 ConnectionFactory cf = new ConnectionFactory();
 cf.setThreadFactory(ThreadManager.backgroundThreadFactory());
-</pre>
+```
 
 ### <a id="java-nio" class="anchor" href="#java-nio">Support for Java non-blocking IO</a>
 
@@ -965,16 +976,16 @@ not so busy.
 
 NIO must be enabled explicitly:
 
-<pre class="lang-java">
+```java
 ConnectionFactory connectionFactory = new ConnectionFactory();
 connectionFactory.useNio();
-</pre>
+```
 
 The NIO mode can be configured through the `NioParams` class:
 
-<pre class="lang-java">
+```java
   connectionFactory.setNioParams(new NioParams().setNbIoThreads(4));
-</pre>
+```
 
 The NIO mode uses reasonable defaults, but you may need to change them according
 to your own workload. Some of the settings are: the total number of IO
@@ -1018,7 +1029,7 @@ the `factory.setAutomaticRecoveryEnabled(boolean)`
 method. The following snippet shows how to explicitly
 enable automatic recovery (e.g. for Java client prior 4.0.0):
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 factory.setUsername(userName);
 factory.setPassword(password);
@@ -1027,25 +1038,25 @@ factory.setHost(hostName);
 factory.setPort(portNumber);
 factory.setAutomaticRecoveryEnabled(true);
 // connection that will recover automatically
-Connection conn = factory.newConnection();</pre>
+Connection conn = factory.newConnection();```
 
 If recovery fails due to an exception (e.g. RabbitMQ node is
 still not reachable), it will be retried after a fixed time interval (default
 is 5 seconds). The interval can be configured:
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 // attempt recovery every 10 seconds
-factory.setNetworkRecoveryInterval(10000);</pre>
+factory.setNetworkRecoveryInterval(10000);```
 
 When a list of addresses is provided, the list is shuffled and
 all addresses are tried, one after the next:
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 
 Address[] addresses = {new Address("192.168.1.4"), new Address("192.168.1.5")};
-factory.newConnection(addresses);</pre>
+factory.newConnection(addresses);```
 
 ### <a id="recovery-triggers" class="anchor" href="#recovery-triggers">When Will Connection Recovery Be Triggered?</a>
 
@@ -1063,7 +1074,7 @@ recovery won't kick in. Applications developers are responsible for retrying
 such connections, logging failed attempts, implementing a limit to the number
 of retries and so on. Here's a very basic example:
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 // configure various connection settings
 
@@ -1073,7 +1084,7 @@ try {
   Thread.sleep(5000);
   // apply retry logic
 }
-</pre>
+```
 
 When a connection is closed by the application via the `Connection.Close` method,
 connection recovery will not be initiated.
@@ -1111,7 +1122,7 @@ enabled. Topology recovery is enabled by default in modern versions of the clien
 
 Topology recovery can be disabled explicitly if needed:
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 
 Connection conn = factory.newConnection();
@@ -1119,7 +1130,7 @@ Connection conn = factory.newConnection();
 factory.setAutomaticRecoveryEnabled(true);
 // disable topology recovery
 factory.setTopologyRecoveryEnabled(false);
-</pre>
+```
 
 ### <a id="automatic-recovery-limitations" class="anchor" href="#automatic-recovery-limitations">Failure Detection and Recovery Limitations</a>
 
@@ -1226,10 +1237,10 @@ It is possible to override the handler using
 `ConnectionFactory#setExceptionHandler`. It will be
 used for all connections created by the factory:
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 cf.setExceptionHandler(customHandler);
-</pre>
+```
 
 Exception handlers should be used for exception logging.
 
@@ -1290,13 +1301,13 @@ Metric collection has to be enabled first:
 
 [Micrometer](http://micrometer.io) the following way:
 
-<pre class="lang-java">
+```java
 ConnectionFactory connectionFactory = new ConnectionFactory();
 MicrometerMetricsCollector metrics = new MicrometerMetricsCollector();
 connectionFactory.setMetricsCollector(metrics);
 ...
 metrics.getPublishedMessages(); // get Micrometer's Counter object
-</pre>
+```
 
 Micrometer supports [several reporting backends](http://micrometer.io/docs):
 Netflix Atlas, Prometheus, Datadog, Influx, JMX, etc.
@@ -1305,24 +1316,24 @@ You would typically pass in an instance of `MeterRegistry`
 to the `MicrometerMetricsCollector`. Here is an example
 with JMX:
 
-<pre class="lang-java">
+```java
 JmxMeterRegistry registry = new JmxMeterRegistry();
 MicrometerMetricsCollector metrics = new MicrometerMetricsCollector(registry);
 ConnectionFactory connectionFactory = new ConnectionFactory();
 connectionFactory.setMetricsCollector(metrics);
-</pre>
+```
 
 ### <a id="metrics-dropwizard-metrics" class="anchor" href="#metrics-dropwizard-metrics">Dropwizard Metrics support</a>
 
 Enable metrics collection with [Dropwizard](http://metrics.dropwizard.io) like so:
 
-<pre class="lang-java">
+```java
 ConnectionFactory connectionFactory = new ConnectionFactory();
 StandardMetricsCollector metrics = new StandardMetricsCollector();
 connectionFactory.setMetricsCollector(metrics);
 ...
 metrics.getPublishedMessages(); // get Metrics' Meter object
-</pre>
+```
 
 Dropwizard Metrics supports [several reporting backends](http://metrics.dropwizard.io/3.2.3/getting-started.html):
 console, JMX, HTTP, Graphite, Ganglia, etc.
@@ -1331,7 +1342,7 @@ You would typically pass in an instance of `MetricsRegistry`
 to the `StandardMetricsCollector`. Here is an example
 with JMX:
 
-<pre class="lang-java">
+```java
 MetricRegistry registry = new MetricRegistry();
 StandardMetricsCollector metrics = new StandardMetricsCollector(registry);
 
@@ -1343,7 +1354,7 @@ JmxReporter reporter = JmxReporter
   .inDomain("com.rabbitmq.client.jmx")
   .build();
 reporter.start();
-</pre>
+```
 
 
 ## <a id="gae-pitfalls" class="anchor" href="#gae-pitfalls">RabbitMQ Java Client on Google App Engine</a>
@@ -1353,10 +1364,10 @@ thread factory that instantiates thread using GAE's `ThreadManager` (see above).
 In addition, it is necessary to set a low heartbeat interval (4-5 seconds) to avoid running
 into the low `InputStream` read timeouts on GAE:
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 cf.setRequestedHeartbeat(5);
-</pre>
+```
 
 
 ## <a id="cache-pitfalls" class="anchor" href="#cache-pitfalls">Caveats and Limitations</a>
@@ -1391,10 +1402,10 @@ The class doesn't impose any particular format on the RPC arguments and return v
 It simply provides a mechanism for sending a message to a given exchange with a particular
 routing key, and waiting for a response on a reply queue.
 
-<pre class="lang-java">
+```java
 import com.rabbitmq.client.RpcClient;
 
-RpcClient rpc = new RpcClient(channel, exchangeName, routingKey);</pre>
+RpcClient rpc = new RpcClient(channel, exchangeName, routingKey);```
 
 (The implementation details of how this class uses AMQP 0-9-1 are as follows: request messages are sent with the
 `basic.correlation_id` field set to a value unique for this `RpcClient` instance,
@@ -1402,12 +1413,12 @@ and with `basic.reply_to` set to the name of the reply queue.)
 
 Once you have created an instance of this class, you can use it to send RPC requests by using any of the following methods:
 
-<pre class="lang-java">
+```java
 byte[] primitiveCall(byte[] message);
 String stringCall(String message)
 Map mapCall(Map message)
 Map mapCall(Object[] keyValuePairs)
-</pre>
+```
 
 The `primitiveCall` method transfers raw byte arrays as the request and response
 bodies. The method `stringCall` is a thin
@@ -1431,7 +1442,7 @@ It's possible to encrypt the communication between the client and the broker
 [using TLS](./ssl.html). Client and server authentication (a.k.a. peer verification) is also supported.
 Here is the simplest, most naive way to use encryption with the Java client:
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 factory.setHost("localhost");
 factory.setPort(5671);
@@ -1441,7 +1452,7 @@ factory.setPort(5671);
 // to man-in-the-middle attacks.
 // See the main TLS guide to learn about peer verification and how to enable it.
 factory.useSslProtocol();
-</pre>
+```
 
 Note the client doesn't enforce any server authentication ([peer certificate chain verification](./ssl.html#peer-verification)) in the above
 sample as the default, "trust all certificates" `TrustManager` is used.
@@ -1476,7 +1487,7 @@ following snippet shows how to configure and create an instance of the OAuth 2 c
 for the [example setup of the OAuth 2 plugin](https://github.com/rabbitmq/rabbitmq-server/tree/main/deps/rabbitmq_auth_backend_oauth2#examples):
 
 
-<pre class="lang-java">
+```java
 import com.rabbitmq.client.impl.OAuth2ClientCredentialsGrantCredentialsProvider.
         OAuth2ClientCredentialsGrantCredentialsProviderBuilder;
 ...
@@ -1490,7 +1501,7 @@ CredentialsProvider credentialsProvider =
     .build();
 
 connectionFactory.setCredentialsProvider(credentialsProvider);
-</pre>
+```
 
 In production, make sure to use HTTPS for the token endpoint URI and configure
 the `SSLContext` if necessary for the HTTPS requests (to verify and trust
@@ -1498,7 +1509,7 @@ the identity of the OAuth 2 server). The following snippet does
 so by using the `tls().sslContext()` method from
 `OAuth2ClientCredentialsGrantCredentialsProviderBuilder`:
 
-<pre class="lang-java">
+```java
 SSLContext sslContext = ... // create and initialise SSLContext
 
 CredentialsProvider credentialsProvider =
@@ -1512,7 +1523,7 @@ CredentialsProvider credentialsProvider =
       .sslContext(sslContext) // set SSLContext
       .builder()              // back to main configuration
     .build();
-</pre>
+```
 
 Please consult the [Javadoc](https://rabbitmq.github.io/rabbitmq-java-client/api/current/com/rabbitmq/client/impl/OAuth2ClientCredentialsGrantCredentialsProvider.html)
 to see all the available options.
@@ -1531,14 +1542,14 @@ the new tokens for the connections it is responsible for.
 The following snippet shows how to create a `DefaultCredentialsRefreshService`
 instance and set it up on the `ConnectionFactory`:
 
-<pre class="lang-java">
+```java
 import com.rabbitmq.client.impl.DefaultCredentialsRefreshService.
         DefaultCredentialsRefreshServiceBuilder;
 ...
 CredentialsRefreshService refreshService =
   new DefaultCredentialsRefreshServiceBuilder().build();
 cf.setCredentialsRefreshService(refreshService);
-</pre>
+```
 
 The `DefaultCredentialsRefreshService` schedules a refresh after 80%
 of the token validity time, e.g. if the token expires in 60 minutes,

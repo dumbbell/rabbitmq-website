@@ -86,16 +86,16 @@ To use federation, one needs to configure two things
 The federation plugin is included in the RabbitMQ distribution. To
 enable it, use [rabbitmq-plugins](man/rabbitmq-plugins.8.html):
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_federation
-</pre>
+```
 
 When using the management plugin, you will also want to
 enable <code>rabbitmq_federation_management</code>:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_federation_management
-</pre>
+```
 
 When using a federation in a cluster, all the nodes of the
 cluster should have the federation plugin enabled.
@@ -139,26 +139,26 @@ First let's define an upstream:
   <tr>
     <th>rabbitmqctl</th>
     <td>
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_parameter federation-upstream my-upstream \<br/>'{"uri":"amqp://target.hostname","expires":3600000}'
-</pre>
+```
     </td>
   </tr>
   <tr>
     <th>rabbitmqctl.bat (Windows)</th>
     <td>
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat set_parameter federation-upstream my-upstream ^<br/>"{""uri"":""amqp://target.hostname"",""expires"":3600000}"
-</pre>
+```
     </td>
   </tr>
   <tr>
     <th>HTTP API</th>
     <td>
-<pre class="lang-bash">
+```bash
 PUT /api/parameters/federation-upstream/%2f/my-upstream
 {"value":{"uri":"amqp://target.hostname","expires":3600000}}
-</pre>
+```
     </td>
   </tr>
   <tr>
@@ -178,26 +178,26 @@ Then define a policy that will match built-in exchanges and use this upstream:
   <tr>
     <th>rabbitmqctl</th>
     <td>
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_policy --apply-to exchanges federate-me "^amq\." '{"federation-upstream-set":"all"}'
-</pre>
+```
     </td>
   </tr>
   <tr>
     <th>rabbitmqctl (Windows)</th>
     <td>
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat set_policy --apply-to exchanges federate-me "^amq\." ^<br/>"{""federation-upstream-set"":""all""}"
-</pre>
+```
     </td>
   </tr>
   <tr>
     <th>HTTP API</th>
     <td>
-<pre class="lang-ini">
+```ini
 PUT /api/policies/%2f/federate-me
 {"pattern":"^amq\.", "definition":{"federation-upstream-set":"all"}, \<br/> "apply-to":"exchanges"}
-</pre>
+```
     </td>
   </tr>
   <tr>
@@ -227,16 +227,16 @@ matched by the policy. You can
 check that the policy has applied to the exchanges by
 checking the exchanges list in management or with:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_exchanges name policy | grep federate-me
-</pre>
+```
 
 And you can check that federation links for each exchange have come up with `Admin` > `Federation Status` > `Running Links` or with:
 
-<pre class="lang-bash">
+```bash
 # This command will be available only if federation plugin is enabled
 rabbitmqctl federation_status
-</pre>
+```
 
 In general there will be one federation link for each
 upstream that is applied to an exchange. So for example with
@@ -329,10 +329,10 @@ Federation link status can be inspected using [RabbitMQ CLI tools](cli.html).
 
 Invoke:
 
-<pre class="lang-bash">
+```bash
 # This command will be available only if federation plugin is enabled
 rabbitmqctl federation_status
-</pre>
+```
 
 This will output a list of federation links running on the target node (not cluster-wide).
 It contains the following keys:
@@ -405,7 +405,7 @@ It contains the following keys:
 
 Here's an example:
 
-<pre class="lang-bash">
+```bash
 # This command will be available only if federation plugin is enabled
 rabbitmqctl federation_status
 # => [[{type,&lt;&lt;"exchange">>},
@@ -415,7 +415,7 @@ rabbitmqctl federation_status
 # =>   {upstream_name,&lt;&lt;"my-upstream-x">>},
 # =>   {status,{running,&lt;&lt;"&lt;rabbit@my-server.1.281.0>">>}},
 # =>   {timestamp,{{2020,3,1},{12,3,28}}}]]
-# => ...done.</pre>
+# => ...done.```
 
 ### Using the Management UI
 

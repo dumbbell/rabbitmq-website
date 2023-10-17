@@ -41,23 +41,23 @@ to a set of exchanges and/or queues.
 
 To apply all upstreams:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_policy federate-me '^federated\.' '{"federation-upstream-set":"all"}'
-</pre>
+```
 
 To apply a named set of upstreams:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_parameter federation-upstream-set location-1 '[{"upstream": "up-1"}, {"upstream": "up-2"}]'
 
 rabbitmqctl set_policy federate-me '^federated\.' '{"federation-upstream-set":"location-1"}'
-</pre>
+```
 
 To apply a single upstream:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_policy federate-me '^federated\.' '{"federation-upstream":"up-1"}'
-</pre>
+```
 
 Note that you cannot use the <code>federation-upstream</code>
 and <code>federation-upstream-set</code> keys together in a
@@ -71,9 +71,9 @@ of a link (connection). Upstreams are defined using the
 `rabbitmqctl set_parameter federation-upstream` command which accepts
 an upstream name and an upstream definition JSON object:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_parameter federation-upstream <i>name</i> '<i>json-object</i>'
-</pre>
+```
 
 The upstream definition object can contain the following keys:
 
@@ -261,10 +261,10 @@ The following upstream parameters are only applicable to <a href="./federated-ex
 Each <code>upstream-set</code> is a set of upstreams. It can be more convenient to use a set
 and refer to it in a federation policy definition that repeatedly listing upstreams.
 
-<pre class="lang-bash">
+```bash
 # up-1 and up-2 are previously declared upstreams
 rabbitmqctl set_parameter federation-upstream-set location-1 '[{"upstream": "up-1"}, {"upstream": "up-2"}]'
-</pre>
+```
 
 Supported keys of the JSON objects are
 
@@ -313,6 +313,6 @@ not give machines distinct names.
 
 Here's an Example:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_cluster_name "east1-production"
-</pre>
+```

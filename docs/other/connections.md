@@ -293,10 +293,10 @@ A large number of concurrent connections will generate a lot of metric (stats) e
 This increases CPU consumption even with mostly idle connections. To reduce this footprint,
 increase the statistics collection interval using the `collect_statistics_interval` key:
 
-<pre class="lang-ini">
+```ini
 # sets the interval to 60 seconds
 collect_statistics_interval = 60000
-</pre>
+```
 
 The default is 5 seconds (5000 milliseconds).
 
@@ -422,7 +422,7 @@ a RabbitMQ node to a client may look like
 (the format presented here can be thought of as pseudocode, since the
 actual table encoding is in a binary format and would not be human-friendly):
 
-<pre class="lang-haskell">
+```haskell
 { "product"      = (longstr) "RabbitMQ",
   "platform"     = (longstr) "Erlang/OTP",
   "information"  = (longstr) "Licensed under the MPL.  See https://www.rabbitmq.com/",
@@ -432,7 +432,7 @@ actual table encoding is in a binary format and would not be human-friendly):
                                "basic.nack"                 = (bool) true,
                                "publisher_confirms"         = (bool) true },
   "version"      = (longstr) "3.8.9" }
-</pre>
+```
 
 The capabilities table for clients is optional: failure to present
 such a table does not preclude the client from being able to

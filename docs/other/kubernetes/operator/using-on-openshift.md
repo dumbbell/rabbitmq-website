@@ -39,7 +39,7 @@ By default, the RabbitMQ Cluster Operator deploys RabbitmqCluster Pods with fixe
 on Openshift, it is necessary to override the Security Context for these Pods. This must be done
 for every RabbitmqCluster deployed under the `override` field:
 
-<pre class="lang-yaml">
+```yaml
 apiVersion: rabbitmq.com/v1beta1
 kind: RabbitmqCluster
 metadata:
@@ -53,6 +53,6 @@ spec:
           spec:
             containers: []
             securityContext: {}
-</pre>
+```
 
 This resets the securityContext for the Pods to default, and ensures that RabbitMQ Pods are also assigned arbitrary user IDs in Openshift.

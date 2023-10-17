@@ -53,7 +53,7 @@ objects within the same namespace as `RabbitmqCluster` are **always** allowed.
 
 The following YAML declares a `RabbitmqCluster` object that allows topology objects from namespace `my-app`:
 
-<pre class="lang-yaml">
+```yaml
 apiVersion: rabbitmq.com/v1beta1
 kind: RabbitmqCluster
 metadata:
@@ -63,11 +63,11 @@ metadata:
     rabbitmq.com/topology-allowed-namespaces: "my-app"
 spec:
   replicas: 1
-</pre>
+```
 
 Note that the above YAML specifies namespace `rabbitmq-service`. Then the following YAML will target the above RabbitMQ, from namespace `my-app`.
 
-<pre class="lang-yaml">
+```yaml
 apiVersion: rabbitmq.com/v1beta1
 kind: Queue
 metadata:
@@ -78,7 +78,7 @@ spec:
   rabbitmqClusterReference:
     name: example-rabbit
     namespace: rabbitmq-service
-</pre>
+```
 
 ### <a id='namespace-scope-note' class='anchor' href='#namespace-scope-note'>Important Information about Forbidden Cross-Namespace Objects</a>
 
@@ -97,7 +97,7 @@ updated** to trigger a reconciliation; for example, by adding a label to the `Qu
 * This feature is released since Messaging Topology Operator `1.4.0`.
 * The following manifest creates a queue and uses credentials in kubernetes secret `my-rabbit-creds` to connect to the RabbitMQ server:
 
-<pre class="lang-bash">
+```bash
 ---
 apiVersion: v1
 kind: Secret
@@ -118,7 +118,7 @@ spec:
   rabbitmqClusterReference:
     connectionSecret:
       name: my-rabbit-creds # has to an existing secret in the same namespace as this Queue object
-</pre>
+```
 
 Note that `spec.rabbitmqClusterReference` is an immutable field. You cannot update the connectionSecret name after creation.
 
@@ -129,9 +129,9 @@ you can annotate Rabbitmqclusters with a custom connection URI. Messaging Topolo
 * This feature is released since Messaging Topology Operator `1.12.0`.
 
 To annotate RabbitmqClusters,
-<pre class="lang-bash">
+```bash
 kubectl annotate rmq RMQ-NAME rabbitmq.com/operator-connection-uri=https://test:1234
-</pre>
+```
 
 ## <a id='queues-policies' class='anchor' href='#queues-policies'>Queues and Policies</a>
 
@@ -140,7 +140,7 @@ Messaging Topology Operator can declare [queues](../../queues.html) and
 
 The following manifest will create a queue named 'test' in the default vhost:
 
-<pre class="lang-bash">
+```bash
 apiVersion: rabbitmq.com/v1beta1
 kind: Queue
 metadata:
@@ -152,11 +152,11 @@ spec:
   durable: true
   rabbitmqClusterReference:
     name: example-rabbit
-</pre>
+```
 
 The following manifest will create a policy named 'lazy-queue' in default virtual host:
 
-<pre class="lang-bash">
+```bash
 apiVersion: rabbitmq.com/v1beta1
 kind: Policy
 metadata:
@@ -170,7 +170,7 @@ spec:
     queue-mode: lazy
   rabbitmqClusterReference:
     name: example-rabbit
-</pre>
+```
 
 Note that it's not recommended setting [optional queue arguments](../../queues.html#optional-arguments) on queues directly. Once set,
 queue properties cannot be changed. Use [policies](../../parameters.html#policies) instead.
@@ -183,7 +183,7 @@ and [policies](https://github.com/rabbitmq/messaging-topology-operator/tree/main
 Messaging Topology Operator can manage [exchanges and bindings](../../publishers.html#basics).
 The following manifest will create a fanout exchange:
 
-<pre class="lang-bash">
+```bash
 apiVersion: rabbitmq.com/v1beta1
 kind: Exchange
 metadata:
@@ -196,11 +196,11 @@ spec:
   durable: true
   rabbitmqClusterReference:
     name: example-rabbit
-</pre>
+```
 
 The following manifest will create a binding between an exchange and a queue:
 
-<pre class="lang-bash">
+```bash
 apiVersion: rabbitmq.com/v1beta1
 kind: Binding
 metadata:
@@ -212,7 +212,7 @@ spec:
   destinationType: queue # can be 'queue' or 'exchange'
   rabbitmqClusterReference:
     name: example-rabbit
-</pre>
+```
 
 More examples on [exchanges](https://github.com/rabbitmq/messaging-topology-operator/tree/main/docs/examples/exchanges)
 and [bindings](https://github.com/rabbitmq/messaging-topology-operator/tree/main/docs/examples/bindings).
@@ -227,7 +227,7 @@ Messaging Topology Operator creates users with generated credentials by default.
 The following manifest will create a user with generated username and password and the generated username and password can be
 accessed via a Kubernetes secret object:
 
-<pre class="lang-bash">
+```bash
 apiVersion: rabbitmq.com/v1beta1
 kind: User
 metadata:
@@ -238,13 +238,13 @@ spec:
   - policymaker
   rabbitmqClusterReference:
     name: example-rabbitmq
-</pre>
+```
 
 To get the name of the kubernetes secret object that contains the generated username and password, run the following command:
 
-<pre class="lang-bash">
+```bash
 kubectl get users.rabbitmq.com user-example -o jsonpath='{.status.credentials.name}'
-</pre>
+```
 
 Note that the Operator does not monitor the generated secret object and updating the secret object won't update the credentials.
 As a workaround, add a label or annotation to `users.rabbitmq.com` object to trigger the Operator to reconcile.
@@ -255,7 +255,7 @@ object won't update the credentials. As a workaround, add a label or annotation 
 
 The following manifest will create a user with username and password provided from secret 'my-rabbit-user' :
 
-<pre class="lang-bash">
+```bash
 apiVersion: rabbitmq.com/v1beta1
 kind: User
 metadata:
@@ -268,12 +268,12 @@ spec:
     name: rabbit-example
   importCredentialsSecret:
     name: my-rabbit-user # name of the secret
-</pre>
+```
 
 To set user permissions on an existing user, create `permissions.rabbitmq.com` resources.
 The following example will assign permissions to user `rabbit-user-1`:
 
-<pre class="lang-bash">
+```bash
 apiVersion: rabbitmq.com/v1beta1
 kind: Permission
 metadata:
@@ -288,7 +288,7 @@ spec:
     read: ".*"
   rabbitmqClusterReference:
     name: sample
-</pre>
+```
 
 More examples on [users](https://github.com/rabbitmq/messaging-topology-operator/tree/main/docs/examples/users)
 and [permissions](https://github.com/rabbitmq/messaging-topology-operator/tree/main/docs/examples/permissions).
@@ -299,7 +299,7 @@ Messaging Topology Operator can create [virtual hosts](../../vhosts.html).
 
 The following manifest will create a vhost named 'test' in a RabbitmqCluster named 'example-rabbit':
 
-<pre class="lang-bash">
+```bash
 apiVersion: rabbitmq.com/v1beta1
 kind: Vhost
 metadata:
@@ -309,7 +309,7 @@ spec:
   name: test # name of the vhost
   rabbitmqClusterReference:
     name: example-rabbit
-</pre>
+```
 
 ## <a id='federation' class='anchor' href='#federation'>Federation</a>
 
@@ -320,7 +320,7 @@ The 'uri' key is mandatory for the Secret object. Its value can be either a sing
 
 The following manifest will define an upstream named 'origin' in a RabbitmqCluster named 'example-rabbit':
 
-<pre class="lang-bash">
+```bash
 apiVersion: rabbitmq.com/v1beta1
 kind: Federation
 metadata:
@@ -334,7 +334,7 @@ spec:
   ackMode: "on-confirm"
   rabbitmqClusterReference:
     name: example-rabbit
-</pre>
+```
 
 More [federation examples](https://github.com/rabbitmq/messaging-topology-operator/tree/main/docs/examples/federations).
 
@@ -348,7 +348,7 @@ or a comma-separated list of URIs.
 
 The following manifest will create a Shovel named 'my-shovel' in a RabbitmqCluster named 'example-rabbit':
 
-<pre class="lang-bash">
+```bash
 apiVersion: rabbitmq.com/v1beta1
 kind: Shovel
 metadata:
@@ -363,7 +363,7 @@ spec:
   destQueue: "the-destination-queue"
   rabbitmqClusterReference:
     name: example-rabbit
-</pre>
+```
 
 More [shovels examples](https://github.com/rabbitmq/messaging-topology-operator/tree/main/docs/examples/shovels).
 
@@ -372,14 +372,14 @@ More [shovels examples](https://github.com/rabbitmq/messaging-topology-operator/
 Some custom resource properties are immutable. Messaging Topology Operator implements [validating webhooks](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#validatingadmissionwebhook)
 to prevent updates on immutable fields. Forbidden updates will be rejected. For example:
 
-<pre class="lang-bash">
+```bash
 kubectl apply -f test-queue.yaml
 Error from server (Forbidden):
 ...
 Resource: "rabbitmq.com/v1beta1, Resource=queues", GroupVersionKind: "rabbitmq.com/v1beta1, Kind=Queue"
 Name: "example", Namespace: "rabbitmq-system"
 for: "test-queue.yaml": admission webhook "vqueue.kb.io" denied the request: Queue.rabbitmq.com "example" is forbidden: spec.name: Forbidden: updates on name, vhost, and rabbitmqClusterReference are all forbidden
-</pre>
+```
 
 Properties that cannot be updated is documented in the [Messaging Topology Operator API docs](https://github.com/rabbitmq/messaging-topology-operator/blob/main/docs/api/rabbitmq.com.ref.asciidoc).
 
@@ -415,7 +415,7 @@ It uses zap logger which can be configured via passing command line flags in the
 
 For example, to configure the log level to 'debug':
 
-<pre class="lang-yaml">
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -429,7 +429,7 @@ spec:
         - --zap-log-level=debug
         command:
         - /manager
-</pre>
+```
 
 Other available command line flags for the zap logger can be found documented in [controller runtime](https://github.com/kubernetes-sigs/controller-runtime/blob/v0.10.2/pkg/log/zap/zap.go#L240-L246).
 
@@ -438,7 +438,7 @@ Other available command line flags for the zap logger can be found documented in
 By default, Messaging Topology Operator reconciles topology objects when there are create/update/delete events for that particular custom resource.
 From version `1.6.0`, you can configure the Operator to perform reconciliation for all topology objects in a specific frequency by setting an environment variable in the Operator deployment:
 
-<pre class="lang-yaml">
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -455,7 +455,7 @@ spec:
         - name: SYNC_PERIOD
           value: 5m # needs to be in a format that's readable by golang time.ParseDuration(), e.g. “1000s”, “5.3h” or “20h35m”
 ...
-</pre>
+```
 
 Recreating a deleted queue will *not recovery any messages*.
 

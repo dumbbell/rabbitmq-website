@@ -63,7 +63,7 @@ receive a response we need to send a 'callback' queue address with the
 request. We can use the default queue.
 Let's try it:
 
-<pre class="lang-go">
+```go
 q, err := ch.QueueDeclare(
   "",    // name
   false, // durable
@@ -87,7 +87,7 @@ err = ch.PublishWithContext(ctx,
     ReplyTo:       q.Name,
     Body:          []byte(strconv.Itoa(n)),
 })
-</pre>
+```
 
 
 > #### Message properties
@@ -210,7 +210,7 @@ Putting it all together
 
 The Fibonacci function:
 
-<pre class="lang-go">
+```go
 func fib(n int) int {
         if n == 0 {
                 return 0
@@ -220,7 +220,7 @@ func fib(n int) int {
                 return fib(n-1) + fib(n-2)
         }
 }
-</pre>
+```
 
 We declare our fibonacci function. It assumes only valid positive integer input.
 (Don't expect this one to work for big numbers,
@@ -228,7 +228,7 @@ and it's probably the slowest recursive implementation possible).
 
 The code for our RPC server [rpc_server.go](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/go/rpc_server.go) looks like this:
 
-<pre class="lang-go">
+```go
 package main
 
 import (
@@ -324,7 +324,7 @@ func main() {
         log.Printf(" [*] Awaiting RPC requests")
         &lt;-forever
 }
-</pre>
+```
 
 The server code is rather straightforward:
 
@@ -339,7 +339,7 @@ The server code is rather straightforward:
 
 The code for our RPC client [rpc_client.go](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/go/rpc_client.go):
 
-<pre class="lang-go">
+```go
 package main
 
 import (
@@ -454,7 +454,7 @@ func bodyFrom(args []string) int {
         failOnError(err, "Failed to convert arg to integer")
         return n
 }
-</pre>
+```
 
 Now is a good time to take a look at our full example source code for
 [rpc_client.go](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/go/rpc_client.go) and [rpc_server.go](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/go/rpc_server.go).
@@ -462,17 +462,17 @@ Now is a good time to take a look at our full example source code for
 
 Our RPC service is now ready. We can start the server:
 
-<pre class="lang-bash">
+```bash
 go run rpc_server.go
 # => [x] Awaiting RPC requests
-</pre>
+```
 
 To request a fibonacci number run the client:
 
-<pre class="lang-bash">
+```bash
 go run rpc_client.go 30
 # => [x] Requesting fib(30)
-</pre>
+```
 
 The design presented here is not the only possible implementation of a RPC
 service, but it has some important advantages:

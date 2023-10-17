@@ -116,9 +116,9 @@ Let's call it a combined keys file. To combined them, simply concatenate the pri
 `server_key.pem` in the example below, to the end of the public key file, `server_certificate.pem`,
 starting with a new line:
 
-<pre class="lang-bash">
+```bash
 cat server_certificate.pem server_key.pem &gt; combined_keys.pem
-</pre>
+```
 
 This can be done using a text editor and not just command line tools such as `cat`.
 
@@ -128,7 +128,7 @@ Assuming a combined keys file from the section above is ready, next we infer
 the Erlang TLS library path and export `ERL_SSL_PATH` in `rabbitmq-env.conf`
 to point at it:
 
-<pre class="lang-bash">
+```bash
 # These commands ensure that `ERL_SSL_PATH` is the first line in
 # /etc/rabbitmq/rabbitmq-env.conf and will preserve the existing
 # contents of that file if it already exists
@@ -136,7 +136,7 @@ to point at it:
 erl -noinput -eval 'io:format("ERL_SSL_PATH=~s~n", [filename:dirname(code:which(inet_tls_dist))])' -s init stop &gt; /tmp/ssl-path.txt
 cat /tmp/ssl-path.txt /etc/rabbitmq/rabbitmq-env.conf &gt; /tmp/new-rabbitmq-env.conf
 mv -f /tmp/new-rabbitmq-env.conf /etc/rabbitmq/rabbitmq-env.conf
-</pre>
+```
 
 This makes it possible for the node to load a module, `inet_tls_dist`, which is used for encrypted inter-node
 communication, from the path.
@@ -147,7 +147,7 @@ As with other runtime flags, `SERVER_ADDITIONAL_ERL_ARGS` is the most convenient
 Please note that the double quotes **must** be used here because the environment variable
 value is multi-line:
 
-<pre class="lang-bash">
+```bash
 # -pa $ERL_SSL_PATH prepends the directory ERL_SSL_PATH points at to the code path
 # -proto_dist inet_tls tells the runtime to encrypt inter-node communication
 # -ssl_dist_opt server_certfile /path/to/combined_keys.pem tells the runtime
@@ -158,14 +158,14 @@ SERVER_ADDITIONAL_ERL_ARGS="-pa $ERL_SSL_PATH \
   -proto_dist inet_tls \
   -ssl_dist_opt server_certfile /path/to/combined_keys.pem \
   -ssl_dist_opt server_password password
-</pre>
+```
 
 Next step is to build on the previous example and enable secure renegotiation for
 inter-node TLS connections. While this is optional, it is highly recommended. The same
 `-ssl_dist_opt` can be used to enable more TLS-related settings. They won't be
 covered in this example:
 
-<pre class="lang-bash">
+```bash
 # -pa $ERL_SSL_PATH prepends the directory ERL_SSL_PATH points at to the code path
 # -proto_dist inet_tls tells the runtime to encrypt inter-node communication
 # -ssl_dist_opt server_certfile /path/to/combined_keys.pem tells the runtime
@@ -177,7 +177,7 @@ SERVER_ADDITIONAL_ERL_ARGS="-pa $ERL_SSL_PATH \
   -ssl_dist_opt server_certfile /path/to/combined_keys.pem \
   -ssl_dist_opt server_password password \
   -ssl_dist_opt server_secure_renegotiate true client_secure_renegotiate true"
-</pre>
+```
 
 Once a node has inter-node connection configured with TLS, CLI tools such as `rabbitmqctl` and `rabbitmq-diagnostics`
 also must use TLS to talk to the node. Plain TCP connections will be fail.
@@ -187,7 +187,7 @@ the environment variable is `RABBITMQ_CTL_ERL_ARGS`. It controls runtime flags u
 
 Here is the complete `/etc/rabbitmq/rabbitmq-env.conf` file:
 
-<pre class="lang-bash">
+```bash
 # IMPORTANT:
 # the following path is system dependent (will
 # change depending on the Erlang version, distribution,
@@ -212,7 +212,7 @@ RABBITMQ_CTL_ERL_ARGS="-pa $ERL_SSL_PATH \
   -ssl_dist_opt server_certfile /path/to/combined_keys.pem \
   -ssl_dist_opt server_password password \
   -ssl_dist_opt server_secure_renegotiate true client_secure_renegotiate true"
-</pre>
+```
 
 
 ## <a id="linux-strategy-two" class="anchor" href="#linux-strategy-two">Strategy Two (Using a Single TLS Option File) on Linux, macOS and BSD</a>
@@ -227,7 +227,7 @@ Here is a complete `/etc/rabbitmq/rabbitmq-env.conf` file using this setting.
 Note that the name of the `-ssl_dist_optfile` file is not significant but
 it must be stored in a location readable by the effective `rabbitmq` user:
 
-<pre class="lang-bash">
+```bash
 # NOTE: the following path is system dependent and will change between Erlang
 #       versions
 ERL_SSL_PATH="/usr/lib64/erlang/lib/ssl-9.4/ebin"
@@ -242,13 +242,13 @@ SERVER_ADDITIONAL_ERL_ARGS="-pa $ERL_SSL_PATH
 RABBITMQ_CTL_ERL_ARGS="-pa $ERL_SSL_PATH
   -proto_dist inet_tls
   -ssl_dist_optfile /etc/rabbitmq/inter_node_tls.config"
-</pre>
+```
 
 Here is an example `/etc/rabbitmq/inter_node_tls.config` file that uses
 separate server certificate and private key files, enables [peer verification](./ssl.html#peer-verification)
 and requires peers to present a certificate:
 
-<pre class="lang-bash">
+```bash
 [
   {server, [
     {cacertfile, "/full/path/to/ca_certificate.pem"},
@@ -268,7 +268,7 @@ and requires peers to present a certificate:
     {verify, verify_peer}
   ]}
 ].
-</pre>
+```
 
 These options are documented further in the [Erlang/OTP documentation](http://erlang.org/doc/apps/ssl/ssl_distribution.html).
 
@@ -282,9 +282,9 @@ There are, however, some minor differences specific to Windows.
 First, the command that outputs the location of the `inet_tls_dist` module is
 different due to Windows shell parsing rules. it looks like this
 
-<pre class="lang-bash">
+```bash
 erl -noinput -eval "io:format(""ERL_SSL_PATH=~s~n"", [filename:dirname(code:which(inet_tls_dist))])" -s init stop
-</pre>
+```
 
 Next, the file containing the [custom environment variables](./configure.html#customise-environment)
 is named `rabbitmq-env-conf.bat` on Windows. This file **must** be saved to the `%AppData%\RabbitMQ` directory of the administrative
@@ -293,7 +293,7 @@ user that installed RabbitMQ.
 Here is a complete `rabbitmq-env-conf.bat` file using the `-ssl_dist_opfile` setting ([strategy two](#linux-strategy-two) covered above).
 Note the use of forward-slash directory delimiters.
 
-<pre class="lang-powershell">
+```powershell
 @echo off
 rem NOTE: If spaces are present in any of these paths,
 rem double quotes must be used.
@@ -313,13 +313,13 @@ rem Same as above but for CLI tools
 set CTL_ERL_ARGS=-pa %SSL_PATH% ^
     -proto_dist inet_tls ^
     -ssl_dist_optfile C:/Users/rmq_user/AppData/Roaming/RabbitMQ/inter_node_tls.config
-</pre>
+```
 
 Below is an example `inter_node_tls.config` file.
 As with other operating systems, more [TLS options](./ssl.html) are available
 to be set if necessary.
 
-<pre class="lang-bash">
+```bash
 [
     {server, [
         {cacertfile, "C:/Path/To/ca_certificate.pem"},
@@ -339,4 +339,4 @@ to be set if necessary.
         {verify, verify_peer}
     ]}
 ].
-</pre>
+```

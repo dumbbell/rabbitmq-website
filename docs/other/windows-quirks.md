@@ -49,17 +49,17 @@ To specify a non-standard port to be used for Erlang distribution, do the follow
  * Remove the RabbitMQ Windows service using `.\rabbitmq-service.bat remove`
  * Create the `%AppData%\RabbitMQ\rabbitmq-env-conf.bat` file with the following contents (use your own port number):
 
-<pre class="lang-powershell">
+```powershell
 set DIST_PORT=44556
-</pre>
+```
 
  * Install the RabbitMQ Windows service using `.\rabbitmq-service.bat install`
  * Start the RabbitMQ Windows service using `.\rabbitmq-service.bat start`
  * Verify what port is being used for inter-node and CLI tool communication:
 
-<pre class="lang-bash">
+```bash
 epmd -names
-</pre>
+```
 
 ## <a id="multiple-erlang-versions" class="anchor" href="#multiple-erlang-versions">Multiple Versions of Erlang May Cause Installation Issues</a>
 
@@ -72,11 +72,11 @@ the version you wish RabbitMQ to use. If you must upgrade Erlang, use this proce
  * Install the new version of Erlang
  * Open the "RabbitMQ Command Prompt (sbin dir)" start menu item and run the commands below to reinstall the Windows service
 
-<pre class="lang-powershell">
+```powershell
 .\rabbitmq-service.bat remove
 .\rabbitmq-service.bat install
 .\rabbitmq-service.bat start
-</pre>
+```
 
 If any environment variables have changed in the mean time, [Windows service reinstallation](./configure.html#rabbitmq-env-file-windows) would
 also be necessary.
@@ -86,9 +86,9 @@ also be necessary.
 
 RabbitMQ will fail to start with the error that reads
 
-<pre class="lang-plaintext">
+```plaintext
 RabbitMQ: Erlang machine stopped instantly (distribution name conflict?)
-</pre>
+```
 
 when installed to a path with non-ASCII characters in it.
 This is because we need to pass the location of the compiled Erlang files to the Erlang VM.
@@ -117,7 +117,8 @@ One of these options can be used to mitigate:
 
  * Avoid using non-ASCII characters in RabbitMQ installation and [node directory](./relocate.html) paths
  * On recent versions of Windows, issue the command
-   <pre class="lang-powershell">chcp 65001</pre> before using CLI tools to force
+   ```powershell
+chcp 65001``` before using CLI tools to force
    the console to use UTF-8
  * Where possible, use the [management plugin](./management.html) instead of CLI tools.
 
@@ -125,7 +126,7 @@ One of these options can be used to mitigate:
 
 In case the output from `rabbitmqctl` and other CLI tools looks like this:
 
-<pre class="lang-plaintext">
+```plaintext
 ←[1mUsage←[0m
 
 rabbitmqctl [--node &lt;node&gt;] [--timeout &lt;timeout&gt;] [--longnames] [--quiet] &lt;command&gt; [&lt;command options&gt;]
@@ -137,7 +138,7 @@ Available commands:
     autocomplete                  Provides command name autocomplete variants
     help                          Displays usage information for a command
     version                       Displays CLI tools version
-</pre>
+```
 
 ### Mitigation
 
@@ -195,10 +196,10 @@ First, log in using the administrative account you used, or will use, to
 install RabbitMQ and create the `%AppData%\RabbitMQ\rabbitmq-env-conf.bat` file
 with the following contents:
 
-<pre class="lang-powershell">
+```powershell
 @echo off
 set SERVER_ADDITIONAL_ERL_ARGS=-kernel net_ticktime 120
-</pre>
+```
 
 The above will set `net_ticktime` to `120` seconds.
 
@@ -207,9 +208,9 @@ If you have not yet installed RabbitMQ, the setting will be picked up during ins
 If you have already installed RabbitMQ, open the "RabbitMQ Command Prompt (sbin dir)"
 start menu item and run these commands:
 
-<pre class="lang-powershell">
+```powershell
 .\rabbitmq-service.bat stop
 .\rabbitmq-service.bat remove
 .\rabbitmq-service.bat install
 .\rabbitmq-service.bat start
-</pre>
+```

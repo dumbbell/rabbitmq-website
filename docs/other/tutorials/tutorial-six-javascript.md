@@ -63,7 +63,7 @@ receive a response we need to send a 'callback' queue address with the
 request. We can use the default exchange.
 Let's try it:
 
-<pre class="lang-javascript">
+```javascript
 channel.assertQueue('', {
   exclusive: true
 });
@@ -73,7 +73,7 @@ channel.sendToQueue('rpc_queue', Buffer.from('10'), {
 });
 
 # ... then code to read a response message from the callback queue ...
-</pre>
+```
 
 > #### Message properties
 >
@@ -195,14 +195,14 @@ Putting it all together
 
 The Fibonacci function:
 
-<pre class="lang-javascript">
+```javascript
 function fibonacci(n) {
   if (n == 0 || n == 1)
     return n;
   else
     return fibonacci(n - 1) + fibonacci(n - 2);
 }
-</pre>
+```
 
 We declare our fibonacci function. It assumes only valid positive integer input.
 (Don't expect this one to work for big numbers,
@@ -211,7 +211,7 @@ and it's probably the slowest recursive implementation possible).
 
 The code for our RPC server [rpc_server.js](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/javascript-nodejs/src/rpc_server.js) looks like this:
 
-<pre class="lang-javascript">
+```javascript
 #!/usr/bin/env node
 
 var amqp = require('amqplib/callback_api');
@@ -254,7 +254,7 @@ function fibonacci(n) {
   else
     return fibonacci(n - 1) + fibonacci(n - 2);
 }
-</pre>
+```
 
 The server code is rather straightforward:
 
@@ -269,7 +269,7 @@ The server code is rather straightforward:
 
 The code for our RPC client [rpc_client.js](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/javascript-nodejs/src/rpc_client.js):
 
-<pre class="lang-javascript">
+```javascript
 #!/usr/bin/env node
 
 var amqp = require('amqplib/callback_api');
@@ -325,7 +325,7 @@ function generateUuid() {
          Math.random().toString() +
          Math.random().toString();
 }
-</pre>
+```
 
 Now is a good time to take a look at our full example source code for
 [rpc_client.js](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/javascript-nodejs/src/rpc_client.js) and [rpc_server.js](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/javascript-nodejs/src/rpc_server.js).
@@ -333,17 +333,17 @@ Now is a good time to take a look at our full example source code for
 
 Our RPC service is now ready. We can start the server:
 
-<pre class="lang-bash">
+```bash
 ./rpc_server.js
 # => [x] Awaiting RPC requests
-</pre>
+```
 
 To request a fibonacci number run the client:
 
-<pre class="lang-bash">
+```bash
 ./rpc_client.js 30
 # => [x] Requesting fib(30)
-</pre>
+```
 
 The design presented here is not the only possible implementation of a RPC
 service, but it has some important advantages:

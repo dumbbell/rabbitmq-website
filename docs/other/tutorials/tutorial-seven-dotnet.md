@@ -44,10 +44,10 @@ Publisher confirms are a RabbitMQ extension to the AMQP 0.9.1 protocol,
 so they are not enabled by default. Publisher confirms are
 enabled at the channel level with the `ConfirmSelect` method:
 
-<pre class="lang-csharp">
+```csharp
 var channel = connection.CreateModel();
 channel.ConfirmSelect();
-</pre>
+```
 
 This method must be called on every channel that you expect to use publisher
 confirms. Confirms should be enabled just once, not for every message published.
@@ -57,7 +57,7 @@ confirms. Confirms should be enabled just once, not for every message published.
 Let's start with the simplest approach to publishing with confirms,
 that is, publishing a message and waiting synchronously for its confirmation:
 
-<pre class="lang-csharp">
+```csharp
 while (ThereAreMessagesToPublish())
 {
     byte[] body = ...;
@@ -66,7 +66,7 @@ while (ThereAreMessagesToPublish())
     // uses a 5 second timeout
     channel.WaitForConfirmsOrDie(TimeSpan.FromSeconds(5));
 }
-</pre>
+```
 
 In the previous example we publish a message as usual and wait for its
 confirmation with the `Channel#WaitForConfirmsOrDie(TimeSpan)` method.
@@ -101,7 +101,7 @@ To improve upon our previous example, we can publish a batch
 of messages and wait for this whole batch to be confirmed.
 The following example uses a batch of 100:
 
-<pre class="lang-csharp">
+```csharp
 var batchSize = 100;
 var outstandingMessageCount = 0;
 while (ThereAreMessagesToPublish())
@@ -120,7 +120,7 @@ if (outstandingMessageCount > 0)
 {
     channel.WaitForConfirmsOrDie(TimeSpan.FromSeconds(5));
 }
-</pre>
+```
 
 Waiting for a batch of messages to be confirmed improves throughput drastically over
 waiting for a confirm for individual message (up to 20-30 times with a remote RabbitMQ node).
@@ -135,7 +135,7 @@ blocks the publishing of messages.
 The broker confirms published messages asynchronously, one just needs
 to register a callback on the client to be notified of these confirms:
 
-<pre class="lang-csharp">
+```csharp
 var channel = connection.CreateModel();
 channel.ConfirmSelect();
 channel.BasicAcks += (sender, ea) =>
@@ -146,7 +146,7 @@ channel.BasicNacks += (sender, ea) =>
 {
   //code when message is nack-ed
 };
-</pre>
+```
 
 There are 2 callbacks: one for confirmed messages and one for nack-ed messages
 (messages that can be considered lost by the broker). Both callbacks have a corresponding `EventArgs` parameter (`ea`) containing a:
@@ -159,10 +159,10 @@ There are 2 callbacks: one for confirmed messages and one for nack-ed messages
 The sequence number can be obtained with `Channel#NextPublishSeqNo`
 before publishing:
 
-<pre class="lang-csharp">
+```csharp
 var sequenceNumber = channel.NextPublishSeqNo;
 channel.BasicPublish(exchange, queue, properties, body);
-</pre>
+```
 
 A simple way to correlate messages with sequence number consists
 in using a dictionary. Let's assume we want to publish strings because they are easy
@@ -170,19 +170,19 @@ to turn into an array of bytes for publishing. Here is a code
 sample that uses a dictionary to correlate the publishing sequence number
 with the string body of the message:
 
-<pre class="lang-csharp">
+```csharp
 var outstandingConfirms = new ConcurrentDictionary&lt;ulong, string&gt;();
 // ... code for confirm callbacks will come later
 var body = "...";
 outstandingConfirms.TryAdd(channel.NextPublishSeqNo, body);
 channel.BasicPublish(exchange, queue, properties, Encoding.UTF8.GetBytes(body));
-</pre>
+```
 
 The publishing code now tracks outbound messages with a dictionary. We need
 to clean this dictionary when confirms arrive and do something like logging a warning
 when messages are nack-ed:
 
-<pre class="lang-csharp">
+```csharp
 var outstandingConfirms = new ConcurrentDictionary&lt;ulong, string&gt;();
 
 void CleanOutstandingConfirms(ulong sequenceNumber, bool multiple)
@@ -210,7 +210,7 @@ channel.BasicNacks += (sender, ea) =>
 };
 
 // ... publishing code
-</pre>
+```
 
 The previous sample contains a callback that cleans the dictionary when
 confirms arrive. Note this callback handles both single and multiple
@@ -276,17 +276,17 @@ The [`PublisherConfirms.cs`](https://github.com/rabbitmq/rabbitmq-tutorials/blob
 class contains code for the techniques we covered. We can compile it, execute it as-is and
 see how they each perform:
 
-<pre class="lang-bash">
+```bash
 dotnet run
-</pre>
+```
 
 The output will look like the following:
 
-<pre class="lang-bash">
+```bash
 Published 50,000 messages individually in 5,549 ms
 Published 50,000 messages in batch in 2,331 ms
 Published 50,000 messages and handled confirms asynchronously in 4,054 ms
-</pre>
+```
 
 The output on your computer should look similar if the client and the server sit
 on the same machine. Publishing messages individually performs poorly as expected,
@@ -297,21 +297,21 @@ trying with a remote node, which is more realistic as clients
 and servers are usually not on the same machine in production.
 `PublisherConfirms.cs` can easily be changed to use a non-local node:
 
-<pre class="lang-csharp">
+```csharp
 private static IConnection CreateConnection()
 {
     var factory = new ConnectionFactory { HostName = "remote-host", UserName = "remote-host", Password = "remote-password" };
     return factory.CreateConnection();
 }
-</pre>
+```
 
 Recompile the class, execute it again, and wait for the results:
 
-<pre class="lang-bash">
+```bash
 Published 50,000 messages individually in 231,541 ms
 Published 50,000 messages in batch in 7,232 ms
 Published 50,000 messages and handled confirms asynchronously in 6,332 ms
-</pre>
+```
 
 We see publishing individually now performs terribly. But
 with the network between the client and the server, batch publishing and asynchronous handling

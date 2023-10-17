@@ -61,7 +61,7 @@ To find the mirrored classic queues that must be migrated, run the following scr
 
 Note, the following command uses `effective_policy_definition` parameters, which are only available since RabbitMQ version 3.10.13/3.11.5. If it's not available, you can use `rabbitmqctl` from any RabbitMQ version later than 3.10.13/3.11.5, or manually match the policy name to it's definition.
 
-<pre class="lang-bash">
+```bash
 #!/bin/sh
 printf "%s\t%s\t%s\n" vhost queue_name mirrors
 for vhost in $(rabbitmqctl -q list_vhosts | tail -n +2) ; do
@@ -69,18 +69,18 @@ for vhost in $(rabbitmqctl -q list_vhosts | tail -n +2) ; do
 	sed -n '/\t\[[^\t]\+\tclassic$/{s/\t\[[^\t]\+\tclassic$//; p}' |
 	xargs -x -r -L1 -d '\n' printf "%s\t%s\n" "$vhost"
 done
-</pre>
+```
 
 All mirrored classic queues that include `ha-mode` in their effective policy definition must be migrated to a different type of queue. All these queues are listed as mirrored classic queues in the Management UI and CLI. Find the policies that apply it by running the following script:
 
-<pre class="lang-bash">
+```bash
 #!/bin/sh
 printf "%s\t%s\t%s\t%s\t%s\t%s\n" vhost policy_name pattern apply_to definition priority
 for vhost in $(rabbitmqctl -q list_vhosts | tail -n +2) ; do
   rabbitmqctl -q list_policies -p "$vhost" |
     grep 'ha-mode'
 done
-</pre>
+```
 
 ## <a id="mcq-changes-way-queue-is-used" class="anchor" href="#mcq-changes-way-queue-is-used">Mirrored Classic Queue Features that require Changes in the Way the Queue is Used</a>
 
@@ -107,15 +107,15 @@ Global [QoS prefetch](./quorum-queues.html#global-qos) where a channel sets a si
 
 To find out if this feature is used, run the following command on a running system and check for non-empty output:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_channels pid name global_prefetch_count | sed -n '/\t0$/!p'
-</pre>
+```
 
 A list of channel PIDs that have global QoS turned on are returned. Then, run the following command to map the channel PID to a queue name to verify if it is a mirrored classic queue. 
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_consumers queue_name channel_pid
-</pre>
+```
 
 ### `x-cancel-on-ha-failover` for Consumers
 
@@ -195,11 +195,11 @@ default vhost URI is `amqp:///%2f`).
 
 The federation upstream can be created using the management UI or the CLI:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_parameter federation-upstream quorum-migration-upstream \
     --vhost NEW_VHOST \
     '{"uri":"amqp:///OLD_VHOST", "trust-user-id":true}'
-</pre>
+```
 
 When this form of URI with an empty hostname is used, there is no
 need to specify credentials. Connection is only possible within
@@ -214,9 +214,9 @@ Export the [definitions](./definitions.html) from the source virtual host to a f
 available on the **Overview** page of the management UI (don't forget to
 select a single virtual host). Alternatively, you can export the definitions using the CLI with the following command:
 
-<pre class="lang-bash">
+```bash
 rabbitmqadmin export -V OLD_VHOST OLD_VHOST.json
-</pre>
+```
 
 Make the following changes to this file before loading it back into the NEW_VHOST:
 
@@ -244,9 +244,9 @@ Make the following changes to this file before loading it back into the NEW_VHOS
 Now the modified schema can be loaded into the new virtual host from the Management
 UI or by running the following command from the CLI:
 
-<pre class="lang-bash">
+```bash
 rabbitadmin import -V NEW_VHOST NEW_VHOST.json
-</pre>
+```
 
 ### Point Consumers to use Quorum Queues in the New Virtual Host
 
@@ -267,17 +267,17 @@ virtual host, and start consumers on the new virtual host.
 
 For every non-empty queue in the old virtual host, a shovel needs to be configured. For example:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_parameter shovel migrate-QUEUE_TO_MIGRATE \
   '{"src-protocol": "amqp091", "src-uri": "amqp:///OLD_VHOST", "src-queue": "QUEUE_TO_MIGRATE",
     "dest-protocol": "amqp091", "dest-uri": "amqp:///NEW_VHOST", "dest-queue": "QUEUE_TO_MIGRATE"}'
-</pre>
+```
 
 After the queue is drained, the shovel can be deleted:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl clear_parameter shovel migrate-QUEUE_TO_MIGRATE
-</pre>
+```
 
 ## <a id="migrate-in-place" class="anchor" href="#migrate-in-place">Migrate Mirrored Classic Queues to Quorum Queues in Place</a>
 

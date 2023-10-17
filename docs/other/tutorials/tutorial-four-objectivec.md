@@ -22,9 +22,9 @@ Bindings
 In previous examples we were already creating bindings. You may recall
 code like:
 
-<pre class="lang-objectivec">
+```objectivec
 [q bind:exchange];
-</pre>
+```
 
 A binding is a relationship between an exchange and a queue. This can
 be simply read as: the queue is interested in messages from this
@@ -34,9 +34,9 @@ Bindings can take an extra `routingKey` parameter. To avoid the
 confusion with an `RMQExchange publish:` parameter we're going to call it a
 `binding key`. This is how we could create a binding with a key:
 
-<pre class="lang-objectivec">
+```objectivec
 [q bind:exchange routingKey:@"black"];
-</pre>
+```
 
 The meaning of a binding key depends on the exchange type. The
 `fanout` exchanges, which we used previously, simply ignored its
@@ -166,16 +166,16 @@ first.
 
 As always, we need to create an exchange first:
 
-<pre class="lang-objectivec">
+```objectivec
 [ch direct:@"logs"];
-</pre>
+```
 
 And we're ready to send a message:
 
-<pre class="lang-objectivec">
+```objectivec
 RMQExchange *x = [ch direct:@"logs"];
 [x publish:[msg dataUsingEncoding:NSUTF8StringEncoding] routingKey:severity];
-</pre>
+```
 
 To simplify things we will assume that 'severity' can be one of
 'info', 'warning', 'error'.
@@ -188,14 +188,14 @@ Receiving messages will work just like in the previous tutorial, with
 one exception - we're going to create a new binding for each severity
 we're interested in.
 
-<pre class="lang-objectivec">
+```objectivec
 RMQQueue *q = [ch queue:@"" options:RMQQueueDeclareExclusive];
 
 NSArray *severities = @[@"error", @"warning", @"info"];
 for (NSString *severity in severities) {
     [q bind:x routingKey:severity];
 }
-</pre>
+```
 
 
 Putting it all together
@@ -243,7 +243,7 @@ Putting it all together
 
 The code for the `emitLogDirect` method:
 
-<pre class="lang-objectivec">
+```objectivec
 - (void)emitLogDirect:(NSString *)msg severity:(NSString *)severity {
     RMQConnection *conn = [[RMQConnection alloc] initWithDelegate:[RMQConnectionDelegateLogger new]];
     [conn start];
@@ -256,11 +256,11 @@ The code for the `emitLogDirect` method:
 
     [conn close];
 }
-</pre>
+```
 
 The code for `receiveLogsDirect`:
 
-<pre class="lang-objectivec">
+```objectivec
 - (void)receiveLogsDirect {
     RMQConnection *conn = [[RMQConnection alloc] initWithDelegate:[RMQConnectionDelegateLogger new]];
     [conn start];
@@ -280,13 +280,13 @@ The code for `receiveLogsDirect`:
         NSLog(@"%@:%@", message.routingKey, [[NSString alloc] initWithData:message.body encoding:NSUTF8StringEncoding]);
     }];
 }
-</pre>
+```
 
 To emit an `error` log message just call:
 
-<pre class="lang-objectivec">
+```objectivec
 [self emitLogDirect:@"Hi there!" severity:@"error"];
-</pre>
+```
 
 ([source code][source])
 

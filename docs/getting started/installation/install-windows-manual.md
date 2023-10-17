@@ -168,7 +168,8 @@ or edit [configuration](./configure.html#configuration-files).
 
 Run the command
 
-<pre class="lang-powershell">rabbitmq-server.bat -detached</pre>
+```powershell
+rabbitmq-server.bat -detached```
 
 This will start a node in the background (not attached to the Command Prompt).
 
@@ -208,7 +209,8 @@ or edit [configuration](./configure.html#configuration-files).
 
 Install the service by running
 
-<pre class="lang-powershell">rabbitmq-service.bat install</pre>
+```powershell
+rabbitmq-service.bat install```
 
 A service with the name defined by <b>RABBITMQ_SERVICENAME</b>
 should now appear in the Windows Services control panel
@@ -227,7 +229,8 @@ same functions as the service script.
 
 To start the broker, execute
 
-<pre class="lang-powershell">rabbitmq-service.bat start</pre>
+```powershell
+rabbitmq-service.bat start```
 
 If the output from this command is
 "<code>Service <em>RABBITMQ_SERVICENAME</em> started</code>", then the service was started
@@ -263,9 +266,9 @@ which has to be placed into the correct location for the user.
 To stop the broker or check its status, use
 `rabbitmqctl.bat` in `sbin` (as an administrator).
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat stop
-</pre>
+```
 
 
 ## Checking Node Status
@@ -273,9 +276,9 @@ rabbitmqctl.bat stop
 The following command performs the most basic node health check and displays some information about
 the node if it is running:
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat status
-</pre>
+```
 
 See [RabbitMQ CLI tools guide](./cli.html) and the [Monitoring and Health Checks guide](./monitoring.html) for details.
 

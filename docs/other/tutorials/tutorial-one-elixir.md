@@ -51,15 +51,15 @@ digraph G {
 > To install it you can use the [`hex`](http://hex.pm/) package
 > management tool. Let's make a new project.
 >
-> <pre class="lang-bash">
+> ```bash
 > mix new rabbitmq_tutorials
 > cd rabbitmq_tutorials
-> </pre>
+> ```
 >
 > Now let's add the dependency on the `amqp` library. Please modify the `applications` and `deps`
 > sections of your `mix.exs` file to match below:
 >
-> <pre class="lang-elixir">
+> ```elixir
 > def application do
 >   [applications: [:amqp]]
 > end
@@ -68,16 +68,16 @@ digraph G {
 >     {:amqp, "~> 3.3"},
 >   ]
 > end
-> </pre>
+> ```
 >
 > The `application` section of `mix.exs` will ensure that the `amqp` dependency will
 > be loaded and started when your project runs. The `deps` section declares which external
 > libraries your project needs. We will now use `mix` to retrieve and compile the `amqp` library.
 >
-> <pre class="lang-bash">
+> ```bash
 > mix deps.get
 > mix deps.compile
-> </pre>
+> ```
 >
 > The `amqp` library will now be loaded and available to your project when executed via `mix run`.
 >
@@ -107,10 +107,10 @@ digraph G {
 
 Our first program `send.exs` will send a single message to a queue. The first thing we need to do is to establish a connection with RabbitMQ server.
 
-<pre class="lang-elixir">
+```elixir
 {:ok, connection} = AMQP.Connection.open
 {:ok, channel} = AMQP.Channel.open(connection)
-</pre>
+```
 
 We're connected now, to a broker on the local machine. By default, [AMQP.Connection.open](http://hexdocs.pm/amqp/AMQP.Connection.html#open/1)
 connects to _localhost_. If we wanted to connect to a broker on a different
@@ -121,9 +121,9 @@ exists. If we send a message to non-existing location, RabbitMQ will
 just trash the message. Let's create a queue to which the message will
 be delivered, let's name it _hello_:
 
-<pre class="lang-elixir">
+```elixir
 AMQP.Queue.declare(channel, "hello")
-</pre>
+```
 
 At that point we're ready to send a message. Our first message will
 just contain a string _Hello World!_ and we want to send it to our
@@ -137,18 +137,18 @@ identified by an empty string. This exchange is special &#8210; it
 allows us to specify exactly to which queue the message should go.
 The queue name needs to be specified in the `routing_key` parameter:
 
-<pre class="lang-elixir">
+```elixir
 AMQP.Basic.publish(channel, "", "hello", "Hello World!")
 IO.puts " [x] Sent 'Hello World!'"
-</pre>
+```
 
 Before exiting the program we need to make sure the network buffers
 were flushed and our message was actually delivered to RabbitMQ. We
 can do it by gently closing the connection.
 
-<pre class="lang-elixir">
+```elixir
 AMQP.Connection.close(connection)
-</pre>
+```
 
 [Here's the whole send.exs script](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/elixir/send.exs).
 
@@ -202,9 +202,9 @@ exists. Creating a queue using `AMQP.Queue.declare` is idempotent &#8210; we
 can run the command as many times as we like, and only one will be
 created.
 
-<pre class="lang-elixir">
+```elixir
 AMQP.Queue.declare(channel, "hello")
-</pre>
+```
 
 You may ask why we declare the queue again &#8210; we have already declared it
 in our previous code. We could avoid that if we were sure
@@ -220,7 +220,7 @@ Elixir message is sent to the specified Elixir process. We can then
 handle the payload and metadata any way we like.  In our case we will
 print on the screen the contents of the message.
 
-<pre class="lang-elixir">
+```elixir
 defmodule Receive do
   def wait_for_messages do
     receive do
@@ -230,17 +230,17 @@ defmodule Receive do
     end
   end
 end
-</pre>
+```
 
 Next, we need to tell RabbitMQ that this particular process should
 receive messages from our _hello_ queue:
 
-<pre class="lang-elixir">
+```elixir
 AMQP.Basic.consume(channel,
                    "hello",
                    nil, # consumer process, defaults to self()
                    no_ack: true)
-</pre>
+```
 
 For that command to succeed we must be sure that a queue which we want
 to subscribe to exists. Fortunately we're confident about that &#8210; we've
@@ -251,44 +251,44 @@ created a queue above &#8210; using `AMQP.Queue.declare`.
 > You may wish to see what queues RabbitMQ has and how many
 > messages are in them. You can do it (as a privileged user) using the `rabbitmqctl` tool:
 >
-> <pre class="lang-bash">
+> ```bash
 > sudo rabbitmqctl list_queues
-> </pre>
+> ```
 >
 > On Windows, omit the sudo:
-> <pre class="lang-powershell">
+> ```powershell
 > rabbitmqctl.bat list_queues
-> </pre>
+> ```
 
 The `no_ack` parameter will be described [later on](tutorial-two-elixir.html).
 
 And finally, we enter a never-ending recursion that waits for data and displays messages
 whenever necessary.
 
-<pre class="lang-elixir">
+```elixir
 IO.puts " [*] Waiting for messages. To exit press CTRL+C, CTRL+C"
 Receive.wait_for_messages()
-</pre>
+```
 
 ### Putting it all together
 
 Full code for `send.exs`:
 
-<pre class="lang-elixir">
+```elixir
 {:ok, connection} = AMQP.Connection.open
 {:ok, channel} = AMQP.Channel.open(connection)
 AMQP.Queue.declare(channel, "hello")
 AMQP.Basic.publish(channel, "", "hello", "Hello World!")
 IO.puts " [x] Sent 'Hello World!'"
 AMQP.Connection.close(connection)
-</pre>
+```
 
 [(send.exs source)](http://github.com/rabbitmq/rabbitmq-tutorials/blob/main/elixir/send.exs)
 
 
 Full `receive.exs` code:
 
-<pre class="lang-elixir">
+```elixir
 defmodule Receive do
   def wait_for_messages do
     receive do
@@ -306,26 +306,26 @@ AMQP.Basic.consume(channel, "hello", nil, no_ack: true)
 IO.puts " [*] Waiting for messages. To exit press CTRL+C, CTRL+C"
 
 Receive.wait_for_messages()
-</pre>
+```
 
 [(receive.exs source)](http://github.com/rabbitmq/rabbitmq-tutorials/blob/main/elixir/receive.exs)
 
 Now we can try out our programs in a terminal. First, let's start
 a consumer, which will run continuously waiting for deliveries:
 
-<pre class="lang-bash">
+```bash
 mix run receive.exs
 # => [*] Waiting for messages. To exit press CTRL+C, CTRL+C
 # ...
 # => [x] Received Hello World!
-</pre>
+```
 
 Now start the producer. The producer program will stop after every run:
 
-<pre class="lang-bash">
+```bash
 mix run send.exs
 # => [x] Sent 'Hello World!'
-</pre>
+```
 
 Hurray! We were able to send our first message through RabbitMQ. As you might
 have noticed, the `receive.exs` program doesn't exit. It will stay ready to

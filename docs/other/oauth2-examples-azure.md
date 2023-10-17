@@ -143,7 +143,7 @@ Update it with the following values:
 * **Application ID** associated to the app that you registered in Azure AD
 * Value of the **jwks_uri** key from `https://login.microsoftonline.com/{TENANT_ID}/v2.0/.well-known/openid-configuration`
 
-<pre class="lang-bash">
+```bash
 $ vi rabbitmq.config
 [
   {rabbit, [
@@ -162,7 +162,7 @@ $ vi rabbitmq.config
    ]}
  ]}
 ].
-</pre>
+```
 
 > **Important**: Please update the [configuration file provided with this tutorial](https://github.com/rabbitmq/rabbitmq-oauth2-tutorial/blob/main/conf/azure/rabbitmq.config), as it will be automatically loaded in the RabbitMQ instance that you are going to deploy later in this tutorial
 
@@ -173,9 +173,9 @@ $ vi rabbitmq.config
 For the purpose of this tutorial, you can generate a self-signed certificate/key pair.
 
 Run the following command (depending on your config, you may have to be root):
-<pre class="lang-bash">
+```bash
 make build-azure
-</pre>
+```
 
 This generates the following files in `conf/azure`:
 * **rabbitmq-ca.**crt**: a custom certificate authority that is used to generate and sign a self signed certificate for RabbitMQ
@@ -188,10 +188,10 @@ This generates the following files in `conf/azure`:
 
 Run the following commands to run RabbitMQ docker image:
 
-<pre class="lang-bash">
+```bash
 export MODE=azure
 make start-rabbitmq
-</pre>
+```
 
 <g-emoji class="g-emoji" alias="arrow_right" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/27a1.png">➡️</g-emoji> This starts a docker container named `rabbitmq`, with RabbitMQ Management UI/API with HTTPS enabled, and configured to use your Azure AD as OAuth 2.0 Authentication Backend, based on the information you provided in `rabbitmq.config` in the previsous steps of this tutorial.
 
@@ -212,7 +212,7 @@ Azure AD issues an access token like this one below. The permissions are managed
 You have configured RabbitMQ with `{extra_scopes_source, <<"roles">>},` which means RabbitMQ uses
 the scopes in the `roles` claim to define permissions for a logged-in user.
 
-<pre class="lang-javascript">
+```javascript
 {
   "aud": "30b61ef8-72d7-4e40-88f2-6e16c8d3fd88",
   "iss": "https://sts.windows.net/1ffc6121-590e-4aa5-bf47-c348674069cb/",
@@ -244,4 +244,4 @@ the scopes in the `roles` claim to define permissions for a logged-in user.
   "uti": "QHqwThTqQEK9iMdnRuD_AA",
   "ver": "1.0"
 }
-</pre>
+```

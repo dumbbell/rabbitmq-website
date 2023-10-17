@@ -51,9 +51,9 @@ The tracer is a very basic, very simple AMQP 0-9-1 protocol analyzer, similar in
 purpose to [Wireshark](./amqp-wireshark.html).
 Use it with the `runtracer` or `runtracer.bat` script:
 
-<pre class="lang-bash">
+```bash
 runtracer [proxy-port] [upstream-host] [upstream-port]
-</pre>
+```
 
 <table>
   <thead>

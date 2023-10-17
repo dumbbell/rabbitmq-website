@@ -38,14 +38,14 @@ Bindings
 In previous examples we were already creating bindings. You may recall
 code like:
 
-<pre class="lang-go">
+```go
 err = ch.QueueBind(
   q.Name, // queue name
   "",     // routing key
   "logs", // exchange
   false,
   nil)
-</pre>
+```
 
 A binding is a relationship between an exchange and a queue. This can
 be simply read as: the queue is interested in messages from this
@@ -55,14 +55,14 @@ Bindings can take an extra `routing_key` parameter. To avoid the
 confusion with a `Channel.Publish` parameter we're going to call it a
 `binding key`. This is how we could create a binding with a key:
 
-<pre class="lang-go">
+```go
 err = ch.QueueBind(
   q.Name,    // queue name
   "black",   // routing key
   "logs",    // exchange
   false,
   nil)
-</pre>
+```
 
 The meaning of a binding key depends on the exchange type. The
 `fanout` exchanges, which we used previously, simply ignored its
@@ -192,7 +192,7 @@ first.
 
 As always, we need to create an exchange first:
 
-<pre class="lang-go">
+```go
 err = ch.ExchangeDeclare(
   "logs_direct", // name
   "direct",      // type
@@ -202,11 +202,11 @@ err = ch.ExchangeDeclare(
   false,         // no-wait
   nil,           // arguments
 )
-</pre>
+```
 
 And we're ready to send a message:
 
-<pre class="lang-go">
+```go
 err = ch.ExchangeDeclare(
   "logs_direct", // name
   "direct",      // type
@@ -231,7 +231,7 @@ err = ch.PublishWithContext(ctx,
     ContentType: "text/plain",
     Body:        []byte(body),
 })
-</pre>
+```
 
 To simplify things we will assume that 'severity' can be one of
 'info', 'warning', 'error'.
@@ -244,7 +244,7 @@ Receiving messages will work just like in the previous tutorial, with
 one exception - we're going to create a new binding for each severity
 we're interested in.
 
-<pre class="lang-go">
+```go
 q, err := ch.QueueDeclare(
   "",    // name
   false, // durable
@@ -270,7 +270,7 @@ for _, s := range os.Args[1:] {
     nil)
   failOnError(err, "Failed to bind a queue")
 }
-</pre>
+```
 
 Putting it all together
 -----------------------
@@ -317,7 +317,7 @@ Putting it all together
 
 The code for `emit_log_direct.go` script:
 
-<pre class="lang-go">
+```go
 package main
 
 import (
@@ -393,11 +393,11 @@ func severityFrom(args []string) string {
         }
         return s
 }
-</pre>
+```
 
 The code for `receive_logs_direct.go`:
 
-<pre class="lang-go">
+```go
 package main
 
 import (
@@ -481,29 +481,29 @@ func main() {
         log.Printf(" [*] Waiting for logs. To exit press CTRL+C")
         &lt;-forever
 }
-</pre>
+```
 
 If you want to save only 'warning' and 'error' (and not 'info') log
 messages to a file, just open a console and type:
 
-<pre class="lang-bash">
+```bash
 go run receive_logs_direct.go warning error > logs_from_rabbit.log
-</pre>
+```
 
 If you'd like to see all the log messages on your screen, open a new
 terminal and do:
 
-<pre class="lang-bash">
+```bash
 go run receive_logs_direct.go info warning error
 # => [*] Waiting for logs. To exit press CTRL+C
-</pre>
+```
 
 And, for example, to emit an `error` log message just type:
 
-<pre class="lang-bash">
+```bash
 go run emit_log_direct.go error "Run. Run. Or it will explode."
 # => [x] Sent 'error':'Run. Run. Or it will explode.'
-</pre>
+```
 
 (Full source code for [(emit_log_direct.go source)](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/go/emit_log_direct.go)
 and [(receive_logs_direct.go source)](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/go/receive_logs_direct.go))

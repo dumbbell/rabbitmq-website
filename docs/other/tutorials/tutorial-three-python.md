@@ -97,10 +97,10 @@ There are a few exchange types available: `direct`, `topic`, `headers`
 and `fanout`. We'll focus on the last one -- the fanout. Let's create
 an exchange of that type, and call it `logs`:
 
-<pre class="lang-python">
+```python
 channel.exchange_declare(exchange='logs',
                          exchange_type='fanout')
-</pre>
+```
 
 The fanout exchange is very simple. As you can probably guess from the
 name, it just broadcasts all the messages it receives to all the
@@ -111,9 +111,9 @@ queues it knows. And that's exactly what we need for our logger.
 >
 > To list the exchanges on the server you can run the ever useful `rabbitmqctl`:
 >
-> <pre class="lang-bash">
+> ```bash
 > sudo rabbitmqctl list_exchanges
-> </pre>
+> ```
 >
 > In this list there will be some `amq.*` exchanges and the default (unnamed)
 > exchange. These are created by default, but it is unlikely you'll need to
@@ -128,11 +128,11 @@ queues it knows. And that's exactly what we need for our logger.
 >
 > Recall how we published a message before:
 >
-> <pre class="lang-python">
+> ```python
 > channel.basic_publish(exchange='',
 >                       routing_key='hello',
 >                       body=message)
-> </pre>
+> ```
 >
 > The `exchange` parameter is the name of the exchange.
 > The empty string denotes the default or _nameless_ exchange: messages are
@@ -140,11 +140,11 @@ queues it knows. And that's exactly what we need for our logger.
 
 Now, we can publish to our named exchange instead:
 
-<pre class="lang-python">
+```python
 channel.basic_publish(exchange='logs',
                       routing_key='',
                       body=message)
-</pre>
+```
 
 Temporary queues
 ----------------
@@ -165,9 +165,9 @@ do it we could create a queue with a random name, or, even better -
 let the server choose a random queue name for us. We can do this by
 supplying empty `queue` parameter to `queue_declare`:
 
-<pre class="lang-python">
+```python
 result = channel.queue_declare(queue='')
-</pre>
+```
 
 At this point `result.method.queue` contains a random queue name. For example
 it may look like `amq.gen-JzTY20BRgKO-HjmUJj0wLg`.
@@ -175,9 +175,9 @@ it may look like `amq.gen-JzTY20BRgKO-HjmUJj0wLg`.
 Secondly, once the consumer connection is closed, the queue should be
 deleted. There's an `exclusive` flag for that:
 
-<pre class="lang-python">
+```python
 result = channel.queue_declare(queue='', exclusive=True)
-</pre>
+```
 
 You can learn more about the `exclusive` flag and other queue
 properties in the [guide on queues](../queues.html).
@@ -211,19 +211,19 @@ We've already created a fanout exchange and a queue. Now we need to
 tell the exchange to send messages to our queue. That relationship
 between exchange and a queue is called a _binding_.
 
-<pre class="lang-python">
+```python
 channel.queue_bind(exchange='logs',
                    queue=result.method.queue)
-</pre>
+```
 
 From now on the `logs` exchange will append messages to our queue.
 
 > #### Listing bindings
 >
 > You can list existing bindings using, you guessed it,
-> <pre class="lang-bash">
+> ```bash
 > rabbitmqctl list_bindings
-> </pre>
+> ```
 
 
 Putting it all together
@@ -270,7 +270,7 @@ value is ignored for `fanout` exchanges.
 
 `emit_log.py` ([source](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/python/emit_log.py))
 
-<pre class="lang-python">
+```python
 #!/usr/bin/env python
 import pika
 import sys
@@ -285,7 +285,7 @@ message = ' '.join(sys.argv[1:]) or "info: Hello World!"
 channel.basic_publish(exchange='logs', routing_key='', body=message)
 print(f" [x] Sent {message}")
 connection.close()
-</pre>
+```
 
 As you see, after establishing the connection we declared the
 exchange. This step is necessary as publishing to a non-existing
@@ -296,7 +296,7 @@ but that's okay for us; if no consumer is listening yet we can safely discard th
 
 `receive_logs.py` ([source](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/python/receive_logs.py))
 
-<pre class="lang-python">
+```python
 #!/usr/bin/env python
 import pika
 
@@ -320,37 +320,37 @@ channel.basic_consume(
     queue=queue_name, on_message_callback=callback, auto_ack=True)
 
 channel.start_consuming()
-</pre>
+```
 
 We're done. If you want to save logs to a file, just open a console and type:
 
-<pre class="lang-bash">
+```bash
 python receive_logs.py > logs_from_rabbit.log
-</pre>
+```
 
 If you wish to see the logs on your screen, spawn a new terminal and run:
 
-<pre class="lang-bash">
+```bash
 python receive_logs.py
-</pre>
+```
 
 And of course, to emit logs type:
 
-<pre class="lang-bash">
+```bash
 python emit_log.py
-</pre>
+```
 
 Using `rabbitmqctl list_bindings` you can verify that the code actually
 creates bindings and queues as we want. With two `receive_logs.py`
 programs running you should see something like:
 
-<pre class="lang-bash">
+```bash
 sudo rabbitmqctl list_bindings
 # => Listing bindings ...
 # => logs    exchange        amq.gen-JzTY20BRgKO-HjmUJj0wLg  queue           []
 # => logs    exchange        amq.gen-vso0PVvyiRIL2WoV3i48Yg  queue           []
 # => ...done.
-</pre>
+```
 
 The interpretation of the result is straightforward: data from
 exchange `logs` goes to two queues with server-assigned names. And

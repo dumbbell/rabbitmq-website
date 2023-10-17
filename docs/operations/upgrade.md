@@ -278,25 +278,25 @@ The mode is explicitly turned on and off by the operator using a bunch of new CL
 For mixed-version cluster compatibility, this feature must be [enabled using a feature flag](feature-flags.html)
 once all cluster members have been upgraded to a version that supports it:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl enable_feature_flag maintenance_mode_status
-</pre>
+```
 
 ### Put a Node into Maintenance Mode
 
 To put a node under maintenance, use `rabbitmq-upgrade drain`:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-upgrade drain
-</pre>
+```
 
 As all other CLI commands, this command can be invoked against an arbitrary node (including remote ones)
 using the `-n` switch:
 
-<pre class="lang-bash">
+```bash
 # puts node rabbit@node2.cluster.rabbitmq.svc into maintenance mode
 rabbitmq-upgrade drain -n rabbit@node2.cluster.rabbitmq.svc
-</pre>
+```
 
 When a node is in maintenance mode, it **will not be available for serving client traffic**
 and will try to transfer as many of its responsibilities as practically possible and safe.
@@ -325,17 +325,17 @@ period of time (say, 5-30 minutes). Nodes are not expected to be running in this
 A node in maintenance mode can be *revived*, that is, **brought back into its regular operational state**,
 using `rabbitmq-upgrade revive`:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-upgrade revive
-</pre>
+```
 
 As all other CLI commands, this command can be invoked against an arbitrary node (including remote ones)
 using the `-n` switch:
 
-<pre class="lang-bash">
+```bash
 # revives node rabbit@node2.cluster.rabbitmq.svc from maintenance
 rabbitmq-upgrade revive -n rabbit@node2.cluster.rabbitmq.svc
-</pre>
+```
 
 When a node is revived or restarted (e.g. after an upgrade), it will again accept client connections
 and be considered for primary queue replica placements.
@@ -352,7 +352,7 @@ If the feature flag is not enabled, the status will be reported as unknown.
 
 Here's an example `rabbitmq-diagnostics status` output of a node under maintenance:
 
-<pre class="lang-plaintext">
+```plaintext
 Status of node rabbit@hostname ...
 Runtime
 
@@ -362,11 +362,11 @@ Uptime (seconds): 48540
 Is under maintenance?: true
 
 # ...
-</pre>
+```
 
 Compare this to this example output from a node in regular operating mode:
 
-<pre class="lang-plaintext">
+```plaintext
 Status of node rabbit@hostname ...
 Runtime
 
@@ -376,7 +376,7 @@ Uptime (seconds): 48540
 Is under maintenance?: false
 
 # ...
-</pre>
+```
 
 
 ## <a id="full-stop-upgrades" class="anchor" href="#full-stop-upgrades">Full-Stop Upgrades</a>
@@ -430,10 +430,10 @@ The following commands can be used to verify whether a node is experience the ab
 An affected node will not respond to CLI connections in a reasonable amount of time
 when performing the following basic commands:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics ping
 rabbitmq-diagnostics status
-</pre>
+```
 
 ### <a id="quorum-queues" class="anchor" href="#quorum-queues">Quorum Queues</a>
 
@@ -448,11 +448,11 @@ able to satisfy their data safety guarantees.
 Latest RabbitMQ releases provide a [health check](monitoring.html#health-checks) command that would fail
 should any quorum queues on the target node lose their quorum in case the node was to be shut down:
 
-<pre class="lang-bash">
+```bash
 # Exits with a non-zero code if one or more quorum queues will lose online quorum
 # should target node be shut down
 rabbitmq-diagnostics check_if_node_is_quorum_critical
-</pre>
+```
 
 For example, consider a three node cluster with nodes A, B, and C. If node B is currently down
 and there are quorum queues with leader replica on node A, this check will fail if executed
@@ -461,9 +461,9 @@ the quorum queues with leader on node A would have a quorum of replicas online.
 
 Quorum queue quorum state can be verified by listing queues in the management UI or using `rabbitmq-queues`:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-queues -n rabbit@to-be-stopped quorum_status &lt;queue name&gt;
-</pre>
+```
 
 ### <a id="mirrored-queues-synchronisation" class="anchor" href="#mirrored-queues-synchronisation">Mirrored Queues Replica Synchronisation</a>
 
@@ -479,11 +479,11 @@ with replicas on a node before shutting the node down.
 Latest RabbitMQ releases provide a [health check](monitoring.html#health-checks) command that would fail
 should any classic mirrored queues on the target node have no synchronised mirrors:
 
-<pre class="lang-bash">
+```bash
 # Exits with a non-zero code if target node hosts leader replica of at least one queue
 # that has out-of-sync mirror.
 rabbitmq-diagnostics check_if_node_is_mirror_sync_critical
-</pre>
+```
 
 For example, consider a three node cluster with nodes A, B, and C. If there are classic mirrored queues
 with the only synchronised replica on node A (the leader), this check will fail if executed
@@ -492,13 +492,13 @@ there would be at least one replica suitable for promotion.
 
 Classic mirrored queue replica state can be verified by listing queues in the management UI or using `rabbitmqctl`:
 
-<pre class="lang-bash">
+```bash
 # For queues with non-empty `mirror_pids`, you must have at least one
 # `synchronised_mirror_pids`.
 #
 # Note that mirror_pids is a new field alias introduced in RabbitMQ 3.11.4
 rabbitmqctl -n rabbit@to-be-stopped list_queues --local name mirror_pids synchronised_mirror_pids
-</pre>
+```
 
 If there are unsynchronised queues, either enable
 automatic synchronisation or [trigger it using `rabbitmqctl`](ha.html#unsynchronised-mirrors) manually.
@@ -518,10 +518,10 @@ You can move a queue leader for a queue using a temporary [policy](parameters.ht
 `ha-mode: nodes` and `ha-params: [&lt;node&gt;]`
 The policy can be created via management UI or rabbitmqctl command:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_policy --apply-to queues --priority 100 move-my-queue '^&lt;queue&gt;$;' '{"ha-mode":"nodes", "ha-params":["&lt;new-master-node&gt;"]}'
 rabbitmqctl clear_policy move-my-queue
-</pre>
+```
 
 A [queue leader rebalancing script](https://github.com/rabbitmq/support-tools/blob/main/scripts/rebalance-queue-masters)
 is available. It rebalances queue leaders for all queues.

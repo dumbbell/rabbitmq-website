@@ -112,12 +112,12 @@ To configure the heartbeat timeout in the Java client, set it with
 `ConnectionFactory#setRequestedHeartbeat` before
 creating a connection:
 
-<pre class="lang-java">
+```java
 ConnectionFactory cf = new ConnectionFactory();
 
 // set the heartbeat timeout to 60 seconds
 cf.setRequestedHeartbeat(60);
-</pre>
+```
 
 Note that in case RabbitMQ server has a non-zero heartbeat timeout
 configured (which is the default), the client can only lower the value but not increase it.
@@ -129,12 +129,12 @@ To configure the heartbeat timeout in the .NET client, set it with
 `ConnectionFactory.RequestedHeartbeat` before
 creating a connection:
 
-<pre class="lang-csharp">
+```csharp
 var cf = new ConnectionFactory();
 
 // set the heartbeat timeout to 60 seconds
 cf.RequestedHeartbeat = TimeSpan.FromSeconds(60);
-</pre>
+```
 
 
 ## <a id="false-positives" class="anchor" href="#false-positives">Low Timeout Values and False Positives</a>

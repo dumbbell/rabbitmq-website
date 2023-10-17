@@ -28,7 +28,7 @@ For extensive documentation on the plugin see the [`kubectl` Plugin guide](./kub
 
 Let's start by installing the latest version of the Cluster Operator. This can be done directly using `kubectl apply`:
 
-<pre class="lang-bash">
+```bash
 kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
 # namespace/rabbitmq-system created
 # customresourcedefinition.apiextensions.k8s.io/rabbitmqclusters.rabbitmq.com created
@@ -38,19 +38,19 @@ kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/d
 # rolebinding.rbac.authorization.k8s.io/rabbitmq-cluster-leader-election-rolebinding created
 # clusterrolebinding.rbac.authorization.k8s.io/rabbitmq-cluster-operator-rolebinding created
 # deployment.apps/rabbitmq-cluster-operator created
-</pre>
+```
 
 The Cluster Operator can also be installed using the `kubectl rabbitmq` plugin:
 
-<pre class="lang-bash">
+```bash
 kubectl rabbitmq install-cluster-operator
-</pre>
+```
 
 Installing the Cluster Operator creates a bunch of Kubernetes resources. Breaking these down, we have:
 
 - a new namespace `rabbitmq-system`. The Cluster Operator deployment is created in this namespace.
 
-<pre class="lang-bash">
+```bash
 kubectl get all -n rabbitmq-system
 
 NAME                                             READY   STATUS    RESTARTS   AGE
@@ -61,18 +61,18 @@ deployment.apps/rabbitmq-cluster-operator   1/1     1            1           2m1
 
 NAME                                                   DESIRED   CURRENT   READY   AGE
 replicaset.apps/rabbitmq-cluster-operator-54f948d8b6   1         1         1       2m10s
-</pre>
+```
 
 - a new custom resource `rabbitmqclusters.rabbitmq.com`. The custom resource allows us to define an API for the creation of RabbitMQ Clusters.
 
-<pre class="lang-bash">
+```bash
 kubectl get customresourcedefinitions.apiextensions.k8s.io
 
 NAME                                             CREATED AT
 ...
 rabbitmqclusters.rabbitmq.com                    2021-01-14T11:12:26Z
 ...
-</pre>
+```
 
 - and some rbac roles. These are required by the Operator to create, update and delete RabbitMQ Clusters.
 
@@ -87,20 +87,20 @@ The [examples folder](https://github.com/rabbitmq/cluster-operator/tree/main/doc
 
 Continuing with our example, we will submit the following yaml to Kubernetes:
 
-<pre class="lang-yaml">
+```yaml
 apiVersion: rabbitmq.com/v1beta1
 kind: RabbitmqCluster
 metadata:
 	name: hello-world
-</pre>
+```
 Submit this using the following command:
-<pre class="lang-bash">
+```bash
 kubectl apply -f https://raw.githubusercontent.com/rabbitmq/cluster-operator/main/docs/examples/hello-world/rabbitmq.yaml
-</pre>
+```
 
 This will create a RabbitMQ cluster called `hello-world` in the current namespace. You can see the RabbitMQ Cluster as it is being created:
 
-<pre class="lang-bash">
+```bash
 watch kubectl get all
 
 NAME                       READY   STATUS    RESTARTS   AGE
@@ -113,7 +113,7 @@ service/kubernetes          ClusterIP   10.75.240.1     &lt;none&gt;  443/TCP   
 
 NAME                                  READY   AGE
 statefulset.apps/hello-world-server   1/1     2m
-</pre>
+```
 
 If the pod is not running (its state is `Pending`) and you are deploying to a resource-constrained cluster (eg. local environments like `kind` or `minikube`),
 you may need to adjust CPU and/or memory limits of the cluster. By default, the Operator configures `RabbitmqCluster` pods to request 1CPU and 2GB of memory.
@@ -121,46 +121,46 @@ Check the [resource-limits example](https://github.com/rabbitmq/cluster-operator
 
 You will also be able to see an instance of the `rabbitmqclusters.rabbitmq.com` custom resource created.
 
-<pre class="lang-bash">
+```bash
 kubectl get rabbitmqclusters.rabbitmq.com
 
 NAME          AGE    STATUS
 hello-world   4m1s
-</pre>
+```
 
 You may also use the kubectl rabbitmq plugin to list the RabbitMQ Clusters deployed:
 
-<pre class="lang-bash">
+```bash
 kubectl rabbitmq list
 NAME          AGE    STATUS
 hello-world   4m10s
-</pre>
+```
 
 If your Pod is stuck in the `Pending` state, most probably your cluster does not have a Physical Volume Provisioner. This can be verified as the following:
-<pre class="lang-bash">
+```bash
 kubectl get pvc,pod
 NAME                               STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
 persistence-hello-world-server-0   Pending                                                     30s
-</pre>
+```
 
 In this case, and if this is not a production environment, you might want to install the [Local Path Provisioner](https://github.com/rancher/local-path-provisioner)
 
-<pre class="lang-bash">
+```bash
 kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
 kubectl annotate storageclass local-path storageclass.kubernetes.io/is-default-class=true
-</pre>
+```
 
 After that, you need to remove and re-create the previously created RabbitMQ Cluster object:
 
-<pre class="lang-bash">
+```bash
 kubectl delete rabbitmqclusters.rabbitmq.com hello-world
-</pre>
+```
 
 ## View RabbitMQ Logs
 
 In order to make sure RabbitMQ has started correctly, let's view the RabbitMQ log file. This can be done by viewing the RabbitMQ pod logs. In this case, it would be:
 
-<pre class="lang-bash">
+```bash
 kubectl logs hello-world-server-0
 ...
 
@@ -180,38 +180,38 @@ kubectl logs hello-world-server-0
   Monitoring: https://rabbitmq.com/monitoring.html
 
 ...
-</pre>
+```
 
 If you care only about viewing the logs, the detail of the component is hidden away in the kubectl rabbitmq plugin. Here, you may just run:
 
-<pre class="lang-bash">
+```bash
 kubectl rabbitmq tail hello-world
-</pre>
+```
 
 ## Access The Management UI
 
 Next, let's access the Management UI.
 
-<pre class="lang-bash">
+```bash
 username="$(kubectl get secret hello-world-default-user -o jsonpath='{.data.username}' | base64 --decode)"
 echo "username: $username"
 password="$(kubectl get secret hello-world-default-user -o jsonpath='{.data.password}' | base64 --decode)"
 echo "password: $password"
 
 kubectl port-forward "service/hello-world" 15672
-</pre>
+```
 Now we can open localhost:15672 in the browser and see the Management UI. The credentials are as printed in the commands above. Alternatively, you can run a `curl` command to verify access:
 
-<pre class="lang-bash">
+```bash
 curl -u$username:$password localhost:15672/api/overview
 {"management_version":"3.8.9","rates_mode":"basic", ...}
-</pre>
+```
 
 Using the `kubectl rabbitmq` plugin, the Management UI can be accessed using:
 
-<pre class="lang-bash">
+```bash
 kubectl rabbitmq manage hello-world
-</pre>
+```
 
 ## Connect An Application To The Cluster
 
@@ -219,24 +219,24 @@ The next step would be to connect an application to the RabbitMQ Cluster in orde
 
 Here, we will be using the `hello-world` service to find the connection address, and the `hello-world-default-user` to find connection credentials.
 
-<pre class="lang-bash">
+```bash
 username="$(kubectl get secret hello-world-default-user -o jsonpath='{.data.username}' | base64 --decode)"
 password="$(kubectl get secret hello-world-default-user -o jsonpath='{.data.password}' | base64 --decode)"
 service="$(kubectl get service hello-world -o jsonpath='{.spec.clusterIP}')"
 kubectl run perf-test --image=pivotalrabbitmq/perf-test -- --uri amqp://$username:$password@$service
 
 # pod/perf-test created
-</pre>
+```
 
 These steps are automated in the kubectl rabbitmq plugin which may simply be run as:
 
-<pre class="lang-bash">
+```bash
 kubectl rabbitmq perf-test hello-world
-</pre>
+```
 
 We can now view the perf-test logs by running:
 
-<pre class="lang-bash">
+```bash
 kubectl logs --follow perf-test
 ...
 id: test-141948-895, time: 16.001s, sent: 25651 msg/s, received: 25733 msg/s, min/median/75th/95th/99th consumer latency: 1346110/1457130/1495463/1529703/1542172 µs
@@ -246,7 +246,7 @@ id: test-141948-895, time: 19.001s, sent: 23727 msg/s, received: 26055 msg/s, mi
 id: test-141948-895, time: 20.001s, sent: 25009 msg/s, received: 25202 msg/s, min/median/75th/95th/99th consumer latency: 1327462/1447157/1474394/1509857/1521303 µs
 id: test-141948-895, time: 21.001s, sent: 28487 msg/s, received: 25942 msg/s, min/median/75th/95th/99th consumer latency: 1350527/1454599/1490094/1519461/1531042 µs
 ...
-</pre>
+```
 
 As can be seen, perf-test is able to produce and consume about 25,000 messages per second.
 

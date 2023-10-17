@@ -23,9 +23,9 @@ Let's test the following 3 OAuth flows:
 
 2. Run the following command to start **Key Cloak** server:
 
-    <pre class="lang-bash">
+    ```bash
     make start-keycloak
-    </pre>
+    ```
 
     **Key Cloak** comes configured with its own signing key. And the [rabbitmq.config](https://github.com/rabbitmq/rabbitmq-oauth2-tutorial/tree/main/conf/keycloak/rabbitmq.config) used by `make start-keycloak` is also configured with the same signing key.
 
@@ -42,18 +42,18 @@ management api and `producer` to access via AMQP protocol.
 ## Start RabbitMQ
 
 Run the command below to start RabbitMQ configured with the **KeyCloak** server we started in the previous section:
-<pre class="lang-bash">
+```bash
 export MODE=keycloak
 make start-rabbitmq
-</pre>
+```
 
 ## Access Management api
 
 Access the management api using the client [mgt_api_client](http://0.0.0.0:8080/admin/master/console/#/realms/test/clients/c5be3c24-0c88-4672-a77a-79002fcc9a9d) which has the scope [rabbitmq.tag:administrator](http://0.0.0.0:8080/admin/master/console/#/realms/test/client-scopes/f6e6dd62-22bf-4421-910e-e6070908764c).
 
-<pre class="lang-bash">
+```bash
 make curl-keycloak url=http://localhost:15672/api/overview client_id=mgt_api_client secret=LWOuYqJ8gjKg3D2U8CJZDuID3KiRZVDa
-</pre>
+```
 
 ## Access AMQP protocol with PerfTest
 
@@ -61,9 +61,9 @@ To test OAuth 2.0 authentication with AMQP protocol you are going to use RabbitM
 
 First you obtain the token and pass it as a parameter to the make target `start-perftest-producer-with-token`.
 
-<pre class="lang-bash">
+```bash
 make start-perftest-producer-with-token PRODUCER=producer TOKEN=$(bin/keycloak/token producer kbOFBXI9tANgKUq8vXHLhT6YhbivgXxn)
-</pre>
+```
 
 **NOTE**: Initializing an application with a token has one drawback: the application cannot use the connection beyond the lifespan of the token. See the next section where you demonstrate how to refresh the token.
 
@@ -74,12 +74,12 @@ In the following information, OAuth 2.0 authentication is tested with the AMQP p
 The sample Python application [can be found on GitHub](https://github.com/rabbitmq/rabbitmq-oauth2-tutorial/tree/main/pika-client).
 
 To run this sample code proceed as follows:
-<pre class="lang-bash">
+```bash
 python3 --version
 pip install pika
 pip install requests
 python3 pika-client/producer.py producer kbOFBXI9tANgKUq8vXHLhT6YhbivgXxn
-</pre>
+```
 
 Note: Ensure you install pika 1.3
 
@@ -92,9 +92,9 @@ Note: Ensure you install pika 1.3
 
 ## Stop keycloak
 
-<pre class="lang-bash">
+```bash
 make stop-keycloak
-</pre>
+```
 
 ## Notes about setting up KeyCloak
 
@@ -105,9 +105,9 @@ make stop-keycloak
 3. In this repository you do not have yet the certificate for the public key but it is easy to generate. Give it priority `101` or greater than the rest of available keys so that it is picked up when you request a token.
 
 IMPORTANT: You cannot hard code the **kid** hence you have to add the key to RabbitMQ via the command
-<pre class="lang-bash">
+```bash
 docker exec -it rabbitmq rabbitmqctl add_uaa_key Gnl2ZlbRh3rAr6Wymc988_5cY7T5GuePd5dpJlXDJUk --pem-file=conf/public.pem
-</pre>
+```
 or you have to modify the RabbitMQ configuration so that it says `Gnl2ZlbRh3rAr6Wymc988_5cY7T5GuePd5dpJlXDJUk`
 rather than `legacy-token-key`.
 

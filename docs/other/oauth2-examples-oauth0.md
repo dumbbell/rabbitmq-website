@@ -87,7 +87,7 @@ list of users which have this role.
 Below we have a sample RabbitMQ configuration where we have set the `default_key` identifier that we copied from
 Auth0 and also the public key we extracted from `/tmp/public.pem`.
 
-<pre class="lang-erlang">
+```erlang
 {key_config, [
 	{default_key, &lt;&lt;"LQPlyC9P_gOhzMLx7r2Qm"&gt;&gt;},
 	{signing_keys,
@@ -104,16 +104,16 @@ CwIDAQAB
 	}]
 }
 
-</pre>
+```
 
 ## Start RabbitMQ
 
 Run the following commands to run RabbitMQ:
 
-<pre class="lang-bash">
+```bash
 export MODE=auth0
 make start-rabbitmq
-</pre>
+```
 
 ## Verify Management UI flows
 
@@ -125,7 +125,7 @@ the requested scopes, and in the `permissions` claim the permissions. We have co
 RabbitMQ with `{extra_scopes_source, <<"permissions">>},` which means RabbitMQ uses
 the scopes in the `permissions` claim too.
 
-<pre class="lang-javascript">
+```javascript
 {
   "iss": "https://dev-prbc0gw4.us.auth0.com/",
   "sub": "auth0|6294e0afdc4dea0068d780a7",
@@ -144,4 +144,4 @@ the scopes in the `permissions` claim too.
     "rabbitmq.write:*/*"
   ]
 }
-</pre>
+```

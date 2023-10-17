@@ -94,46 +94,46 @@ the configuration keys listed below:
 
 The following example overrides log file name:
 
-<pre class="lang-ini">
+```ini
 log.file = rabbit.log
-</pre>
+```
 
 The following example overrides log file location:
 
-<pre class="lang-ini">
+```ini
 log.file = /opt/custom/var/log/rabbit.log
-</pre>
+```
 
 The following example instructs RabbitMQ to log to a file at the `debug` level:
 
-<pre class="lang-ini">
+```ini
 log.file.level = debug
-</pre>
+```
 
 Supported log levels ca be found in the [example rabbitmq.conf file](https://github.com/rabbitmq/rabbitmq-server/blob/v3.9.x/deps/rabbit/docs/rabbitmq.conf.example).
 
 Logging to a file can be deactivated with
 
-<pre class="lang-ini">
+```ini
 log.file = false
-</pre>
+```
 
 Logging in JSON format to a file:
 
-<pre class="lang-ini">
+```ini
 log.file.formatter = json
-</pre>
+```
 
 By default, RabbitMQ will use RFC 3339 timestamp format. It is possible
 to switch to a UNIX epoch-based format:
 
-<pre class="lang-ini">
+```ini
 log.file = true
 log.file.level = info
 
 # use microseconds since UNIX epoch for timestamp format
 log.file.formatter.time_format = epoch_usecs
-</pre>
+```
 
 The rest of this guide describes more options, including [more advanced ones](#advanced-configuration).
 
@@ -150,35 +150,35 @@ for the file output.
 
 Use `log.file.rotation.date` to set up minimalistic periodic rotation:
 
-<pre class="lang-ini">
+```ini
 # rotate every night at midnight
 log.file.rotation.date = $D0
 
 # keep up to 5 archived log files in addition to the current one
 log.file.rotation.count = 5
-</pre>
+```
 
-<pre class="lang-ini">
+```ini
 # rotate every day at 23:00 (11:00 p.m.)
 log.file.rotation.date = $D23
-</pre>
+```
 
-<pre class="lang-ini">
+```ini
 # rotate every night at midnight
 log.file.rotation.date = $D0
-</pre>
+```
 
 #### Built-in File Size-based Rotation
 
 `log.file.rotation.size` controls rotation based on the current log file size:
 
-<pre class="lang-ini">
+```ini
 # rotate when the file reaches 10 MiB
 log.file.rotation.size = 10485760
 
 # keep up to 5 archived log files in addition to the current one
 log.file.rotation.count = 5
-</pre>
+```
 
 #### <a id="logrotate" class="anchor" href="#logrotate">Rotation Using Logrotate</a>
 
@@ -204,44 +204,44 @@ Here are the main settings that control console (standard output) logging:
 
 To activate console logging, use the following config snippet:
 
-<pre class="lang-ini">
+```ini
 log.console = true
-</pre>
+```
 
 The following example deactivates console logging
 
-<pre class="lang-ini">
+```ini
 log.console = false
-</pre>
+```
 
 The following example instructs RabbitMQ to use the `debug` logging level when logging to console:
 
-<pre class="lang-ini">
+```ini
 log.console.level = debug
-</pre>
+```
 
 Supported log levels ca be found in the [example rabbitmq.conf file](https://github.com/rabbitmq/rabbitmq-server/blob/v3.9.x/deps/rabbit/docs/rabbitmq.conf.example).
 
 Logging to console in JSON format:
 
-<pre class="lang-ini">
+```ini
 log.console.formatter = json
-</pre>
+```
 
 When console output is activated, the file output will also be activated by default.
 To deactivate the file output, set `log.file` to `false`:
 
-<pre class="lang-ini">
+```ini
 log.console = true
 log.console.level = info
 
 log.file = false
-</pre>
+```
 
 By default, RabbitMQ will use RFC 3339 timestamp format. It is possible
 to switch to a UNIX epoch-based format:
 
-<pre class="lang-ini">
+```ini
 log.console = true
 log.console.level = info
 
@@ -249,7 +249,7 @@ log.file = false
 
 # use microseconds since UNIX epoch for timestamp format
 log.console.formatter.time_format = epoch_usecs
-</pre>
+```
 
 Please note that `RABBITMQ_LOGS=-` will deactivate the file output
 even if `log.file` is configured.
@@ -261,9 +261,9 @@ and **requires Syslog service configuration**. TLS is also supported.
 
 Syslog output has to be explicitly configured:
 
-<pre class="lang-ini">
+```ini
 log.syslog = true
-</pre>
+```
 
 #### Syslog Endpoint Configuration
 
@@ -278,15 +278,15 @@ TLS support requires the RFC 5424 protocol.
 
 The following example uses TCP and the RFC 5424 protocol:
 
-<pre class="lang-ini">
+```ini
 log.syslog = true
 log.syslog.transport = tcp
 log.syslog.protocol = rfc5424
-</pre>
+```
 
 To use TLS, a standard set of <a href="ssl.html">TLS options</a> must be provided:
 
-<pre class="lang-ini">
+```ini
 log.syslog = true
 log.syslog.transport = tls
 log.syslog.protocol = rfc5424
@@ -294,23 +294,23 @@ log.syslog.protocol = rfc5424
 log.syslog.ssl_options.cacertfile = /path/to/ca_certificate.pem
 log.syslog.ssl_options.certfile = /path/to/client_certificate.pem
 log.syslog.ssl_options.keyfile = /path/to/client_key.pem
-</pre>
+```
 
 Syslog service IP address and port can be customised:
 
-<pre class="lang-ini">
+```ini
 log.syslog = true
 log.syslog.ip = 10.10.10.10
 log.syslog.port = 1514
-</pre>
+```
 
 If a hostname is to be used rather than an IP address:
 
-<pre class="lang-ini">
+```ini
 log.syslog = true
 log.syslog.host = my.syslog-server.local
 log.syslog.port = 1514
-</pre>
+```
 
 Syslog metadata identity and facility values also can be configured.
 By default identity will be set to the name part of the node name (for example, `rabbitmq` in `rabbitmq@hostname`)
@@ -318,19 +318,19 @@ and facility will be set to `daemon`.
 
 To set identity and facility of log messages:
 
-<pre class="lang-ini">
+```ini
 log.syslog = true
 log.syslog.identity = my_rabbitmq
 log.syslog.facility = user
-</pre>
+```
 
 Logging to Syslog in JSON format:
 
-<pre class="lang-ini">
+```ini
 log.syslog = true
 
 log.syslog.formatter = json
-</pre>
+```
 
 Less commonly used [Syslog client](https://github.com/schlagert/syslog) options can
 be configured using the <a href="./configure.html#configuration-files">advanced config file</a>.
@@ -342,28 +342,28 @@ RabbitMQ nodes can format log messages as JSON, which can be convenient for pars
 
 Logging to a file in JSON format:
 
-<pre class="lang-ini">
+```ini
 log.file.level = info
 log.file.formatter = json
-</pre>
+```
 
 Logging to the console in JSON format:
 
-<pre class="lang-ini">
+```ini
 log.console = true
 log.console.level = info
 log.console.formatter = json
 
 log.file = false
-</pre>
+```
 
 Logging to Syslog in JSON format:
 
-<pre class="lang-ini">
+```ini
 log.syslog = true
 
 log.syslog.formatter = json
-</pre>
+```
 
 ## <a id="log-message-categories" class="anchor" href="#log-message-categories">Log Message Categories</a>
 
@@ -393,23 +393,23 @@ category to override.
 For example, given debug level in the file output,
 the following will deactivate debug logging for connection events:
 
-<pre class="lang-ini">
+```ini
 log.file.level = debug
 log.connection.level = info
-</pre>
+```
 
 To redirect all federation logs to the `rabbit_federation.log` file, use:
 
-<pre class="lang-ini">
+```ini
 log.federation.file = rabbit_federation.log
-</pre>
+```
 
 To deactivate a log type, you can use the `none` log level. For example, to deactivate
 upgrade logs:
 
-<pre class="lang-ini">
+```ini
 log.upgrade.level = none
-</pre>
+```
 
 ### <a id="log-levels" class="anchor" href="#log-levels">Log Levels</a>
 
@@ -443,9 +443,9 @@ to all outputs.
 
 To make the `default` category log only errors or higher severity messages, use
 
-<pre class="lang-ini">
+```ini
 log.default.level = error
-</pre>
+```
 
 The `none` level means no logging.
 
@@ -471,15 +471,15 @@ There are two ways of changing effective log levels:
 
 To set log level to `debug` on a running node:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl -n rabbit@target-host set_log_level debug
-</pre>
+```
 
 To set the level to `info`:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl -n rabbit@target-host set_log_level info
-</pre>
+```
 
 
 ## <a id="log-tail" class="anchor" href="#log-tail">Tailing Logs Using CLI Tools</a>
@@ -490,11 +490,11 @@ is allowed.
 
 To tail three hundred last lines on a node `rabbitmq@target-host`, use `rabbitmq-diagnostics log_tail`:
 
-<pre class="lang-bash">
+```bash
 # This is semantically equivalent to using `tail -n 300 /path/to/rabbit@hostname.log`.
 # Use -n to specify target node, -N is to specify the number of lines.
 rabbitmq-diagnostics -n rabbit@target-host log_tail -N 300
-</pre>
+```
 
 This will load and print last lines from the log file.
 If only console logging is activated, this command will fail with a "file not found" (`enoent`) error.
@@ -502,11 +502,11 @@ If only console logging is activated, this command will fail with a "file not fo
 To continuously inspect as a stream of log messages as they are appended to a file,
 similarly to `tail -f` or console logging, use `rabbitmq-diagnostics log_tail_stream`:
 
-<pre class="lang-bash">
+```bash
 # This is semantically equivalent to using `tail -f /path/to/rabbit@hostname.log`.
 # Use Control-C to stop the stream.
 rabbitmq-diagnostics -n rabbit@target-host log_tail_stream
-</pre>
+```
 
 This will continuously tail and stream lines added to the log file.
 If only console logging is activated, this command will fail with a "file not found" (`enoent`) error.
@@ -522,37 +522,37 @@ To activate debug messages, you should have a debug output.
 
 For example to log debug messages to a file:
 
-<pre class="lang-ini">
+```ini
 log.file.level = debug
-</pre>
+```
 
 To print log messages to standard I/O streams:
 
-<pre class="lang-ini">
+```ini
 log.console = true
 log.console.level = debug
-</pre>
+```
 
 To switch to debug logging at runtime:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl -n rabbit@target-host set_log_level debug
-</pre>
+```
 
 To set the level back to `info`:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl -n rabbit@target-host set_log_level info
-</pre>
+```
 
 It is possible to deactivate debug logging for some categories:
 
-<pre class="lang-ini">
+```ini
 log.file.level = debug
 
 log.connection.level = info
 log.channel.level = info
-</pre>
+```
 
 
 ## <a id="service-logs" class="anchor" href="#service-logs">Service Logs</a>
@@ -560,21 +560,21 @@ log.channel.level = info
 On `systemd`-based Linux distributions, system service logs can be
 inspected using `journalctl --system`
 
-<pre class="lang-bash">
+```bash
 journalctl --system
-</pre>
+```
 
 which requires superuser privileges.
 Its output can be filtered to narrow it down to RabbitMQ-specific entries:
 
-<pre class="lang-bash">
+```bash
 sudo journalctl --system | grep rabbitmq
-</pre>
+```
 
 Service logs will include standard output and standard error streams of the node.
 The output of <code>journalctl --system</code> will look similar to this:
 
-<pre class="lang-plaintext">
+```plaintext
 Dec 26 11:03:04 localhost rabbitmq-server[968]: ##  ##
 Dec 26 11:03:04 localhost rabbitmq-server[968]: ##  ##      RabbitMQ 3.11.6. Copyright (c) 2007-2023 VMware, Inc. or its affiliates.
 Dec 26 11:03:04 localhost rabbitmq-server[968]: ##########  Licensed under the MPL.  See https://www.rabbitmq.com/
@@ -584,7 +584,7 @@ Dec 26 11:03:04 localhost rabbitmq-server[968]: /var/log/rabbitmq/rabbit@localho
 Dec 26 11:03:04 localhost rabbitmq-server[968]: Starting broker...
 Dec 26 11:03:05 localhost rabbitmq-server[968]: systemd unit for activation check: "rabbitmq-server.service"
 Dec 26 11:03:06 localhost rabbitmq-server[968]: completed with 6 plugins.
-</pre>
+```
 
 
 ## <a id="logged-events" class="anchor" href="#logged-events">Logged Events</a>
@@ -597,9 +597,9 @@ not be logged.
 
 Here's an example:
 
-<pre class="lang-plaintext">
+```plaintext
 2018-11-22 10:44:33.654 [info] &lt;0.620.0&gt; accepting AMQP connection &lt;0.620.0&gt; (127.0.0.1:52771 -> 127.0.0.1:5672)
-</pre>
+```
 
 The entry includes client IP address and port (<code>127.0.0.1:52771</code>) as well as the target
 IP address and port of the server (<code>127.0.0.1:5672</code>). This information can be useful
@@ -608,9 +608,9 @@ when troubleshooting client connections.
 Once a connection successfully authenticates and is granted access to a [virtual host](./vhosts.html),
 that is also logged:
 
-<pre class="lang-plaintext">
+```plaintext
 2018-11-22 10:44:33.663 [info] &lt;0.620.0&gt; connection &lt;0.620.0&gt; (127.0.0.1:52771 -> 127.0.0.1:5672): user 'guest' authenticated and granted access to vhost '/'
-</pre>
+```
 
 The examples above include two values that can be used as connection identifiers
 in various scenarios: connection name (`127.0.0.1:57919 -> 127.0.0.1:5672`) and an Erlang process ID of the connection (`&lt;0.620.0&gt;`).
@@ -624,16 +624,16 @@ or TCP connection fails. RabbitMQ will log both cases.
 
 Below is an example entry for a successfully closed connection:
 
-<pre class="lang-plaintext">
+```plaintext
 2018-06-17 06:23:29.855 [info] &lt;0.634.0&gt; closing AMQP connection &lt;0.634.0&gt; (127.0.0.1:58588 -&gt; 127.0.0.1:5672, vhost: '/', user: 'guest')
-</pre>
+```
 
 Abruptly closed connections will be logged as warnings:
 
-<pre class="lang-plaintext">
+```plaintext
 2018-06-17 06:28:40.868 [warning] &lt;0.646.0&gt; closing AMQP connection &lt;0.646.0&gt; (127.0.0.1:58667 -&gt; 127.0.0.1:5672, vhost: '/', user: 'guest'):
 client unexpectedly closed TCP connection
-</pre>
+```
 
 Abruptly closed connections can be harmless. For example, a short lived program can naturally stop
 and don't have a chance to close its connection. They can also hint at a genuine issue such as
@@ -669,16 +669,16 @@ If the `log_levels` key is present in `rabbitmq.config` file, it should be updat
 RabbitMQ nodes have an internal mechanism. Some of its events can be of interest for monitoring,
 audit and troubleshooting purposes. They can be consumed as JSON objects using a `rabbitmq-diagnostics` command:
 
-<pre class="lang-bash">
+```bash
 # will emit JSON objects
 rabbitmq-diagnostics consume_event_stream
-</pre>
+```
 
 When used interactively, results can be piped to a command line JSON processor such as [jq](https://stedolan.github.io/jq/):
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics consume_event_stream | jq
-</pre>
+```
 
 The events can also be exposed to applications for [consumption](./consumers.html)
 with [a plugin](event-exchange.html).
@@ -770,18 +770,18 @@ will be declared in the default [virtual host](vhosts.html).
 This feature is deactivated by default.
 To activate this logging, set the `log.exchange` configuration key to `true`:
 
-<pre class="lang-ini">
+```ini
 # activate log forwarding to amq.rabbitmq.log, a topic exchange
 log.exchange = true
-</pre>
+```
 
 `log.exchange.level` can be used to control the [log level](#log-levels) that
 will be used by this logging target:
 
-<pre class="lang-ini">
+```ini
 log.exchange = true
 log.exchange.level = warning
-</pre>
+```
 
 
 `amq.rabbitmq.log` is a regular topic exchange and can be used as such.

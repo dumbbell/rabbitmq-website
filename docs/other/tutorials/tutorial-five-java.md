@@ -156,7 +156,7 @@ The code is almost the same as in the
 
 The code for `EmitLogTopic.java`:
 
-<pre class="lang-java">
+```java
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -182,11 +182,11 @@ public class EmitLogTopic {
   }
   //..
 }
-</pre>
+```
 
 The code for `ReceiveLogsTopic.java`:
 
-<pre class="lang-java">
+```java
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -224,46 +224,46 @@ public class ReceiveLogsTopic {
     channel.basicConsume(queueName, true, deliverCallback, consumerTag -> { });
   }
 }
-</pre>
+```
 
 Compile and run the examples, including the classpath as in [Tutorial 1](tutorial-one-java.html) -
 on Windows, use %CP%.
 
 To compile:
 
-<pre class="lang-bash">
+```bash
 javac -cp $CP ReceiveLogsTopic.java EmitLogTopic.java
-</pre>
+```
 
 To receive all the logs:
 
-<pre class="lang-bash">
+```bash
 java -cp $CP ReceiveLogsTopic "#"
-</pre>
+```
 
 To receive all logs from the facility "`kern`":
 
-<pre class="lang-bash">
+```bash
 java -cp $CP ReceiveLogsTopic "kern.*"
-</pre>
+```
 
 Or if you want to hear only about "`critical`" logs:
 
-<pre class="lang-bash">
+```bash
 java -cp $CP ReceiveLogsTopic "*.critical"
-</pre>
+```
 
 You can create multiple bindings:
 
-<pre class="lang-bash">
+```bash
 java -cp $CP ReceiveLogsTopic "kern.*" "*.critical"
-</pre>
+```
 
 And to emit a log with a routing key "`kern.critical`" type:
 
-<pre class="lang-bash">
+```bash
 java -cp $CP EmitLogTopic "kern.critical" "A critical kernel error"
-</pre>
+```
 
 Have fun playing with these programs. Note that the code doesn't make
 any assumption about the routing or binding keys, you may want to play

@@ -38,9 +38,9 @@ Bindings
 In previous examples we were already creating bindings. You may recall
 code like:
 
-<pre class="lang-javascript">
+```javascript
 channel.bindQueue(q.queue, exchange, '');
-</pre>
+```
 
 A binding is a relationship between an exchange and a queue. This can
 be simply read as: the queue is interested in messages from this
@@ -49,9 +49,9 @@ exchange.
 Bindings can take an extra binding key parameter (the empty string in the code above).
 This is how we could create a binding with a key:
 
-<pre class="lang-javascript">
+```javascript
 channel.bindQueue(queue_name, exchange_name, 'black');
-</pre>
+```
 
 The meaning of a binding key depends on the exchange type. The
 `fanout` exchanges, which we used previously, simply ignored its
@@ -181,24 +181,24 @@ first.
 
 As always, we need to create an exchange first:
 
-<pre class="lang-javascript">
+```javascript
 var exchange = 'direct_logs';
 
 channel.assertExchange(exchange, 'direct', {
   durable: false
 });
-</pre>
+```
 
 And we're ready to send a message:
 
-<pre class="lang-javascript">
+```javascript
 var exchange = 'direct_logs';
 
 channel.assertExchange(exchange, 'direct', {
   durable: false
 });
 channel.publish(exchange, severity, Buffer.from(msg));
-</pre>
+```
 
 To simplify things we will assume that 'severity' can be one of
 'info', 'warning', 'error'.
@@ -211,11 +211,11 @@ Receiving messages will work just like in the previous tutorial, with
 one exception - we're going to create a new binding for each severity
 we're interested in.
 
-<pre class="lang-javascript">
+```javascript
 args.forEach(function(severity) {
   channel.bindQueue(q.queue, exchange, severity);
 });
-</pre>
+```
 
 Putting it all together
 -----------------------
@@ -264,7 +264,7 @@ Putting it all together
 
 The code for `emit_log_direct.js` script:
 
-<pre class="lang-javascript">
+```javascript
 #!/usr/bin/env node
 
 var amqp = require('amqplib/callback_api');
@@ -294,11 +294,11 @@ amqp.connect('amqp://localhost', function(error0, connection) {
     process.exit(0)
   }, 500);
 });
-</pre>
+```
 
 The code for `receive_logs_direct.js`:
 
-<pre class="lang-javascript">
+```javascript
 #!/usr/bin/env node
 
 var amqp = require('amqplib/callback_api');
@@ -344,29 +344,29 @@ amqp.connect('amqp://localhost', function(error0, connection) {
     });
   });
 });
-</pre>
+```
 
 If you want to save only 'warning' and 'error' (and not 'info') log
 messages to a file, just open a console and type:
 
-<pre class="lang-bash">
+```bash
 ./receive_logs_direct.js warning error > logs_from_rabbit.log
-</pre>
+```
 
 If you'd like to see all the log messages on your screen, open a new
 terminal and do:
 
-<pre class="lang-bash">
+```bash
 ./receive_logs_direct.js info warning error
 # => [*] Waiting for logs. To exit press CTRL+C
-</pre>
+```
 
 And, for example, to emit an `error` log message just type:
 
-<pre class="lang-bash">
+```bash
 ./emit_log_direct.js error "Run. Run. Or it will explode."
 # => [x] Sent 'error':'Run. Run. Or it will explode.'
-</pre>
+```
 
 
 (Full source code for [(emit_log_direct.js source)](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/javascript-nodejs/src/emit_log_direct.js)

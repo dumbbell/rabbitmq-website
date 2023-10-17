@@ -63,31 +63,31 @@ on behalf of the consumer.
 
 First let's verify that you have .NET Core toolchain in `PATH`:
 
-<pre class="lang-powershell">
+```powershell
 dotnet --help
-</pre>
+```
 
 should produce a help message.
 
 Now let's generate two projects, one for the publisher and one for the consumer:
 
-<pre class="lang-powershell">
+```powershell
 dotnet new console --name Send
 mv Send/Program.cs Send/Send.cs
 dotnet new console --name Receive
 mv Receive/Program.cs Receive/Receive.cs
-</pre>
+```
 
 This will create two new directories named `Send` and `Receive`.
 
 Then we add the client dependency.
 
-<pre class="lang-powershell">
+```powershell
 cd Send
 dotnet add package RabbitMQ.Client
 cd ../Receive
 dotnet add package RabbitMQ.Client
-</pre>
+```
 
 Now we have the .NET project set up we can write some code.
 
@@ -105,19 +105,19 @@ In
 [`Send.cs`](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/dotnet/Send/Send.cs),
 we need to use some namespaces:
 
-<pre class="lang-csharp">
+```csharp
 using System.Text;
 using RabbitMQ.Client;
-</pre>
+```
 
 then we can create a connection to the server:
 
-<pre class="lang-csharp">
+```csharp
 var factory = new ConnectionFactory { HostName = "localhost" };
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
 ...
-</pre>
+```
 
 The connection abstracts the socket connection, and takes care of
 protocol version negotiation and authentication and so on for us. Here
@@ -131,7 +131,7 @@ things done resides.
 To send, we must declare a queue for us to send to; then we can publish a message
 to the queue:
 
-<pre class="lang-csharp">
+```csharp
 using System.Text;
 using RabbitMQ.Client;
 
@@ -156,7 +156,7 @@ Console.WriteLine($" [x] Sent {message}");
 
 Console.WriteLine(" Press [enter] to exit.");
 Console.ReadLine();
-</pre>
+```
 
 Declaring a queue is idempotent - it will only be created if it doesn't
 exist already. The message content is a byte array, so you can encode
@@ -192,17 +192,17 @@ keep the consumer running continuously to listen for messages and print them out
 
 The code (in [`Receive.cs`](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/dotnet/Receive/Receive.cs)) has almost the same `using` statements as `Send`:
 
-<pre class="lang-csharp">
+```csharp
 using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-</pre>
+```
 
 Setting up is the same as the publisher; we open a connection and a
 channel, and declare the queue from which we're going to consume.
 Note this matches up with the queue that `Send` publishes to.
 
-<pre class="lang-csharp">
+```csharp
 var factory = new ConnectionFactory { HostName = "localhost" };
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();
@@ -213,7 +213,7 @@ channel.QueueDeclare(queue: "hello",
                      autoDelete: false,
                      arguments: null);
 ...
-</pre>
+```
 
 Note that we declare the queue here as well. Because we might start
 the consumer before the publisher, we want to make sure the queue exists
@@ -224,7 +224,7 @@ queue. Since it will push us messages asynchronously, we provide a
 callback. That is what `EventingBasicConsumer.Received` event handler
 does.
 
-<pre class="lang-csharp">
+```csharp
 using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -254,7 +254,7 @@ channel.BasicConsume(queue: "hello",
 
 Console.WriteLine(" Press [enter] to exit.");
 Console.ReadLine();
-</pre>
+```
 
 [Here's the whole Receive.cs
 class](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/dotnet/Receive/Receive.cs).
@@ -265,17 +265,17 @@ Open two terminals.
 
 You can run the clients in any order, as both declares the queue. We will run the consumer first so you can see it waiting for and then receiving the message:
 
-<pre class="lang-powershell">
+```powershell
 cd Receive
 dotnet run
-</pre>
+```
 
 Then run the producer:
 
-<pre class="lang-powershell">
+```powershell
 cd Send
 dotnet run
-</pre>
+```
 
 The consumer will print the message it gets from the publisher via
 RabbitMQ. The consumer will keep running, waiting for messages, so try restarting

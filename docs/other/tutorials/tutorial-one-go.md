@@ -48,9 +48,9 @@ on behalf of the consumer.
 >
 > First, install amqp using `go get`:
 >
-> <pre class="lang-go">
+> ```go
 > go get github.com/rabbitmq/amqp091-go
-> </pre>
+> ```
 
 Now we have amqp installed, we can write some
 code.
@@ -69,7 +69,7 @@ In
 [`send.go`](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/go/send.go),
 we need to import the library first:
 
-<pre class="lang-go">
+```go
 package main
 
 import (
@@ -79,42 +79,42 @@ import (
 
   amqp "github.com/rabbitmq/amqp091-go"
 )
-</pre>
+```
 
 We also need a helper function to check the return value for each
 amqp call:
 
-<pre class="lang-go">
+```go
 func failOnError(err error, msg string) {
   if err != nil {
     log.Panicf("%s: %s", msg, err)
   }
 }
-</pre>
+```
 
 then connect to RabbitMQ server
 
-<pre class="lang-go">
+```go
 conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 failOnError(err, "Failed to connect to RabbitMQ")
 defer conn.Close()
-</pre>
+```
 
 The connection abstracts the socket connection, and takes care of
 protocol version negotiation and authentication and so on for us.
 Next we create a channel, which is where most of the API for getting
 things done resides:
 
-<pre class="lang-go">
+```go
 ch, err := conn.Channel()
 failOnError(err, "Failed to open a channel")
 defer ch.Close()
-</pre>
+```
 
 To send, we must declare a queue for us to send to; then we can publish a message
 to the queue:
 
-<pre class="lang-go">
+```go
 q, err := ch.QueueDeclare(
   "hello", // name
   false,   // durable
@@ -140,7 +140,7 @@ err = ch.PublishWithContext(ctx,
   })
 failOnError(err, "Failed to publish a message")
 log.Printf(" [x] Sent %s\n", body)
-</pre>
+```
 
 Declaring a queue is idempotent - it will only be created if it doesn't
 exist already. The message content is a byte array, so you can encode
@@ -172,7 +172,7 @@ keep the consumer running to listen for messages and print them out.
 
 The code (in [`receive.go`](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/go/receive.go)) has the same import and helper function as `send`:
 
-<pre class="lang-go">
+```go
 package main
 
 import (
@@ -186,13 +186,13 @@ func failOnError(err error, msg string) {
     log.Panicf("%s: %s", msg, err)
   }
 }
-</pre>
+```
 
 Setting up is the same as the publisher; we open a connection and a
 channel, and declare the queue from which we're going to consume.
 Note this matches up with the queue that `send` publishes to.
 
-<pre class="lang-go">
+```go
 conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 failOnError(err, "Failed to connect to RabbitMQ")
 defer conn.Close()
@@ -210,7 +210,7 @@ q, err := ch.QueueDeclare(
   nil,     // arguments
 )
 failOnError(err, "Failed to declare a queue")
-</pre>
+```
 
 Note that we declare the queue here, as well. Because we might start
 the consumer before the publisher, we want to make sure the queue exists
@@ -220,7 +220,7 @@ We're about to tell the server to deliver us the messages from the
 queue. Since it will push us messages asynchronously, we will read
 the messages from a channel (returned by `amqp::Consume`) in a goroutine.
 
-<pre class="lang-go">
+```go
 msgs, err := ch.Consume(
   q.Name, // queue
   "",     // consumer
@@ -242,7 +242,7 @@ go func() {
 
 log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
 &lt;-forever
-</pre>
+```
 
 [Here's the whole receive.go script](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/go/receive.go).
 
@@ -250,15 +250,15 @@ log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
 
 Now we can run both scripts. In a terminal, run the publisher:
 
-<pre class="lang-bash">
+```bash
 go run send.go
-</pre>
+```
 
 then, run the consumer:
 
-<pre class="lang-bash">
+```bash
 go run receive.go
-</pre>
+```
 
 The consumer will print the message it gets from the publisher via
 RabbitMQ. The consumer will keep running, waiting for messages (Use Ctrl-C to stop it), so try running

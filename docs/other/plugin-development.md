@@ -76,9 +76,9 @@ as an example below</a>.
 To test the plugin during development, use the following make target to start
 a RabbitMQ node with the local plugin built from source and enabled:
 
-<pre class="lang-bash">
+```bash
 make run-broker
-</pre>
+```
 
 
 ## <a id="plugin-quality-tips" class="anchor" href="#plugin-quality-tips">Plugin Quality Tips</a>
@@ -102,12 +102,12 @@ application environment. The requirements are specified as a list of
 minimum version in each release series.
 Consider the following example:
 
-<pre class="lang-erlang">
+```erlang
 {application, my_plugin,[
     %% ...
     {broker_version_requirements, ["3.11.15", "3.10.22"]}
 ]}
-</pre>
+```
 
 The above requires RabbitMQ
 3.10.x starting with 3.10.22 and 3.11.x starting with 3.11.15.
@@ -121,12 +121,12 @@ to the above but uses a dictionary-like data structure (proplist).
 
 For example:
 
-<pre class="lang-erlang">
+```erlang
 {application, my_plugin, [
     %% ...
     {dependency_version_requirements, [{rabbitmq_management, ["3.11.0", "3.10.22"]}]}
 ]}
-</pre>
+```
 
 means the plugin depends on `rabbitmq_management` 3.10.x starting
 with 3.10.22 and all versions in the 3.11.x series.
@@ -188,10 +188,12 @@ The following table should explain the purpose of the various files in the repos
       before <tt>erlang.mk</tt> inclusion. This file must be
       kept up-to-date w.r.t. <tt>rabbitmq-common</tt>: when it
       is out-of-date, you will get the following error:
-      <pre>error: rabbitmq-components.mk must be updated!</pre>
+      ```
+error: rabbitmq-components.mk must be updated!```
       In this case, just run the following command to update
       your copy:
-      <pre>make rabbitmq-components-mk</pre>
+      ```
+make rabbitmq-components-mk```
     </td>
   </tr>
   <tr>
@@ -247,25 +249,25 @@ The following table should explain the purpose of the various files in the repos
 
 Run make to build the plugin:
 
-<pre class="lang-bash">
+```bash
 make
-</pre>
+```
 
 To start a node with the plugin built and enabled on:
 
-<pre class="lang-bash">
+```bash
 make run-broker
-</pre>
+```
 
 To ensure that the new plugin is up and running, run the following command:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics status
-</pre>
+```
 
 If your plugin has loaded successfully, you should see it in the enabled plugin list:
 
-<pre class="lang-bash">
+```bash
 # => Plugins
 # =>
 # => Enabled plugin file: /var/folders/gp/53t98z011678vk9rkcb_s6ph0000gn/T/rabbitmq-test-instances/rabbit@warp10/enabled_plugins
@@ -273,14 +275,16 @@ If your plugin has loaded successfully, you should see it in the enabled plugin 
 # =>
 # =>  * rabbitmq_metronome
 # =>  * amqp_client
-</pre>
+```
 
 To run Common Test test suites, use
 
-<pre class="lang-bash">make tests</pre>
+```bash
+make tests```
 
 Finally, you can produce an <code>.ez</code> file, suitable for distribution with:
 
-<pre class="lang-bash">DIST_AS_EZS=yes make dist</pre>
+```bash
+DIST_AS_EZS=yes make dist```
 
 The file appears in the <tt>plugins</tt> directory under repository root.

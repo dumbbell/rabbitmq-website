@@ -48,9 +48,9 @@ on behalf of the consumer.
 >
 > First, install Bunny using [Rubygems](http://rubygems.org):
 >
-> <pre class="lang-bash">
+> ```bash
 > gem install bunny --version ">= 2.13.0"
-> </pre>
+> ```
 
 Now we have Bunny installed, we can write some
 code.
@@ -69,17 +69,17 @@ In
 [`send.rb`](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/ruby/send.rb),
 we need to require the library first:
 
-<pre class="lang-ruby">
+```ruby
 #!/usr/bin/env ruby
 require 'bunny'
-</pre>
+```
 
 then connect to RabbitMQ server
 
-<pre class="lang-ruby">
+```ruby
 connection = Bunny.new
 connection.start
-</pre>
+```
 
 The connection abstracts the socket connection, and takes care of
 protocol version negotiation and authentication and so on for us. Here
@@ -89,27 +89,27 @@ If we wanted to connect to a broker on a different
 machine we'd simply specify its name or IP address using the `:hostname`
 option:
 
-<pre class="lang-ruby">
+```ruby
 connection = Bunny.new(hostname: 'rabbit.local')
 connection.start
-</pre>
+```
 
 Next we create a channel, which is where most of the API for getting
 things done resides:
 
-<pre class="lang-ruby">
+```ruby
 channel = connection.create_channel
-</pre>
+```
 
 To send, we must declare a queue for us to send to; then we can publish a message
 to the queue:
 
-<pre class="lang-ruby">
+```ruby
 queue = channel.queue('hello')
 
 channel.default_exchange.publish('Hello World!', routing_key: queue.name)
 puts " [x] Sent 'Hello World!'"
-</pre>
+```
 
 Declaring a queue is idempotent - it will only be created if it doesn't
 exist already. The message content is a byte array, so you can encode
@@ -117,9 +117,9 @@ whatever you like there.
 
 Lastly, we close the connection:
 
-<pre class="lang-ruby">
+```ruby
 connection.close
-</pre>
+```
 
 [Here's the whole send.rb script](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/ruby/send.rb).
 
@@ -147,22 +147,22 @@ keep the consumer running to listen for messages and print them out.
 
 The code (in [`receive.rb`](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/ruby/receive.rb)) has the same require as `send`:
 
-<pre class="lang-ruby">
+```ruby
 #!/usr/bin/env ruby
 require 'bunny'
-</pre>
+```
 
 Setting up is the same as the producer; we open a connection and a
 channel, and declare the queue from which we're going to consume.
 Note this matches up with the queue that `send` publishes to.
 
-<pre class="lang-ruby">
+```ruby
 connection = Bunny.new
 connection.start
 
 channel = connection.create_channel
 queue = channel.queue('hello')
-</pre>
+```
 
 Note that we declare the queue here, as well. Because we might start
 the consumer before the producer, we want to make sure the queue exists
@@ -173,7 +173,7 @@ queue. Since it will push us messages asynchronously, we provide a
 callback that will be executed when RabbitMQ pushes messages to
 our consumer. This is what `Bunny::Queue#subscribe` does.
 
-<pre class="lang-ruby">
+```ruby
 begin
   puts ' [*] Waiting for messages. To exit press CTRL+C'
   queue.subscribe(block: true) do |_delivery_info, _properties, body|
@@ -184,7 +184,7 @@ rescue Interrupt => _
 
   exit(0)
 end
-</pre>
+```
 
 `Bunny::Queue#subscribe` is used with the `:block` option that makes it
 block the calling thread (we don't want the script to finish running immediately!).
@@ -195,15 +195,15 @@ block the calling thread (we don't want the script to finish running immediately
 
 Now we can run both scripts. In a terminal, run the consumer (receiver):
 
-<pre class="lang-bash">
+```bash
 ruby receive.rb
-</pre>
+```
 
 then, run the publisher (sender):
 
-<pre class="lang-bash">
+```bash
 ruby send.rb
-</pre>
+```
 
 The consumer will print the message it gets from the producer via
 RabbitMQ. The consumer will keep running, waiting for messages (Use Ctrl-C to stop it), so try running
@@ -214,13 +214,13 @@ the producer from another terminal.
 > You may wish to see what queues RabbitMQ has and how many
 > messages are in them. You can do it (as a privileged user) using the `rabbitmqctl` tool:
 >
-> <pre class="lang-bash">
+> ```bash
 > sudo rabbitmqctl list_queues
-> </pre>
+> ```
 >
 > On Windows, omit the sudo:
-> <pre class="lang-powershell">
+> ```powershell
 > rabbitmqctl.bat list_queues
-> </pre>
+> ```
 
 Time to move on to [part 2](tutorial-two-ruby.html) and build a simple _work queue_.

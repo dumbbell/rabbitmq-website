@@ -29,7 +29,8 @@ RabbitMQ [distributions](./download.html).
 
 ## The License
 
-<pre>Mozilla Public License Version 2.0
+```
+Mozilla Public License Version 2.0
 ==================================
 
 1. Definitions
@@ -403,4 +404,4 @@ Exhibit B - "Incompatible With Secondary Licenses" Notice
   This Source Code Form is "Incompatible With Secondary Licenses", as
   defined by the Mozilla Public License, v. 2.0.
 
-</pre>
+```

@@ -156,7 +156,7 @@ The code is almost the same as in the
 
 The code for `emit_log_topic.rb`:
 
-<pre class="lang-ruby">
+```ruby
 #!/usr/bin/env ruby
 require 'bunny'
 
@@ -172,12 +172,12 @@ exchange.publish(message, routing_key: severity)
 puts " [x] Sent #{severity}:#{message}"
 
 connection.close
-</pre>
+```
 
 
 The code for `receive_logs_topic.rb`:
 
-<pre class="lang-ruby">
+```ruby
 #!/usr/bin/env ruby
 require 'bunny'
 
@@ -206,37 +206,37 @@ rescue Interrupt => _
 
   exit(0)
 end
-</pre>
+```
 
 To receive all the logs:
 
-<pre class="lang-bash">
+```bash
 ruby receive_logs_topic.rb "#"
-</pre>
+```
 
 To receive all logs from the facility "`kern`":
 
-<pre class="lang-bash">
+```bash
 ruby receive_logs_topic.rb "kern.*"
-</pre>
+```
 
 Or if you want to hear only about "`critical`" logs:
 
-<pre class="lang-bash">
+```bash
 ruby receive_logs_topic.rb "*.critical"
-</pre>
+```
 
 You can create multiple bindings:
 
-<pre class="lang-bash">
+```bash
 ruby receive_logs_topic.rb "kern.*" "*.critical"
-</pre>
+```
 
 And to emit a log with a routing key "`kern.critical`" type:
 
-<pre class="lang-bash">
+```bash
 ruby emit_log_topic.rb "kern.critical" "A critical kernel error"
-</pre>
+```
 
 Have fun playing with these programs. Note that the code doesn't make
 any assumption about the routing or binding keys, you may want to play

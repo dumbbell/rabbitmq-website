@@ -156,7 +156,7 @@ The code is almost the same as in the
 
 The code for `EmitLogTopic.cs`:
 
-<pre class="lang-csharp">
+```csharp
 using System.Text;
 using RabbitMQ.Client;
 
@@ -177,11 +177,11 @@ channel.BasicPublish(exchange: "topic_logs",
                      basicProperties: null,
                      body: body);
 Console.WriteLine($" [x] Sent '{routingKey}':'{message}'");
-</pre>
+```
 
 The code for `ReceiveLogsTopic.cs`:
 
-<pre class="lang-csharp">
+```csharp
 using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -228,44 +228,44 @@ channel.BasicConsume(queue: queueName,
 
 Console.WriteLine(" Press [enter] to exit.");
 Console.ReadLine();
-</pre>
+```
 
 Run the following examples:
 
 To receive all the logs:
 
-<pre class="lang-bash">
+```bash
 cd ReceiveLogsTopic
 dotnet run "#"
-</pre>
+```
 
 To receive all logs from the facility "`kern`":
 
-<pre class="lang-bash">
+```bash
 cd ReceiveLogsTopic
 dotnet run "kern.*"
-</pre>
+```
 
 Or if you want to hear only about "`critical`" logs:
 
-<pre class="lang-bash">
+```bash
 cd ReceiveLogsTopic
 dotnet run "*.critical"
-</pre>
+```
 
 You can create multiple bindings:
 
-<pre class="lang-bash">
+```bash
 cd ReceiveLogsTopic
 dotnet run "kern.*" "*.critical"
-</pre>
+```
 
 And to emit a log with a routing key "`kern.critical`" type:
 
-<pre class="lang-bash">
+```bash
 cd EmitLogTopic
 dotnet run "kern.critical" "A critical kernel error"
-</pre>
+```
 
 Have fun playing with these programs. Note that the code doesn't make
 any assumption about the routing or binding keys, you may want to play

@@ -45,9 +45,9 @@ WebSockets.
 
 To enable the plugin run [rabbitmq-plugins](./man/rabbitmq-plugins.8.html):
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_web_mqtt
-</pre>
+```
 
 ## <a id="usage" class="anchor" href="#usage">Usage</a>
 
@@ -59,19 +59,19 @@ It is included as part of [RabbitMQ Web MQTT example plugin](https://github.com/
 By default the Web MQTT plugin exposes a WebSocket endpoint on port
 15675. The WebSocket endpoint is available on the `/ws` path:
 
-<pre class="lang-plaintext">
+```plaintext
 ws://127.0.0.1:15675/ws
-</pre>
+```
 
 In order to establish connection from the browser using WebSocket
 you may use code like:
 
-<pre class="lang-html">
+```html
 &lt;!-- include the client library --&gt;
 &lt;script src="mqttws31.js"&gt;&lt;/script&gt;
-</pre>
+```
 
-<pre class="lang-javascript">
+```javascript
 &lt;script&gt;
 
     var wsbroker = location.hostname;  // mqtt websocket enabled broker
@@ -86,13 +86,13 @@ you may use code like:
         print_first(message.payloadString);
     };
 ...
-</pre>
+```
 
 Once you have the `client` object you can follow API's exposed by
 [Paho JavaScript library](https://eclipse.org/paho/clients/js/). The next step is usually to establish an MQTT
 connection with the broker:
 
-<pre class="lang-javascript">
+```javascript
 [...]
 
 var options = {
@@ -112,7 +112,7 @@ if (location.protocol == "https:") {
 debug("CONNECT TO " + wsbroker + ":" + wsport);
 client.connect(options);
 [...]
-</pre>
+```
 
 ## <a id="examples" class="anchor" href="#examples">Web MQTT Examples</a>
 
@@ -121,9 +121,9 @@ A few simple Web MQTT examples are provided as a
 plugin. To get it running follow the installation instructions for that plugin
 and enable the plugin:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_web_mqtt_examples
-</pre>
+```
 
 The examples will be available under
 [http://127.0.0.1:15670/](http://127.0.0.1:15670/) url. You will see two examples:
@@ -147,9 +147,9 @@ to contain a `port` variable for the `rabbitmq_web_mqtt` application.
 For example, a complete configuration file which changes the listener
 port to `9001` would look like:
 
-<pre class="lang-ini">
+```ini
 web_mqtt.tcp.port = 9001
-</pre>
+```
 
 See [RabbitMQ Networking guide](networking.html) for more information.
 
@@ -161,7 +161,7 @@ to learn more about TLS support in RabbitMQ.
 
 TLS configuration parameters are provided in the `web_mqtt.ssl` section:
 
-<pre class="lang-ini">
+```ini
 web_mqtt.ssl.port       = 15676
 web_mqtt.ssl.backlog    = 1024
 web_mqtt.ssl.cacertfile = /path/to/ca_certificate.pem
@@ -169,7 +169,7 @@ web_mqtt.ssl.certfile   = /path/to/server_certificate.pem
 web_mqtt.ssl.keyfile    = /path/to/server_key.pem
 # needed when private key has a passphrase
 # web_mqtt.ssl.password   = changeme
-</pre>
+```
 
 The TLS listener port, server certificate file, private key and CA certificate bundle are mandatory options.
 Password is also mandatory if the private key uses one.
@@ -189,7 +189,7 @@ RabbitMQ TLS guide has [a section on TLS versions](./ssl.html#disabling-tls-vers
 in the [advanced config format](./configure.html#advanced-config-file) that configures cipher suites
 and a number of other [TLS options](./ssl.html) for the plugin:
 
-<pre class="lang-ini">
+```ini
 web_mqtt.ssl.port       = 15676
 web_mqtt.ssl.backlog    = 1024
 web_mqtt.ssl.certfile   = /path/to/server_certificate.pem
@@ -213,7 +213,7 @@ web_mqtt.ssl.ciphers.6 = ECDH-RSA-AES256-GCM-SHA384
 web_mqtt.ssl.ciphers.7 = ECDH-ECDSA-AES256-SHA384
 web_mqtt.ssl.ciphers.8 = ECDH-RSA-AES256-SHA384
 web_mqtt.ssl.ciphers.9 = DHE-RSA-AES256-GCM-SHA384
-</pre>
+```
 
 
 #### Troubleshooting TLS (WSS)
@@ -226,9 +226,9 @@ information.
 The Web MQTT plugin supports the [proxy protocol](http://www.haproxy.org/download/1.8/doc/proxy-protocol.txt).
 This feature is deactivated by default, to enable it for MQTT clients:
 
-<pre class="lang-ini">
+```ini
 web_mqtt.proxy_protocol = true
-</pre>
+```
 
 See the [Networking Guide](./networking.html#proxy-protocol) for more information
 about the proxy protocol.
@@ -247,7 +247,7 @@ Some settings are generic HTTP ones, others are specific to WebSockets.
 Generic HTTP server settings can be specified using `web_mqtt.cowboy_opts.*` keys,
 for example:
 
-<pre class="lang-ini">
+```ini
 # connection inactivity timeout
 web_mqtt.cowboy_opts.idle_timeout = 60000
 # max number of pending requests allowed on a connection
@@ -258,12 +258,12 @@ web_mqtt.cowboy_opts.max_headers   = 100
 web_mqtt.cowboy_opts.max_empty_lines = 5
 # max request line length allowed in requests
 web_mqtt.cowboy_opts.max_request_line_length
-</pre>
+```
 
 
 ### <a id="websocket-options" class="anchor" href="#websocket-options">WebSocket Options</a>
 
-<pre class="lang-ini">
+```ini
 # WebSocket traffic compression is enabled by default
 web_mqtt.ws_opts.compress = true
 
@@ -271,4 +271,4 @@ web_mqtt.ws_opts.compress = true
 web_mqtt.ws_opts.idle_timeout = 60000
 
 web_mqtt.ws_opts.max_frame_size = 50000
-</pre>
+```

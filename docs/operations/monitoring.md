@@ -154,9 +154,9 @@ have a number of benefits compared to other monitoring options:
 
 To enable the Prometheus plugin, use
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_prometheus
-</pre>
+```
 
 or [pre-configure](./plugins.html#enabled-plugins-file) the plugin.
 
@@ -164,9 +164,9 @@ or [pre-configure](./plugins.html#enabled-plugins-file) the plugin.
 
 The plugin serves metrics to Prometheus-compatible scrapers on port `15692` by default:
 
-<pre class="lang-bash">
+```bash
 curl {hostname}:15692/metrics
-</pre>
+```
 
 Please consult the [Prometheus plugin guide](./prometheus.html) to learn more.
 
@@ -190,9 +190,9 @@ It has, however, has a number of significant limitations compared to [monitoring
 
 To enable the management plugin, use
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_management
-</pre>
+```
 
 or [pre-configure](./plugins.html#enabled-plugins-file) the plugin.
 
@@ -200,9 +200,9 @@ or [pre-configure](./plugins.html#enabled-plugins-file) the plugin.
 
 The plugin serves metrics via the HTTP API on port `15672` by default and uses Basic HTTP Authentication:
 
-<pre class="lang-bash">
+```bash
 curl -u {username}:{password} {hostname}:15672/api/overview
-</pre>
+```
 
 Please consult the [Management plugin guide](./management.html) to learn more.
 
@@ -598,10 +598,10 @@ except for upgrades and maintenance windows.
 
 [`rabbitmq-diagnostics ping`](./rabbitmq-diagnostics.8.html) performs this check:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics -q ping
 # =&gt; Ping succeeded if exit code is 0
-</pre>
+```
 
 #### Stage 2
 
@@ -611,10 +611,10 @@ This includes the stage 1 check plus retrieves some essential
 system information which is useful for other checks and should always be
 available if RabbitMQ is running on the node (see below).
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics -q status
 # =&gt; [output elided for brevity]
-</pre>
+```
 
 This is a common way of confidence checking a node.
 The probability of false positives can be considered approaching `0`
@@ -627,10 +627,10 @@ Includes previous checks and also verifies that the RabbitMQ application is runn
 or the [Pause Minority partition handling strategy](./partitions.html))
 and there are no resource alarms.
 
-<pre class="lang-bash">
+```bash
 # lists alarms in effect across the cluster, if any
 rabbitmq-diagnostics -q alarms
-</pre>
+```
 
 [`rabbitmq-diagnostics check_running`](./rabbitmq-diagnostics.8.html) is a check that makes sure that the runtime is running
 and the RabbitMQ application on it is not stopped or paused.
@@ -640,10 +640,10 @@ on the node. If there are any, it will exit with a non-zero status.
 
 The two commands in combination deliver the stage 3 check:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics -q check_running &amp;&amp; rabbitmq-diagnostics -q check_local_alarms
 # if both checks succeed, the exit code will be 0
-</pre>
+```
 
 The probability of false positives is low. Systems hovering around their
 [high runtime memory watermark](./alarms.html) will have a high probability of false positives.
@@ -652,7 +652,7 @@ During upgrades and maintenance windows can raise significantly.
 Specifically for memory alarms, the `GET /api/nodes/{node}/memory` HTTP API endpoint can be used for additional checks.
 In the following example its output is piped to [jq](https://stedolan.github.io/jq/manual/):
 
-<pre class="lang-bash">
+```bash
 curl --silent -u guest:guest -X GET http://127.0.0.1:15672/api/nodes/rabbit@hostname/memory | jq
 # =&gt; {
 # =&gt;     "memory": {
@@ -683,20 +683,20 @@ curl --silent -u guest:guest -X GET http://127.0.0.1:15672/api/nodes/rabbit@host
 # =&gt;         }
 # =&gt;     }
 # =&gt; }
-</pre>
+```
 
 The [breakdown information](./memory-use.html) it produces can be reduced down to a single value using [jq](https://stedolan.github.io/jq/manual/)
 or similar tools:
 
-<pre class="lang-bash">
+```bash
 curl --silent -u guest:guest -X GET http://127.0.0.1:15672/api/nodes/rabbit@hostname/memory | jq ".memory.total.allocated"
 # =&gt; 397365248
-</pre>
+```
 
 [`rabbitmq-diagnostics -q memory_breakdown`](./rabbitmq-diagnostics.8.html) provides access to the same per category data
 and supports various units:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics -q memory_breakdown --unit "MB"
 # =&gt; connection_other: 50.18 mb (22.1%)
 # =&gt; allocated_unused: 43.7058 mb (19.25%)
@@ -717,7 +717,7 @@ rabbitmq-diagnostics -q memory_breakdown --unit "MB"
 # =&gt; queue_slave_procs: 0.0 mb (0.0%)
 # =&gt; mgmt_db: 0.0 mb (0.0%)
 # =&gt; reserved_unallocated: 0.0 mb (0.0%)
-</pre>
+```
 
 #### Stage 4
 
@@ -726,25 +726,25 @@ Includes all checks in stage 3 plus a check on all enabled listeners
 
 To inspect all listeners enabled on a node, use [`rabbitmq-diagnostics listeners`](./rabbitmq-diagnostics.8.html):
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics -q listeners --node rabbit@target-hostname
 # =&gt; Interface: [::], port: 25672, protocol: clustering, purpose: inter-node and CLI tool communication
 # =&gt; Interface: [::], port: 5672, protocol: amqp, purpose: AMQP 0-9-1 and AMQP 1.0
 # =&gt; Interface: [::], port: 5671, protocol: amqp/ssl, purpose: AMQP 0-9-1 and AMQP 1.0 over TLS
 # =&gt; Interface: [::], port: 15672, protocol: http, purpose: HTTP API
 # =&gt; Interface: [::], port: 15671, protocol: https, purpose: HTTP API over TLS (HTTPS)
-</pre>
+```
 
 [`rabbitmq-diagnostics check_port_connectivity [--address &lt;address&gt;]`](./rabbitmq-diagnostics.8.html) is a command that
 performs the basic TCP connectivity check mentioned above:
 
-<pre class="lang-bash">
+```bash
 # This check will try to open a TCP connection to the discovered listener ports.
 # Since nodes can be configured to listen to specific interfaces, an --address should
 # be provided, or CLI tools will have to rely on the configured hostname resolver to know where to connect.
 rabbitmq-diagnostics -q check_port_connectivity --node rabbit@target-hostname --address &lt;ip-address-to-connect-to&gt;
 # If the check succeeds, the exit code will be 0
-</pre>
+```
 
 The probability of false positives is generally low but during upgrades and
 maintenance windows can raise significantly.
@@ -757,10 +757,10 @@ Includes all checks in stage 4 plus checks that there are no failed [virtual hos
 checks whether any virtual host dependencies may have failed. This is done for all
 virtual hosts.
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics -q check_virtual_hosts --node rabbit@target-hostname
 # if the check succeeded, exit code will be 0
-</pre>
+```
 
 The probability of false positives is generally low except for systems that are under
 high CPU load.
@@ -824,11 +824,11 @@ For example, using a load balancer or [round-robin DNS](https://en.wikipedia.org
 
 Earlier versions of RabbitMQ provided a single opinionated and intrusive health check command (and its respective HTTP API endpoint):
 
-<pre class="lang-bash">
+```bash
 # DO NOT USE: this health check is very intrusive, resource-intensive, prone to false positives
 #             and as such, deprecated
 rabbitmq-diagnostics node_health_check
-</pre>
+```
 
 The above command is **deprecated** will be **removed in a future version** of RabbitMQ and is to be avoided.
 Systems that use it should adopt one of the [fine grained modern health checks](#health-checks) instead.

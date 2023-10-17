@@ -265,15 +265,15 @@ As an alternative, the option "`-setcookie <value>`" can be added
 to `RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS` <a href="./configure.html">environment variable value</a>
 to override the cookie value used by a RabbitMQ node:
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="-setcookie cookie-value"
-</pre>
+```
 
 CLI tools can take a cookie value using a command line flag:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics status --erlang-cookie "cookie-value"
-</pre>
+```
 
 Both are **the least secure options** and generally **not recommended**.
 
@@ -281,10 +281,10 @@ Both are **the least secure options** and generally **not recommended**.
 
 When a node starts, it will [log](./logging.html) the home directory location of its effective user:
 
-<pre class="lang-plaintext">
+```plaintext
 node           : rabbit@cdbf4de5f22d
 home dir       : /var/lib/rabbitmq
-</pre>
+```
 
 Unless any [server directories](./relocate.html) were overridden, that's the directory where
 the cookie file will be looked for, and created by the node on first boot if it does not already exist.
@@ -298,33 +298,33 @@ such as "Connection attempt from disallowed node", "", "Could not auto-cluster".
 
 For example, when a CLI tool connects and tries to authenticate using a mismatching secret value:
 
-<pre class="lang-plaintext">
+```plaintext
 2020-06-15 13:03:33 [error] &lt;0.1187.0&gt; ** Connection attempt from node 'rabbitmqcli-99391-rabbit@warp10' rejected. Invalid challenge reply. **
-</pre>
+```
 
 When a CLI tool such as `rabbitmqctl` fails to authenticate with RabbitMQ,
 the message usually says
 
-<pre class="lang-plaintext">
+```plaintext
 * epmd reports node 'rabbit' running on port 25672
 * TCP connection succeeded but Erlang distribution failed
 * suggestion: hostname mismatch?
 * suggestion: is the cookie set correctly?
 * suggestion: is the Erlang distribution using TLS?
-</pre>
+```
 
 An incorrectly placed cookie file or cookie value mismatch are most common scenarios for such failures.
 
 When a recent Erlang/OTP version is used, authentication failures contain
 more information and cookie mismatches can be identified better:
 
-<pre class="lang-ini">
+```ini
 * connected to epmd (port 4369) on warp10
 * epmd reports node 'rabbit' running on port 25672
 * TCP connection succeeded but Erlang distribution failed
 
 * Authentication failed (rejected by the remote node), please check the Erlang cookie
-</pre>
+```
 
 See the [CLI Tools guide](./cli.html) for more information.
 
@@ -344,14 +344,14 @@ The commands are covered in the [Networking guide](./networking.html#dns-verify-
 Starting with [version `3.8.6`](./changelog.html), `rabbitmq-diagnostics` includes a command
 that provides relevant information on the Erlang cookie file used by CLI tools:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics erlang_cookie_sources
-</pre>
+```
 
 The command will report on the effective user, user home directory and the expected location
 of the cookie file:
 
-<pre class="lang-plaintext">
+```plaintext
 Cookie File
 
 Effective user: antares
@@ -371,7 +371,7 @@ Env variable  (Deprecated)
 
 RABBITMQ_ERLANG_COOKIE value set? false
 RABBITMQ_ERLANG_COOKIE value length: 0
-</pre>
+```
 
 ## <a id="node-count" class="anchor" href="#node-count">Node Counts and Quorum</a>
 
@@ -519,20 +519,20 @@ Clusters are set up by re-configuring existing RabbitMQ
 nodes into a cluster configuration. Hence the first step
 is to start RabbitMQ on all nodes in the normal way:
 
-<pre class="lang-bash">
+```bash
 # on rabbit1
 rabbitmq-server -detached
 # on rabbit2
 rabbitmq-server -detached
 # on rabbit3
 rabbitmq-server -detached
-</pre>
+```
 
 This creates three <i>independent</i> RabbitMQ brokers,
 one on each node, as confirmed by the <i>cluster_status</i>
 command:
 
-<pre class="lang-bash">
+```bash
 # on rabbit1
 rabbitmqctl cluster_status
 # => Cluster status of node rabbit@rabbit1 ...
@@ -550,7 +550,7 @@ rabbitmqctl cluster_status
 # => Cluster status of node rabbit@rabbit3 ...
 # => [{nodes,[{disc,[rabbit@rabbit3]}]},{running_nodes,[rabbit@rabbit3]}]
 # => ...done.
-</pre>
+```
 
 The node name of a RabbitMQ broker started from the
 `rabbitmq-server` shell script is
@@ -581,7 +581,7 @@ of a cluster and keep its existing data at the same time. When that's desired,
 using the [Blue/Green deployment strategy](./blue-green-upgrade.html) or [backup and restore](./backup.html)
 are the available options.
 
-<pre class="lang-bash">
+```bash
 # on rabbit2
 rabbitmqctl stop_app
 # => Stopping node rabbit@rabbit2 ...done.
@@ -594,12 +594,12 @@ rabbitmqctl join_cluster rabbit@rabbit1
 
 rabbitmqctl start_app
 # => Starting node rabbit@rabbit2 ...done.
-</pre>
+```
 
 We can see that the two nodes are joined in a cluster by
 running the <i>cluster_status</i> command on either of the nodes:
 
-<pre class="lang-bash">
+```bash
 # on rabbit1
 rabbitmqctl cluster_status
 # => Cluster status of node rabbit@rabbit1 ...
@@ -613,7 +613,7 @@ rabbitmqctl cluster_status
 # => [{nodes,[{disc,[rabbit@rabbit1,rabbit@rabbit2]}]},
 # =>  {running_nodes,[rabbit@rabbit1,rabbit@rabbit2]}]
 # => ...done.
-</pre>
+```
 
 Now we join `rabbit@rabbit3` to the same
 cluster. The steps are identical to the ones above, except
@@ -623,7 +623,7 @@ matter - it is enough to provide one online node and the
 node will be clustered to the cluster that the specified
 node belongs to.
 
-<pre class="lang-bash">
+```bash
 # on rabbit3
 rabbitmqctl stop_app
 # => Stopping node rabbit@rabbit3 ...done.
@@ -637,12 +637,12 @@ rabbitmqctl join_cluster rabbit@rabbit2
 
 rabbitmqctl start_app
 # => Starting node rabbit@rabbit3 ...done.
-</pre>
+```
 
 We can see that the three nodes are joined in a cluster by
 running the `cluster_status` command on any of the nodes:
 
-<pre class="lang-bash">
+```bash
 # on rabbit1
 rabbitmqctl cluster_status
 # => Cluster status of node rabbit@rabbit1 ...
@@ -663,7 +663,7 @@ rabbitmqctl cluster_status
 # => [{nodes,[{disc,[rabbit@rabbit3,rabbit@rabbit2,rabbit@rabbit1]}]},
 # =>  {running_nodes,[rabbit@rabbit2,rabbit@rabbit1,rabbit@rabbit3]}]
 # => ...done.
-</pre>
+```
 
 By following the above steps we can add new nodes to the
 cluster at any time, while the cluster is running.
@@ -701,25 +701,25 @@ node will **give up and voluntarily stop**. Such condition can be
 identified by the timeout (`timeout_waiting_for_tables`) warning messages in the logs
 that eventually lead to node startup failure:
 
-<pre class="lang-plaintext">
+```plaintext
 2020-07-27 21:10:51.361 [warning] &lt;0.269.0&gt; Error while waiting for Mnesia tables: {timeout_waiting_for_tables,[rabbit@node2,rabbit@node1],[rabbit_durable_queue]}
 2020-07-27 21:10:51.361 [info] &lt;0.269.0&gt; Waiting for Mnesia tables for 30000 ms, 1 retries left
 2020-07-27 21:11:21.362 [warning] &lt;0.269.0&gt; Error while waiting for Mnesia tables: {timeout_waiting_for_tables,[rabbit@node2,rabbit@node1],[rabbit_durable_queue]}
 2020-07-27 21:11:21.362 [info] &lt;0.269.0&gt; Waiting for Mnesia tables for 30000 ms, 0 retries left
-</pre>
+```
 
-<pre class="lang-plaintext">
+```plaintext
 2020-07-27 21:15:51.380 [info] &lt;0.269.0&gt; Waiting for Mnesia tables for 30000 ms, 1 retries left
 2020-07-27 21:16:21.381 [warning] &lt;0.269.0&gt; Error while waiting for Mnesia tables: {timeout_waiting_for_tables,[rabbit@node2,rabbit@node1],[rabbit_user,rabbit_user_permission, …]}
 2020-07-27 21:16:21.381 [info] &lt;0.269.0&gt; Waiting for Mnesia tables for 30000 ms, 0 retries left
 2020-07-27 21:16:51.393 [info] &lt;0.44.0&gt; Application mnesia exited with reason: stopped
-</pre>
+```
 
-<pre class="lang-plaintext">
+```plaintext
 2020-07-27 21:16:51.397 [error] &lt;0.269.0&gt; BOOT FAILED
 2020-07-27 21:16:51.397 [error] &lt;0.269.0&gt; ===========
 2020-07-27 21:16:51.397 [error] &lt;0.269.0&gt; Timeout contacting cluster nodes: [rabbit@node1].
-</pre>
+```
 
 When a node has no online peers during shutdown, it will start without
 attempts to sync with any known peers. It does not start as a standalone
@@ -733,13 +733,13 @@ can be restarted in any order in that period of time. In this case
 they will rejoin each other one by one successfully. This window of time
 can be adjusted using two configuration settings:
 
-<pre class="lang-ini">
+```ini
 # wait for 60 seconds instead of 30
 mnesia_table_loading_retry_timeout = 60000
 
 # retry 15 times instead of 10
 mnesia_table_loading_retry_limit = 15
-</pre>
+```
 
 By adjusting these settings and tweaking the time window in which
 known peer has to come back it is possible to account for cluster-wide
@@ -769,19 +769,19 @@ finished booting. They are not suitable for nodes that are [awaiting schema tabl
 
 One very common example of such check is
 
-<pre class="lang-bash">
+```bash
 # will exit with an error for the nodes that are currently waiting for
 # a peer to sync schema tables from
 rabbitmq-diagnostics check_running
-</pre>
+```
 
 One health check that does not expect a node to be fully booted and have schema tables synced is
 
-<pre class="lang-bash">
+```bash
 # a very basic check that will succeed for the nodes that are currently waiting for
 # a peer to sync schema from
 rabbitmq-diagnostics ping
-</pre>
+```
 
 This basic check would allow the deployment to proceed and the nodes to eventually rejoin each other,
 assuming they are [compatible](./upgrade.html).
@@ -807,9 +807,9 @@ Consider the following scenario:
 in this case node B will reject the clustering attempt from A with an appropriate error
 message in the log:
 
-<pre class="lang-plaintext">
+```plaintext
 Node 'rabbit@node1.local' thinks it's clustered with node 'rabbit@node2.local', but 'rabbit@node2.local' disagrees
-</pre>
+```
 
 In this case B can be reset again and then will be able to join A, or A
 can be reset and will successfully join B.
@@ -820,7 +820,7 @@ The below example uses CLI tools to shut down the nodes `rabbit@rabbit1` and
 `rabbit@rabbit3` and check on the cluster
 status at each step:
 
-<pre class="lang-bash">
+```bash
 # on rabbit1
 rabbitmqctl stop
 # => Stopping and halting node rabbit@rabbit1 ...done.
@@ -849,12 +849,12 @@ rabbitmqctl cluster_status
 # => [{nodes,[{disc,[rabbit@rabbit1,rabbit@rabbit2,rabbit@rabbit3]}]},
 # =>  {running_nodes,[rabbit@rabbit2]}]
 # => ...done.
-</pre>
+```
 
 In the below example, the nodes are started back, checking on the cluster
 status as we go along:
 
-<pre class="lang-bash">
+```bash
 # on rabbit1
 rabbitmq-server -detached
 rabbitmqctl cluster_status
@@ -893,7 +893,7 @@ rabbitmqctl cluster_status
 # => [{nodes,[{disc,[rabbit@rabbit1,rabbit@rabbit2,rabbit@rabbit3]}]},
 # =>  {running_nodes,[rabbit@rabbit2,rabbit@rabbit1,rabbit@rabbit3]}]
 # => ...done.
-</pre>
+```
 
 ## <a id="forced-boot" class="anchor" href="#forced-boot">Forcing Node Boot in Case of Unavailable Peers</a>
 
@@ -923,7 +923,7 @@ independent operation. To do that, on `rabbit@rabbit3` we
 stop the RabbitMQ application, reset the node, and restart the
 RabbitMQ application.
 
-<pre class="lang-bash">
+```bash
 # on rabbit3
 rabbitmqctl stop_app
 # => Stopping node rabbit@rabbit3 ...done.
@@ -932,7 +932,7 @@ rabbitmqctl reset
 # => Resetting node rabbit@rabbit3 ...done.
 rabbitmqctl start_app
 # => Starting node rabbit@rabbit3 ...done.
-</pre>
+```
 
 Note that it would have been equally valid to list
 `rabbit@rabbit3` as a node.
@@ -942,7 +942,7 @@ Running the <i>cluster_status</i> command on the nodes confirms
 that `rabbit@rabbit3` now is no longer part of
 the cluster and operates independently:
 
-<pre class="lang-bash">
+```bash
 # on rabbit1
 rabbitmqctl cluster_status
 # => Cluster status of node rabbit@rabbit1 ...
@@ -962,13 +962,13 @@ rabbitmqctl cluster_status
 # => Cluster status of node rabbit@rabbit3 ...
 # => [{nodes,[{disc,[rabbit@rabbit3]}]},{running_nodes,[rabbit@rabbit3]}]
 # => ...done.
-</pre>
+```
 
 We can also remove nodes remotely. This is useful, for example, when
 having to deal with an unresponsive node. We can for example remove
 `rabbit@rabbit1` from `rabbit@rabbit2`.
 
-<pre class="lang-bash">
+```bash
 # on rabbit1
 rabbitmqctl stop_app
 # => Stopping node rabbit@rabbit1 ...done.
@@ -977,13 +977,13 @@ rabbitmqctl stop_app
 rabbitmqctl forget_cluster_node rabbit@rabbit1
 # => Removing node rabbit@rabbit1 from cluster ...
 # => ...done.
-</pre>
+```
 
 Note that `rabbit1` still thinks it's clustered with
 `rabbit2`, and trying to start it will result in an
 error. We will need to reset it to be able to start it again.
 
-<pre class="lang-bash">
+```bash
 # on rabbit1
 rabbitmqctl start_app
 # => Starting node rabbit@rabbit1 ...
@@ -995,12 +995,12 @@ rabbitmqctl reset
 rabbitmqctl start_app
 # => Starting node rabbit@rabbit1 ...
 # => ...done.
-</pre>
+```
 
 The `cluster_status` command now shows all three nodes
 operating as independent RabbitMQ brokers:
 
-<pre class="lang-bash">
+```bash
 # on rabbit1
 rabbitmqctl cluster_status
 # => Cluster status of node rabbit@rabbit1 ...
@@ -1018,7 +1018,7 @@ rabbitmqctl cluster_status
 # => Cluster status of node rabbit@rabbit3 ...
 # => [{nodes,[{disc,[rabbit@rabbit3]}]},{running_nodes,[rabbit@rabbit3]}]
 # => ...done.
-</pre>
+```
 
 Note that `rabbit@rabbit2` retains the residual
 state of the cluster, whereas `rabbit@rabbit1`
@@ -1027,7 +1027,7 @@ RabbitMQ brokers. If we want to re-initialise
 `rabbit@rabbit2` we follow the same steps as
 for the other nodes:
 
-<pre class="lang-bash">
+```bash
 # on rabbit2
 rabbitmqctl stop_app
 # => Stopping node rabbit@rabbit2 ...done.
@@ -1035,7 +1035,7 @@ rabbitmqctl reset
 # => Resetting node rabbit@rabbit2 ...done.
 rabbitmqctl start_app
 # => Starting node rabbit@rabbit2 ...done.
-</pre>
+```
 
 Besides `rabbitmqctl forget_cluster_node` and the automatic cleanup of unknown nodes
 by some [peer discovery](./cluster-formation.html) plugins, there are no scenarios
@@ -1053,13 +1053,13 @@ users, virtual hosts and any other node data. It will also permanently remove th
 To reset a running and responsive node, first stop RabbitMQ on it using `rabbitmqctl stop_app`
 and then reset it using `rabbitmqctl reset`:
 
-<pre class="lang-bash">
+```bash
 # on rabbit1
 rabbitmqctl stop_app
 # => Stopping node rabbit@rabbit1 ...done.
 rabbitmqctl reset
 # => Resetting node rabbit@rabbit1 ...done.
-</pre>
+```
 
 In case of a non-responsive node, it must be stopped first using any means necessary.
 For nodes that fail to start this is already the case. Then [override](./relocate.html)
@@ -1099,23 +1099,23 @@ You can start multiple nodes on the same host manually by
 repeated invocation of `rabbitmq-server` (
 `rabbitmq-server.bat` on Windows). For example:
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_NODE_PORT=5672 RABBITMQ_NODENAME=rabbit rabbitmq-server -detached
 RABBITMQ_NODE_PORT=5673 RABBITMQ_NODENAME=hare rabbitmq-server -detached
 rabbitmqctl -n hare stop_app
 rabbitmqctl -n hare join_cluster rabbit@`hostname -s`
 rabbitmqctl -n hare start_app
-</pre>
+```
 
 will set up a two node cluster, both nodes as disc nodes.
 Note that if the node [listens on any ports](networking.html) other
 than AMQP 0-9-1 and AMQP 1.0 ones, those must be configured to avoid a collision as
 well. This can be done via command line:
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_NODE_PORT=5672 RABBITMQ_SERVER_START_ARGS="-rabbitmq_management listener [{port,15672}]" RABBITMQ_NODENAME=rabbit rabbitmq-server -detached
 RABBITMQ_NODE_PORT=5673 RABBITMQ_SERVER_START_ARGS="-rabbitmq_management listener [{port,15673}]" RABBITMQ_NODENAME=hare rabbitmq-server -detached
-</pre>
+```
 
 will start two nodes (which can then be clustered) when
 the management plugin is installed.
@@ -1250,7 +1250,7 @@ the cluster. We do this with
 `rabbitmqctl join_cluster` as before, but passing the
 `--ram` flag:
 
-<pre class="lang-bash">
+```bash
 # on rabbit2
 rabbitmqctl stop_app
 # => Stopping node rabbit@rabbit2 ...done.
@@ -1260,11 +1260,11 @@ rabbitmqctl join_cluster --ram rabbit@rabbit1
 
 rabbitmqctl start_app
 # => Starting node rabbit@rabbit2 ...done.
-</pre>
+```
 
 RAM nodes are shown as such in the cluster status:
 
-<pre class="lang-bash">
+```bash
 # on rabbit1
 rabbitmqctl cluster_status
 # => Cluster status of node rabbit@rabbit1 ...
@@ -1278,7 +1278,7 @@ rabbitmqctl cluster_status
 # => [{nodes,[{disc,[rabbit@rabbit1]},{ram,[rabbit@rabbit2]}]},
 # =>  {running_nodes,[rabbit@rabbit1,rabbit@rabbit2]}]
 # => ...done.
-</pre>
+```
 
 ### <a id="change-type" class="anchor" href="#change-type">Changing node types</a>
 
@@ -1290,7 +1290,7 @@ disc node into a ram node. To do that we can use the
 `change_cluster_node_type` command. The node must be
 stopped first.
 
-<pre class="lang-bash">
+```bash
 # on rabbit2
 rabbitmqctl stop_app
 # => Stopping node rabbit@rabbit2 ...done.
@@ -1310,4 +1310,4 @@ rabbitmqctl change_cluster_node_type ram
 
 rabbitmqctl start_app
 # => Starting node rabbit@rabbit1 ...done.
-</pre>
+```

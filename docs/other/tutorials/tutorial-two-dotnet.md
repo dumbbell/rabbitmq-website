@@ -80,7 +80,7 @@ program will schedule tasks to our work queue, so let's name it
 
 Like [tutorial one](tutorial-one-dotnet.html) we need to generate two projects.
 
-<pre class="lang-powershell">
+```powershell
 dotnet new console --name NewTask
 mv NewTask/Program.cs NewTask/NewTask.cs
 dotnet new console --name Worker
@@ -89,22 +89,22 @@ cd NewTask
 dotnet add package RabbitMQ.Client
 cd ../Worker
 dotnet add package RabbitMQ.Client
-</pre>
+```
 
 Copy the code from our old _Send.cs_ to _NewTask.cs_ and make the following modifications.
 
 Update the initialization of the _message_ variable:
-<pre class="lang-csharp">
+```csharp
 var message = GetMessage(args);
-</pre>
+```
 
 Add the _GetMessage_ method to the end of the _NewTask_ class:
-<pre class="lang-csharp">
+```csharp
 static string GetMessage(string[] args)
 {
     return ((args.Length > 0) ? string.Join(" ", args) : "Hello World!");
 }
-</pre>
+```
 
 Our old _Receive.cs_ script also requires some changes to
 fake a second of work for every dot in the message body. It will
@@ -112,14 +112,14 @@ handle messages delivered by RabbitMQ and perform the task, so let's copy it to
 _Worker.cs_ and modify it as follows.
 
 After our existing _WriteLine_ for receiving the message, add the fake task to simulate execution time:
-<pre class="lang-csharp">
+```csharp
 Console.WriteLine($" [x] Received {message}");
 
 int dots = message.Split('.').Length - 1;
 Thread.Sleep(dots * 1000);
 
 Console.WriteLine(" [x] Done");
-</pre>
+```
 
 Round-robin dispatching
 -----------------------
@@ -134,24 +134,24 @@ will both get messages from the queue, but how exactly? Let's see.
 You need three consoles open. Two will run the `Worker` program.
 These consoles will be our two consumers - C1 and C2.
 
-<pre class="lang-bash">
+```bash
 # shell 1
 cd Worker
 dotnet run
 # => Press [enter] to exit.
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 # shell 2
 cd Worker
 dotnet run
 # => Press [enter] to exit.
-</pre>
+```
 
 In the third one we'll publish new tasks. Once you've started
 the consumers you can publish a few messages:
 
-<pre class="lang-bash">
+```bash
 # shell 3
 cd NewTask
 dotnet run "First message."
@@ -159,11 +159,11 @@ dotnet run "Second message.."
 dotnet run "Third message..."
 dotnet run "Fourth message...."
 dotnet run "Fifth message....."
-</pre>
+```
 
 Let's see what is delivered to our workers:
 
-<pre class="lang-bash">
+```bash
 # shell 1
 # => Press [enter] to exit.
 # => [x] Received First message.
@@ -172,16 +172,16 @@ Let's see what is delivered to our workers:
 # => [x] Done
 # => [x] Received Fifth message.....
 # => [x] Done
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 # shell 2
 # => Press [enter] to exit.
 # => [x] Received Second message..
 # => [x] Done
 # => [x] Received Fourth message....
 # => [x] Done
-</pre>
+```
 
 By default, RabbitMQ will send each message to the next consumer,
 in sequence. On average every consumer will get the same number of
@@ -227,7 +227,7 @@ remove this flag and manually send a proper acknowledgment from the
 worker, once we're done with a task.
 
 After the existing _WriteLine_, add a call to _BasicAck_ and update _BasicConsume_ with _autoAck:false_:
-<pre class="lang-csharp">
+```csharp
     Console.WriteLine(" [x] Done");
 
     // here channel could also be accessed as ((EventingBasicConsumer)sender).Model
@@ -236,7 +236,7 @@ After the existing _WriteLine_, add a call to _BasicAck_ and update _BasicConsum
 channel.BasicConsume(queue: "hello",
                      autoAck: false,
                      consumer: consumer);
-</pre>
+```
 
 Using this code, you can  ensure that even if you terminate a worker node using
 CTRL+C while it was processing a message, nothing is lost. Soon
@@ -258,14 +258,14 @@ to learn more.
 > In order to debug this kind of mistake you can use `rabbitmqctl`
 > to print the `messages_unacknowledged` field:
 >
-> <pre class="lang-bash">
+> ```bash
 > sudo rabbitmqctl list_queues name messages_ready messages_unacknowledged
-> </pre>
+> ```
 >
 > On Windows, drop the sudo:
-> <pre class="lang-bash">
+> ```bash
 > rabbitmqctl.bat list_queues name messages_ready messages_unacknowledged
-> </pre>
+> ```
 
 
 Message durability
@@ -282,13 +282,13 @@ durable.
 First, we need to make sure that the queue will survive a RabbitMQ node restart.
 In order to do so, we need to declare it as _durable_:
 
-<pre class="lang-csharp">
+```csharp
 channel.QueueDeclare(queue: "hello",
                      durable: true,
                      exclusive: false,
                      autoDelete: false,
                      arguments: null);
-</pre>
+```
 
 Although this command is correct by itself, it won't work in our present
 setup. That's because we've already defined a queue called `hello`
@@ -297,13 +297,13 @@ with different parameters and will return an error to any program
 that tries to do that. But there is a quick workaround - let's declare
 a queue with different name, for example `task_queue`:
 
-<pre class="lang-csharp">
+```csharp
 channel.QueueDeclare(queue: "task_queue",
                      durable: true,
                      exclusive: false,
                      autoDelete: false,
                      arguments: null);
-</pre>
+```
 
 This `QueueDeclare` change needs to be applied to both the producer
 and consumer code. You also need to change the name of the queue for `BasicConsume` and `BasicPublish`.
@@ -312,12 +312,12 @@ At this point we're sure that the `task_queue` queue won't be lost
 even if RabbitMQ restarts. Now we need to mark our messages as persistent.
 
 After the existing _GetBytes_, set `IBasicProperties.Persistent` to `true`:
-<pre class="lang-csharp">
+```csharp
 var body = Encoding.UTF8.GetBytes(message);
 
 var properties = channel.CreateBasicProperties();
 properties.Persistent = true;
-</pre>
+```
 
 > #### Note on Message Persistence
 >
@@ -377,7 +377,7 @@ a new message to a worker until it has processed and acknowledged the
 previous one. Instead, it will dispatch it to the next worker that is not still busy.
 
 After the existing _QueueDeclare_ in _Worker.cs_ add the call to `BasicQos`:
-<pre class="lang-csharp">
+```csharp
 channel.QueueDeclare(queue: "task_queue",
                      durable: true,
                      exclusive: false,
@@ -385,7 +385,7 @@ channel.QueueDeclare(queue: "task_queue",
                      arguments: null);
 
 channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
-</pre>
+```
 
 > #### Note about queue size
 >
@@ -399,7 +399,7 @@ Open two terminals.
 Run the consumer (worker) first so that the topology (primarily the queue) is in place.
 Here is its complete code:
 
-<pre class="lang-csharp">
+```csharp
 using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -439,11 +439,11 @@ channel.BasicConsume(queue: "task_queue",
 
 Console.WriteLine(" Press [enter] to exit.");
 Console.ReadLine();
-</pre>
+```
 
 Now run the task publisher (NewTask). Its final code is:
 
-<pre class="lang-csharp">
+```csharp
 using System.Text;
 using RabbitMQ.Client;
 
@@ -476,7 +476,7 @@ static string GetMessage(string[] args)
 {
     return ((args.Length > 0) ? string.Join(" ", args) : "Hello World!");
 }
-</pre>
+```
 
 [(NewTask.cs source)](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/dotnet/NewTask/NewTask.cs)
 

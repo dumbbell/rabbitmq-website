@@ -156,7 +156,7 @@ The code is almost the same as in the
 
 The code for `emit_log_topic.go`:
 
-<pre class="lang-go">
+```go
 package main
 
 import (
@@ -232,11 +232,11 @@ func severityFrom(args []string) string {
         }
         return s
 }
-</pre>
+```
 
 The code for `receive_logs_topic.go`:
 
-<pre class="lang-go">
+```go
 package main
 
 import (
@@ -320,37 +320,37 @@ func main() {
         log.Printf(" [*] Waiting for logs. To exit press CTRL+C")
         &lt;-forever
 }
-</pre>
+```
 
 To receive all the logs:
 
-<pre class="lang-bash">
+```bash
 go run receive_logs_topic.go "#"
-</pre>
+```
 
 To receive all logs from the facility "`kern`":
 
-<pre class="lang-bash">
+```bash
 go run receive_logs_topic.go "kern.*"
-</pre>
+```
 
 Or if you want to hear only about "`critical`" logs:
 
-<pre class="lang-bash">
+```bash
 go run receive_logs_topic.go "*.critical"
-</pre>
+```
 
 You can create multiple bindings:
 
-<pre class="lang-bash">
+```bash
 go run receive_logs_topic.go "kern.*" "*.critical"
-</pre>
+```
 
 And to emit a log with a routing key "`kern.critical`" type:
 
-<pre class="lang-bash">
+```bash
 go run emit_log_topic.go "kern.critical" "A critical kernel error"
-</pre>
+```
 
 Have fun playing with these programs. Note that the code doesn't make
 any assumption about the routing or binding keys, you may want to play

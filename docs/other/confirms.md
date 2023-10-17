@@ -156,7 +156,7 @@ Java client users will use `Channel#basicAck` and `Channel#basicNack`
 to perform a `basic.ack` and `basic.nack`, respectively. Here's a Java
 client examples that demonstrates a positive acknowledgement:
 
-<pre class="lang-java">
+```java
 // this example assumes an existing channel instance
 
 boolean autoAck = false;
@@ -175,12 +175,12 @@ channel.basicConsume(queueName, autoAck, "a-consumer-tag",
              channel.basicAck(deliveryTag, false);
          }
      });
-</pre>
+```
 
 In .NET client the methods are `IModel#BasicAck` and `IModel#BasicNack`, respectively.
 Here's an example that demonstrates a positive acknowledgement with that client:
 
-<pre class="lang-csharp">
+```csharp
 // this example assumes an existing channel (IModel) instance
 
 var consumer = new EventingBasicConsumer(channel);
@@ -192,7 +192,7 @@ consumer.Received += (ch, ea) =>
                     channel.BasicAck(ea.DeliveryTag, false);
                 };
 String consumerTag = channel.BasicConsume(queueName, false, consumer);
-</pre>
+```
 
 ### <a id="consumer-acks-multiple-parameter" class="anchor" href="#consumer-acks-multiple-parameter">Acknowledging Multiple Deliveries at Once</a>
 
@@ -214,7 +214,7 @@ be unacknowledged.
 To acknowledge multiple deliveries with RabbitMQ Java client, pass `true` for the
 `multiple` parameter to `Channel#basicAck`:
 
-<pre class="lang-java">
+```java
 // this example assumes an existing channel instance
 
 boolean autoAck = false;
@@ -233,11 +233,11 @@ channel.basicConsume(queueName, autoAck, "a-consumer-tag",
              channel.basicAck(deliveryTag, true);
          }
      });
-</pre>
+```
 
 The idea is very much the same with the .NET client:
 
-<pre class="lang-csharp">
+```csharp
 // this example assumes an existing channel (IModel) instance
 
 var consumer = new EventingBasicConsumer(channel);
@@ -249,7 +249,7 @@ consumer.Received += (ch, ea) =>
                     channel.BasicAck(ea.DeliveryTag, true);
                 };
 String consumerTag = channel.BasicConsume(queueName, false, consumer);
-</pre>
+```
 
 ### <a id="consumer-nacks-requeue" class="anchor" href="#consumer-nacks-requeue">Negative Acknowledgement and Requeuing of Deliveries</a>
 
@@ -269,7 +269,7 @@ Both methods are usually exposed as operations on a channel in client libraries.
 client users will use `Channel#basicReject` and `Channel#basicNack`
 to perform a `basic.reject` and `basic.nack`, respectively:
 
-<pre class="lang-java">
+```java
 // this example assumes an existing channel instance
 
 boolean autoAck = false;
@@ -288,9 +288,9 @@ channel.basicConsume(queueName, autoAck, "a-consumer-tag",
              channel.basicReject(deliveryTag, false);
          }
      });
-</pre>
+```
 
-<pre class="lang-java">
+```java
 // this example assumes an existing channel instance
 
 boolean autoAck = false;
@@ -308,12 +308,12 @@ channel.basicConsume(queueName, autoAck, "a-consumer-tag",
              channel.basicReject(deliveryTag, true);
          }
      });
-</pre>
+```
 
 In .NET client the methods are `IModel#BasicReject` and `IModel#BasicNack`,
 respectively:
 
-<pre class="lang-csharp">
+```csharp
 // this example assumes an existing channel (IModel) instance
 
 var consumer = new EventingBasicConsumer(channel);
@@ -325,9 +325,9 @@ consumer.Received += (ch, ea) =>
                     channel.BasicReject(ea.DeliveryTag, false);
                 };
 String consumerTag = channel.BasicConsume(queueName, false, consumer);
-</pre>
+```
 
-<pre class="lang-csharp">
+```csharp
 // this example assumes an existing channel (IModel) instance
 
 var consumer = new EventingBasicConsumer(channel);
@@ -338,7 +338,7 @@ consumer.Received += (ch, ea) =>
                     channel.BasicReject(ea.DeliveryTag, true);
                 };
 String consumerTag = channel.BasicConsume(queueName, false, consumer);
-</pre>
+```
 
 When a message is requeued, it will be placed to its original
 position in its queue, if possible. If not (due to concurrent
@@ -359,7 +359,7 @@ It is possible to reject or requeue multiple messages at once using the `basic.n
 method. This is what differentiates it from `basic.reject`. It accepts an additional
 parameter, `multiple`. Here's a Java client example:
 
-<pre class="lang-java">
+```java
 // this example assumes an existing channel instance
 
 boolean autoAck = false;
@@ -378,11 +378,11 @@ channel.basicConsume(queueName, autoAck, "a-consumer-tag",
              channel.basicNack(deliveryTag, true, true);
          }
      });
-</pre>
+```
 
 Things work very similarly with .NET client:
 
-<pre class="lang-csharp">
+```csharp
 // this example assumes an existing channel (IModel) instance
 
 var consumer = new EventingBasicConsumer(channel);
@@ -394,7 +394,7 @@ consumer.Received += (ch, ea) =>
                     channel.BasicNack(ea.DeliveryTag, true, true);
                 };
 String consumerTag = channel.BasicConsume(queueName, false, consumer);
-</pre>
+```
 
 ### <a id="channel-qos-prefetch" class="anchor" href="#channel-qos-prefetch">Channel Prefetch Setting (QoS)</a>
 

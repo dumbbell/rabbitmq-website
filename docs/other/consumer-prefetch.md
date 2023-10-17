@@ -69,22 +69,22 @@ The following basic example in Java will receive a maximum of 10
 unacknowledged messages at once:
 
 
-<pre class="lang-java">
+```java
 Channel channel = ...;
 Consumer consumer = ...;
 channel.basicQos(10); // Per consumer limit
 channel.basicConsume("my-queue", false, consumer);
-</pre>
+```
 
 A value of `0` is treated as infinite, allowing any number of unacknowledged
 messages.
 
-<pre class="lang-java">
+```java
 Channel channel = ...;
 Consumer consumer = ...;
 channel.basicQos(0); // No limit for this consumer
 channel.basicConsume("my-queue", false, consumer);
-</pre>
+```
 
 ## <a id="independent-consumers" class="anchor" href="#independent-consumers">Independent Consumers</a>
 
@@ -92,14 +92,14 @@ This example starts two consumers on the same channel, each of
 which will independently receive a maximum of 10 unacknowledged
 messages at once:
 
-<pre class="lang-java">
+```java
 Channel channel = ...;
 Consumer consumer1 = ...;
 Consumer consumer2 = ...;
 channel.basicQos(10); // Per consumer limit
 channel.basicConsume("my-queue1", false, consumer1);
 channel.basicConsume("my-queue2", false, consumer2);
-</pre>
+```
 
 ## <a id="sharing-the-limit" class="anchor" href="#sharing-the-limit">Multiple Consumers Sharing the Limit</a>
 
@@ -112,7 +112,7 @@ limit on unacknowledged messages has been reached.
 
 For example:
 
-<pre class="lang-java">
+```java
 Channel channel = ...;
 Consumer consumer1 = ...;
 Consumer consumer2 = ...;
@@ -120,7 +120,7 @@ channel.basicQos(10, false); // Per consumer limit
 channel.basicQos(15, true);  // Per channel limit
 channel.basicConsume("my-queue1", false, consumer1);
 channel.basicConsume("my-queue2", false, consumer2);
-</pre>
+```
 
 These two consumers will only ever have 15 unacknowledged
 messages between them, with a maximum of 10 messages for each
@@ -133,7 +133,7 @@ the queues to enforce the global limit.
 RabbitMQ can use a default prefetch that will be applied if the consumer doesn't specify one.
 The value can be configured as `rabbit.default_consumer_prefetch` in the [advanced configuration file](configure.html#advanced-config-file):
 
-<pre class="lang-erlang">
+```erlang
 %% advanced.config file
 [
  {rabbit, [
@@ -141,4 +141,4 @@ The value can be configured as `rabbit.default_consumer_prefetch` in the [advanc
      ]
  }
 ].
-</pre>
+```

@@ -65,21 +65,21 @@ in your project is with a dependency management system.
 
 If you're using Maven, add this dependency to the POM file of your project:
 
-<pre class="lang-xml">
+```xml
 &lt;dependency&gt;
   &lt;groupId&gt;com.rabbitmq&lt;/groupId&gt;
   &lt;artifactId&gt;amqp-client&lt;/artifactId&gt;
   &lt;version&gt;5.19.0&lt;/version&gt;
 &lt;/dependency&gt;
-</pre>
+```
 
 If using Gradle:
 
-<pre class="lang-groovy">
+```groovy
 dependencies {
   compile 'com.rabbitmq:amqp-client:5.19.0'
 }
-</pre>
+```
 
 We attempt to upload new versions of the Java client on the day
 of release; however the Maven servers are sometimes unavailable,
@@ -188,9 +188,9 @@ compiling from source code.
       <a href="https://github.com/rabbitmq/rabbitmq-java-client/tarball/main">Java client</a>
     </td>
     <td>
-<pre class="lang-bash">
+```bash
 git clone https://github.com/rabbitmq/rabbitmq-java-client.git
-</pre>
+```
     </td>
     <td>
       <a href="https://github.com/rabbitmq/rabbitmq-java-client">Repository on GitHub</a>
@@ -202,10 +202,10 @@ git clone https://github.com/rabbitmq/rabbitmq-java-client.git
       RabbitMQ Code Generator
     </td>
     <td>
-<pre class="lang-bash">
+```bash
 git clone https://github.com/rabbitmq/rabbitmq-server
 cd rabbitmq-server/deps/rabbitmq_codegen
-</pre>
+```
     </td>
     <td>
       <a href="https://github.com/rabbitmq/rabbitmq-server/tree/main/deps/rabbitmq_codegen">Repository on GitHub</a>

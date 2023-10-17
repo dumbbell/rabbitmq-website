@@ -48,9 +48,9 @@ SHA-256 is used by default. More algorithms can be provided by plugins.
 It is possible to change what algorithm is used via [RabbitMQ configuration file](./configure.html#config-file),
 for example, to use SHA-512:
 
-<pre class="lang-plaintext">
+```plaintext
 password_hashing_module = rabbit_password_hashing_sha512
-</pre>
+```
 
 Out of the box, the following hashing modules are provided:
 
@@ -93,17 +93,17 @@ There are three credential validators available out of the box:
 
 The following example demonstrates how `rabbit_credential_validator_min_password_length` is used:
 
-<pre class="lang-ini">
+```ini
 credential_validator.validation_backend = rabbit_credential_validator_min_password_length
 credential_validator.min_length = 30
-</pre>
+```
 
 The following example demonstrates how `rabbit_credential_validator_password_regexp` is used:
 
-<pre class="lang-ini">
+```ini
 credential_validator.validation_backend = rabbit_credential_validator_password_regexp
 credential_validator.regexp = ^[a-bA-Z0-9$]{20,100}
-</pre>
+```
 
 ### <a id="credential-validation-limitations" class="anchor" href="#credential-validation-limitations">Credential Validator Limitations</a>
 
@@ -138,12 +138,12 @@ with passwordless [authentication mechanisms](./authentication.html) such as [au
 In order to create a passwordless user, create one with any password that passes validation and clear
 the password using [rabbitmqctl](./cli.html)'s `clear_password` command:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl add_user passwordless-user "pa$$wordless"
 rabbitmqctl clear_password passwordless-user
 # don't forget to grant the user virtual host access permissions using set_permissions
 # ...
-</pre>
+```
 
 Starting with versions `3.6.15` and `3.7.3`, authentication attempts that use a blank password
 will be unconditionally rejected by the [internal authentication backend](./access-control.html) with a distinctive error
@@ -173,22 +173,22 @@ or to generate a [definitions file](definitions.html) to import.
 
 ### Hash via `rabbitmqctl`
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl hash_password foobarbaz
 
 # Output:
 # Will hash password foobarbaz
 # 27cx5+wEi8R8uwTeTr3hk5azuV3yYxxAtwPPhCyrbdsxVhqq
-</pre>
+```
 
 ### Hash via HTTP API
 
-<pre class="lang-bash">
+```bash
 curl -4su guest:guest -X GET localhost:15672/api/auth/hash_password/foobarbaz
 
 # Output:
 # {"ok":"TBybOvomyVw6BqBU/fHCEpVhDO7fLdQ4kxZDUpt6hagCxV8I"}
-</pre>
+```
 
 ### This is the algorithm:
 

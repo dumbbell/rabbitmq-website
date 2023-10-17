@@ -74,9 +74,9 @@ There are a few exchange types available: `direct`, `topic`, `headers`
 and `fanout`. We'll focus on the last one -- the fanout. Let's create
 an exchange of this type, and call it `logs`:
 
-<pre class="lang-objectivec">
+```objectivec
 [ch fanout:@"logs"];
-</pre>
+```
 
 The fanout exchange is very simple. As you can probably guess from the
 name, it just broadcasts all the messages it receives to all the
@@ -87,9 +87,9 @@ queues it knows. And that's exactly what we need for our logger.
 >
 > To list the exchanges on the server you can run the ever useful `rabbitmqctl`:
 >
-> <pre class="lang-bash">
+> ```bash
 > sudo rabbitmqctl list_exchanges
-> </pre>
+> ```
 >
 > In this list there will be some `amq.*` exchanges and the default (unnamed)
 > exchange. These are created by default, but it is unlikely you'll need to
@@ -104,19 +104,19 @@ queues it knows. And that's exactly what we need for our logger.
 >
 > Recall how we published a message before:
 >
-> <pre class="lang-objectivec">
+> ```objectivec
 > [ch.defaultExchange publish:@"hello" routingKey:@"hello" persistent:YES];
-> </pre>
+> ```
 >
 > Here we use the default or _nameless_ exchange: messages are
 > routed to the queue with the name specified by `routingKey`, if it exists.
 
 Now, we can publish to our named exchange instead:
 
-<pre class="lang-objectivec">
+```objectivec
 RMQExchange *x = [ch fanout:@"logs"];
 [x publish:[msg dataUsingEncoding:NSUTF8StringEncoding]];
-</pre>
+```
 
 Temporary queues
 ----------------
@@ -237,7 +237,7 @@ we now want to publish messages to our `logs` exchange instead of the
 nameless one. Here goes the code for
 `emitLog`:
 
-<pre class="lang-objectivec">
+```objectivec
 RMQConnection *conn = [[RMQConnection alloc] initWithDelegate:[RMQConnectionDelegateLogger new]];
 [conn start];
 
@@ -250,7 +250,7 @@ NSString *msg = @"Hello World!";
 NSLog(@"Sent %@", msg);
 
 [conn close];
-</pre>
+```
 
 As you see, after establishing the connection we declared the
 exchange. This step is necessary as publishing to a non-existing
@@ -261,7 +261,7 @@ but that's okay for us; if no consumer is listening yet we can safely discard th
 
 The code for `receiveLogs`:
 
-<pre class="lang-objectivec">
+```objectivec
 RMQConnection *conn = [[RMQConnection alloc] initWithDelegate:[RMQConnectionDelegateLogger new]];
 [conn start];
 
@@ -276,7 +276,7 @@ NSLog(@"Waiting for logs.");
 [q subscribe:^(RMQMessage * _Nonnull message) {
     NSLog(@"Received %@", [[NSString alloc] initWithData:message.body encoding:NSUTF8StringEncoding]);
 }];
-</pre>
+```
 
 [(source)](https://github.com/rabbitmq/rabbitmq-tutorials/tree/main/objective-c/tutorial3/tutorial3/ViewController.m)
 
@@ -284,13 +284,13 @@ Using `rabbitmqctl list_bindings` you can verify that the code actually
 creates bindings and queues as we want. With two `receive_logs.rb`
 programs running you should see something like:
 
-<pre class="lang-bash">
+```bash
 sudo rabbitmqctl list_bindings
 # => Listing bindings ...
 # => logs    exchange        amq.gen-JzTY20BRgKO-HjmUJj0wLg  queue           []
 # => logs    exchange        amq.gen-vso0PVvyiRIL2WoV3i48Yg  queue           []
 # => ...done.
-</pre>
+```
 
 The interpretation of the result is straightforward: data from
 exchange `logs` goes to two queues with generated names. And

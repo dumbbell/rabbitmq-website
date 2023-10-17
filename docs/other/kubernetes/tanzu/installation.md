@@ -45,26 +45,26 @@ First download the VMware RabbitMQ release tarball (`.tar` file) from [VMware Ta
 The file then must be placed on the filesystem of a machine within the network hosting the target registry.
 On that machine, load the tarball into the registry by running:
 
-<pre class="lang-bash">
+```bash
 # upload the file to the target registry reachable on the local network
 imgpkg copy --to-repo your.company.domain/registry/tanzu-rabbitmq-bundle --tar tanzu-rabbitmq-1.1.0.tar
-</pre>
+```
 
 On a machine that targets (has access to) the target Kubernetes cluster,
 pull bundle by running:
 
-<pre class="lang-bash">
+```bash
 imgpkg pull -b your.company.domain/registry/tanzu-rabbitmq-bundle:1.1.0 -o /your/output/directory
 cd /your/output/directory
-</pre>
+```
 
 ### Creating a Namespace
 
 Create a new namespace, `rabbitmq-system`, by running:
 
-<pre class="lang-bash">
+```bash
 kubectl create namespace rabbitmq-system
-</pre>
+```
 
 ### Providing imagePullSecrets
 
@@ -82,7 +82,7 @@ the secret on the `default` and `rabbitmq-system` namespaces.
 Assuming we have already authenticated with the registry, a more convenient options would be to simply mount
 the Docker authentication credentials as a Secret:
 
-<pre class="lang-bash">
+```bash
 AUTH_TOKEN="$(cat $HOME/.docker/config.json | jq -r ".auths[\"$MY_PRIVATE_REGISTRY\"].auth")"
 kubectl create secret generic tanzu-registry-creds \
     -n default \
@@ -92,7 +92,7 @@ kubectl create secret generic tanzu-registry-creds \
     -n rabbitmq-system \
     --type=kubernetes.io/dockerconfigjson \
     --from-literal=.dockerconfigjson="{\"auths\":{\"$MY_PRIVATE_REGISTRY\":{\"auth\":\"$AUTH_TOKEN\"}}}"
-</pre>
+```
 
 ## Installing the Bundle
 
@@ -107,15 +107,15 @@ There are two ways of installing the components of :
 
 First, install Cert-manager version 1.2.0+ on your cluster. For example, for version 1.3.1, run:
 
-<pre class="lang-bash">
+```bash
 kbld -f https://github.com/jetstack/cert-manager/releases/download/v1.3.1/cert-manager.yaml | kapp deploy -y -a cert-manager -f-
-</pre>
+```
 
 Next install the RabbitMQ operators by running:
 
-<pre class="lang-bash">
+```bash
 ytt -f manifests/cluster-operator.yml -f manifests/messaging-topology-operator-with-certmanager.yaml -f overlays/operator-deployments.yml | kbld -f .imgpkg/images.yml -f config/ -f- | kapp -y deploy -a rabbitmq-operator -f -
-</pre>
+```
 
 ### Option 2. Install Using Manually Created Certificates
 
@@ -129,7 +129,7 @@ The secret object must contain following keys: `ca.crt`, `tls.key`, and `tls.key
 
 This example will create a manifest for a Kubernetes Secret with name `webhook-server-cert` in namespace `rabbitmq-system`:
 
-<pre class="lang-yaml">
+```yaml
 apiVersion: v1
 kind: Secret
 type: kubernetes.io/tls
@@ -140,24 +140,24 @@ data:
   ca.crt: # ca cert that can be used to validate the webhook's server certificate
   tls.crt: # generated certificate
   tls.key: # generated key
-</pre>
+```
 
 There are some steps to perform **before** deploying the above manifest.
 
 Edit the Messaging Topology Operator manifest within the bundle
 using any text editor:
 
-<pre class="lang-bash">
+```bash
 vim manifests/messaging-topology-operator.yaml
-</pre>
+```
 
 In it, replace the values of all `caBundle` keys in this file with the value of `ca.crt` in the Secret manifest created earlier.
 
 Now install the RabbitMQ operators by running:
 
-<pre class="lang-bash">
+```bash
 ytt -f manifests/cluster-operator.yml -f manifests/messaging-topology-operator.yaml -f overlays/operator-deployments.yml | kbld -f .imgpkg/images.yml -f config/ -f $SECRET_PATH -f- | kapp -y deploy -a rabbitmq-operator -f -
-</pre>
+```
 
 ## Observability
 
@@ -176,7 +176,7 @@ the resultant cluster will use the bundled VMware RabbitMQ container image.
 
 This example creates a very minimalistic RabbitmqCluster:
 
-<pre class="lang-bash">
+```bash
 cat &lt;&lt;EOF &gt; rabbitmq.yaml
 apiVersion: rabbitmq.com/v1beta1
 kind: RabbitmqCluster
@@ -184,4 +184,4 @@ metadata:
   name: my-tanzu-rabbit
 EOF
 ytt -f rabbitmq.yaml -f overlays/rabbitmqcluster.yml | kbld -f- | kapp deploy -f- -a my-tanzu-rabbit -y
-</pre>
+```

@@ -155,7 +155,7 @@ The code is almost the same as in the
 
 The code for `emit_log_topic.php`:
 
-<pre class="lang-php">
+```php
 &lt;?php
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -181,11 +181,11 @@ echo ' [x] Sent ', $routing_key, ':', $data, "\n";
 
 $channel->close();
 $connection->close();
-</pre>
+```
 
 The code for `receive_logs_topic.php`:
 
-<pre class="lang-php">
+```php
 &lt;?php
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -222,37 +222,37 @@ while ($channel->is_open()) {
 
 $channel->close();
 $connection->close();
-</pre>
+```
 
 To receive all the logs:
 
-<pre class="lang-bash">
+```bash
 php receive_logs_topic.php "#"
-</pre>
+```
 
 To receive all logs from the facility "`kern`":
 
-<pre class="lang-bash">
+```bash
 php receive_logs_topic.php "kern.*"
-</pre>
+```
 
 Or if you want to hear only about "`critical`" logs:
 
-<pre class="lang-bash">
+```bash
 php receive_logs_topic.php "*.critical"
-</pre>
+```
 
 You can create multiple bindings:
 
-<pre class="lang-bash">
+```bash
 php receive_logs_topic.php "kern.*" "*.critical"
-</pre>
+```
 
 And to emit a log with a routing key "`kern.critical`" type:
 
-<pre class="lang-bash">
+```bash
 php emit_log_topic.php "kern.critical" "A critical kernel error"
-</pre>
+```
 
 Have fun playing with these programs. Note that the code doesn't make
 any assumption about the routing or binding keys, you may want to play

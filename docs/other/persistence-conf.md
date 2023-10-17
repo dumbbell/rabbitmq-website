@@ -83,10 +83,10 @@ keep up to this much message data in memory under steady load.
 
 The limit can be controlled
 
-<pre class="lang-ini">
+```ini
 # Flush current WAL file to a segment file on disk once it reaches 32 MiB in size
 raft.wal_max_size_bytes = 32000000
-</pre>
+```
 
 Because memory deallocation may take some time,
 we recommend that the RabbitMQ node is allocated at least 3 times the memory of the default WAL file size limit.
@@ -123,11 +123,11 @@ the conversion is running.
 The default version can be set through configuration by setting
 `classic_queue.default_version` in `rabbitmq.conf`:
 
-<pre class="lang-ini">
+```ini
 # makes classic queues use a more efficient message storage
 # and queue index implementations
 classic_queue.default_version = 2
-</pre>
+```
 
 ## <a id="cq-v1" class="anchor" href="#cq-v1">How Classic Queue v1 Persistence Overview</a>
 

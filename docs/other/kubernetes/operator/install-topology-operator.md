@@ -24,15 +24,15 @@ There are two options for installing the Operator:
 
 First, install cert-manager version 1.2.0+ on your cluster. For example, for version 1.3.1, run:
 
-<pre class="lang-bash">
+```bash
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.3.1/cert-manager.yaml
-</pre>
+```
 
 Then, to install the Operator, run the following command:
 
-<pre class="lang-bash">
+```bash
 kubectl apply -f https://github.com/rabbitmq/messaging-topology-operator/releases/latest/download/messaging-topology-operator-with-certmanager.yaml
-</pre>
+```
 
 ### Install with Generated Certificates
 
@@ -63,7 +63,7 @@ The secret will be mounted to the Operator container, where all webhooks will ru
 
 For example:
 
-<pre class="lang-yaml">
+```yaml
 apiVersion: v1
 kind: Secret
 type: kubernetes.io/tls
@@ -74,7 +74,7 @@ data:
   ca.crt: # ca cert that can be used to validate the webhook's server certificate
   tls.crt: # generated certificate
   tls.key: # generated private key
-</pre>
+```
 
 #### Use Generated Certificates in Release Manifest
 
@@ -86,7 +86,7 @@ Because there are several webhooks, perform this action in several places.
 
 The example below shows how to add a CA certificate to the `queues.rabbitmq.com` validating webhook:
 
-<pre class="lang-yaml">
+```yaml
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
@@ -106,14 +106,14 @@ webhooks:
   rules:
   - apiGroups:
     - rabbitmq.com
-...</pre>
+...```
 
 
 Then, to install the Operator, run the following command:
 
-<pre class="lang-bash">
+```bash
 kubectl apply -f messaging-topology-operator.yaml
-</pre>
+```
 
 At this point, the RabbitMQ Messaging Topology Operator is successfully installed.
 
@@ -135,7 +135,7 @@ To set this environment variable:
 
 The manifest related to the `Deployment` should look similar to this:
 
-<pre class="lang-yaml">
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -156,7 +156,7 @@ spec:
               fieldPath: metadata.namespace
         - name: MESSAGING_DOMAIN_NAME
           value: "my.cluster.domain"
-</pre>
+```
 
 Apply the edited manifest. Once the Pod has applied the changes, subsequent HTTP API requests to
 RabbitMQ will append the domain name to the connection string.

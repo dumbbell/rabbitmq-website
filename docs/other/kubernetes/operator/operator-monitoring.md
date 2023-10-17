@@ -18,24 +18,24 @@ The [Prometheus Operator](https://github.com/coreos/prometheus-operator) defines
 
 Check whether the RabbitMQ Kubernetes cluster has the Prometheus Operator deployed:
 
-<pre class="lang-bash">
+```bash
 kubectl get customresourcedefinitions.apiextensions.k8s.io servicemonitors.monitoring.coreos.com
-</pre>
+```
 If this command returns an error, Prometheus Operator is not deployed. If you want to deploy it, follow [these instructions](https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/getting-started.md).
 
 To monitor all RabbitMQ clusters, run:
-<pre class="lang-bash">
+```bash
 kubectl apply --filename https://raw.githubusercontent.com/rabbitmq/cluster-operator/main/observability/prometheus/monitors/rabbitmq-servicemonitor.yml
-</pre>
+```
 
 To monitor RabbitMQ Cluster Operator, run:
-<pre class="lang-bash">
+```bash
 kubectl apply --filename https://raw.githubusercontent.com/rabbitmq/cluster-operator/main/observability/prometheus/monitors/rabbitmq-cluster-operator-podmonitor.yml
-</pre>
+```
 
 If <code>Prometheus</code> is deployed with a label selector for Pod or Service monitor, for example:
 
-<pre class="lang-yaml">
+```yaml
   apiVersion: monitoring.coreos.com/v1
   kind: Prometheus
   metadata:
@@ -48,15 +48,15 @@ If <code>Prometheus</code> is deployed with a label selector for Pod or Service 
     podMonitorSelector:
       matchLabels:
         team: frontend
-</pre>
+```
 
 It is required to add the same labels to the <code>ServiceMonitor</code> deployed with the previous command.
 To label the <code>ServiceMonitor</code> and <code>PodMonitor</code> deployed in previous steps, run:
 
-<pre class="lang-bash">
+```bash
   kubectl label ServiceMonitor rabbitmq team=frontend
   kubectl label PodMonitor rabbitmq-cluster-operator team=frontend
-</pre>
+```
 
 `ServiceMonitor` and `PodMonitor` can be created in any namespace, as long as the Prometheus Operator has permissions to find it.
 For more information about these permissions, refer to [Configure Permissions for the Prometheus Operator](#config-perm) later in this information.
@@ -78,7 +78,7 @@ The `ruleSelector` from the `Prometheus` custom resource must match the labels o
 
 For example, in the following code, if the Prometheus custom resource contains the`ruleSelector`, then a label `release: my-prometheus` needs to be added to the `PrometheusRules`.
 
-<pre class='hljs lang-yaml'>
+```yaml
 apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
 metadata:
@@ -91,7 +91,7 @@ spec:
       release: my-prometheus
   ...
   version: v2.26.0
-</pre>
+```
 
 To get notified on firing alerts (for example: via Email or PagerDuty), configure a notification receiver in the [Alertmanager](https://prometheus.io/docs/alerting/latest/overview/).
 
@@ -105,7 +105,7 @@ The following steps were tested with a `kube-prometheus` deployment.
 
 To configure permissions for the Prometheus Operator, first create a file named `prometheus-roles.yaml` with the following contents:
 
-<pre class="lang-yaml">
+```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -137,13 +137,13 @@ subjects:
 - kind: ServiceAccount
   name: prometheus-k8s
   namespace: monitoring
-</pre>
+```
 
 Then, apply the permissions listed in `prometheus-roles.yaml` by running
 
-<pre class="lang-bash">
+```bash
 kubectl apply -f prometheus-roles.yaml
-</pre>
+```
 
 ## <a id='prom-annotations' class='anchor' href='#prom-annotations'>Monitor RabbitMQ Without the Prometheus Operator</a>
 

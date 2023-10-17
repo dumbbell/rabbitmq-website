@@ -61,66 +61,66 @@ user records should be **considered sensitive information**.
 
 To export definitions using [`rabbitmqctl`](cli.html), use `rabbitmqctl export_definitions`:
 
-<pre class="lang-bash">
+```bash
 # Does not require management plugin to be enabled
 rabbitmqctl export_definitions /path/to/definitions.file.json
-</pre>
+```
 
 `rabbitmqadmin export` is very similar but uses the HTTP API and is compatible
 with older versions:
 
-<pre class="lang-bash">
+```bash
 # Requires management plugin to be enabled
 rabbitmqadmin export /path/to/definitions.file.json
-</pre>
+```
 
 In this example, the `GET /api/definitions` endpoint is used directly to export
 definitions of all virtual hosts in a cluster:
 
-<pre class="lang-bash">
+```bash
 # Requires management plugin to be enabled,
 # placeholders are used for credentials and hostname.
 # Use HTTPS when possible.
 curl -u {username}:{password} -X GET http://{hostname}:15672/api/definitions
-</pre>
+```
 
 The response from the above API endpoint can be piped to [`jq`](https://stedolan.github.io/jq/) and similar tools
 for more human-friendly formatting:
 
-<pre class="lang-bash">
+```bash
 # Requires management plugin to be enabled,
 # placeholders are used for credentials and hostname.
 # Use HTTPS when possible.
 #
 # jq is a 3rd party tool that must be available in PATH
 curl -u {username}:{password} -X GET http://{hostname}:15672/api/definitions | jq
-</pre>
+```
 
 
 ## <a id="import" class="anchor" href="#import">Definition Import</a>
 
 To import definitions using [`rabbitmqctl`](cli.html), use `rabbitmqctl import_definitions`:
 
-<pre class="lang-ini">
+```ini
 # Does not require management plugin to be enabled
 rabbitmqctl import_definitions /path/to/definitions.file.json
-</pre>
+```
 
 `rabbitmqadmin import` is its HTTP API equivalent:
 
-<pre class="lang-ini">
+```ini
 # Requires management plugin to be enabled
 rabbitmqadmin import /path/to/definitions.file.json
-</pre>
+```
 
 It is also possible to use the `POST /api/definitions` API endpoint directly:
 
-<pre class="lang-bash">
+```bash
 # Requires management plugin to be enabled,
 # placeholders are used for credentials and hostname.
 # Use HTTPS when possible.
 curl -u {username}:{password} -H "Content-Type: application/json" -X POST -T /path/to/definitions.file.json http://{hostname}:15672/api/definitions
-</pre>
+```
 
 
 ## <a id="import-on-boot" class="anchor" href="#import-on-boot">Definition Import at Node Boot Time</a>
@@ -136,21 +136,21 @@ without the need to [preconfigure](plugins.html#enabled-plugins-file) the [manag
 To import definitions from a local file on node boot,
 set the `load_definitions` config key to a path of a previously exported JSON file with definitions:
 
-<pre class="lang-ini">
+```ini
 # Does not require management plugin to be enabled.
 load_definitions = /path/to/definitions/file.json
-</pre>
+```
 
 Definitions can be imported from a URL accessible over HTTPS on node boot.
 Set the `definitions.import_backend` and `definitions.https.url` config keys to https and a valid URL where a JSON definition is located.
 
-<pre class="lang-ini">
+```ini
 # Does not require management plugin to be enabled.
 definitions.import_backend = https
 definitions.https.url = https://raw.githubusercontent.com/rabbitmq/sample-configs/main/queues/5k-queues.json
 # client-side TLS options for definition import
 definitions.tls.versions.1 = tlsv1.2
-</pre>
+```
 
 ### <a id="import-on-boot-nuances" class="anchor" href="#import-on-boot-nuances">Nuances of Boot-time Definition Import</a>
 
@@ -168,7 +168,7 @@ For **production** systems a new user with unique credentials must be created an
 The below snippet demonstrates how the definitions file can be modified to
 "re-create" the default user that would only be able to connect from `localhost` by default:
 
-<pre class="lang-javascript">
+```javascript
     "users": [
         {
             "name": "guest",
@@ -184,7 +184,7 @@ The below snippet demonstrates how the definitions file can be modified to
             "read":".*",
             "write":".*"}
     ],
-</pre>
+```
 
 ### <a id="import-on-boot-skip-if-unchanged" class="anchor" href="#import-on-boot-skip-if-unchanged">Avoid Boot Time Import if Definition Contents Have Not Changed</a>
 
@@ -195,29 +195,29 @@ sense to only perform an import when definition file contents actually change.
 This can be done by setting the `definitions.skip_if_unchanged` configuration key
 to `true`:
 
-<pre class="lang-ini">
+```ini
 # when set to true, definition import will only happen
 # if definition file contents change
 definitions.skip_if_unchanged = true
 
 definitions.import_backend = local_filesystem
 definitions.local.path = /path/to/definitions/defs.json
-</pre>
+```
 
 This feature works for both individual files and directories:
 
-<pre class="lang-ini">
+```ini
 # when set to true, definition import will only happen
 # if definition file contents change
 definitions.skip_if_unchanged = true
 
 definitions.import_backend = local_filesystem
 definitions.local.path = /path/to/definitions/conf.d/
-</pre>
+```
 
  It is also supported by the HTTPS endpoint import mechanism:
 
-<pre class="lang-ini">
+```ini
 # when set to true, definition import will only happen
 # if definition file contents change
 definitions.skip_if_unchanged = true
@@ -231,7 +231,7 @@ definitions.tls.fail_if_no_peer_cert = true
 definitions.tls.cacertfile = /path/to/ca_certificate.pem
 definitions.tls.certfile   = /path/to/client_certificate.pem
 definitions.tls.keyfile    = /path/to/client_key.pem
-</pre>
+```
 
 
 ## <a id="import-after-boot" class="anchor" href="#import-after-boot">Definition Import After Node Boot</a>
@@ -239,7 +239,7 @@ definitions.tls.keyfile    = /path/to/client_key.pem
 Installations that use earlier versions that do not provide the built-in definition import
 can import definitions immediately after node boot using a combination of two CLI commands:
 
-<pre class="lang-bash">
+```bash
 # await startup for up to 5 minutes
 rabbitmqctl await_startup --timeout 300
 
@@ -249,4 +249,4 @@ rabbitmqctl import_definitions /path/to/definitions.file.json
 # OR, import using rabbitmqadmin
 # Requires management plugin to be enabled
 rabbitmqadmin import /path/to/definitions.file.json
-</pre>
+```

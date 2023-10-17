@@ -56,32 +56,32 @@ The direct download method is recommended because most key servers are prone to 
 The key is distributed via [GitHub](https://github.com/rabbitmq/signing-keys/releases/) and
 [rabbitmq.com](https://www.rabbitmq.com/rabbitmq-release-signing-key.asc):
 
-<pre class="lang-bash">
+```bash
 curl -L https://github.com/rabbitmq/signing-keys/releases/download/3.0/rabbitmq-release-signing-key.asc --output rabbitmq-release-signing-key.asc
 gpg --import rabbitmq-release-signing-key.asc
-</pre>
+```
 
 #### Using a Key Server
 
 The key can be imported from [keys.openpgp.org](https://keys.openpgp.org/):
 
-<pre class="lang-bash">
+```bash
 gpg --keyserver "hkps://keys.openpgp.org" --recv-keys "0x0A9AF2115F4687BD29803A206B73A36E6026DFCA"
-</pre>
+```
 
 Alternative keyservers:
 
-<pre class="lang-bash">
+```bash
 gpg --keyserver "keyserver.ubuntu.com" --recv-keys "0x0A9AF2115F4687BD29803A206B73A36E6026DFCA"
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 gpg --keyserver "pgp.surfnet.nl" --recv-keys "0x0A9AF2115F4687BD29803A206B73A36E6026DFCA"
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 gpg --keyserver "pgp.mit.edu" --recv-keys "0x0A9AF2115F4687BD29803A206B73A36E6026DFCA"
-</pre>
+```
 
 ### <a id="importing-apt" class="anchor" href="#importing-apt">With apt</a>
 
@@ -95,30 +95,30 @@ This can be done using key servers or (for the RabbitMQ main signing key) a dire
 Main RabbitMQ signing key is distributed via [GitHub](https://github.com/rabbitmq/signing-keys/releases/) and
 [rabbitmq.com](https://www.rabbitmq.com/rabbitmq-release-signing-key.asc):
 
-<pre class="lang-bash">
+```bash
 curl -1sLf https://github.com/rabbitmq/signing-keys/releases/download/3.0/rabbitmq-release-signing-key.asc | sudo gpg --dearmor &gt; /usr/share/keyrings/com.rabbitmq.team.gpg
-</pre>
+```
 
 #### Using a Key Server
 
 The same main RabbitMQ signing key can be imported from [keys.openpgp.org](https://keys.openpgp.org/):
 
-<pre class="lang-bash">
+```bash
 curl -1sLf "https://keys.openpgp.org/vks/v1/by-fingerprint/0A9AF2115F4687BD29803A206B73A36E6026DFCA" | sudo gpg --dearmor &gt; /usr/share/keyrings/com.rabbitmq.team.gpg
-</pre>
+```
 
 When using the [Team RabbitMQ modern Erlang PPA](https://launchpad.net/~rabbitmq/+archive/ubuntu/rabbitmq-erlang)
 and [PackageCloud apt repository](https://packagecloud.io/rabbitmq/rabbitmq-server), two more keys need
 to be added:
 
-<pre class="lang-bash">
+```bash
 ## Team RabbitMQ's main signing key
 curl -1sLf "https://keys.openpgp.org/vks/v1/by-fingerprint/0A9AF2115F4687BD29803A206B73A36E6026DFCA" | sudo gpg --dearmor &gt; /usr/share/keyrings/com.rabbitmq.team.gpg
 ## Launchpad PPA that provides modern Erlang releases
 curl -1sLf "https://keyserver.ubuntu.com/pks/lookup?op=get&amp;search=0xf77f1eda57ebb1cc" | sudo gpg --dearmor &gt; /usr/share/keyrings/net.launchpad.ppa.rabbitmq.erlang.gpg
 ## PackageCloud RabbitMQ repository
 curl -1sLf "https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey" | sudo gpg --dearmor &gt; /usr/share/keyrings/io.packagecloud.rabbitmq.gpg
-</pre>
+```
 
 ### <a id="importing-rpm" class="anchor" href="#importing-rpm">With RPM</a>
 
@@ -130,9 +130,9 @@ On RPM-based systems (RHEL, Fedora, CentOS), assuming that [yum repositories](./
 The key is distributed via [GitHub](https://github.com/rabbitmq/signing-keys/releases/) and
 [rabbitmq.com](https://www.rabbitmq.com/rabbitmq-release-signing-key.asc):
 
-<pre class="lang-bash">
+```bash
 rpm --import https://github.com/rabbitmq/signing-keys/releases/download/3.0/rabbitmq-release-signing-key.asc
-</pre>
+```
 
 ## <a id="checking-signatures" class="anchor" href="#checking-signatures">Verifying Signatures</a>
 
@@ -142,13 +142,14 @@ e.g. the signature file of `rabbitmq-server-generic-unix-3.9.3.tar.xz` would be 
 
 Then use `gpg --verify`:
 
-<pre class="lang-bash">gpg --verify [filename].asc [filename]</pre>
+```bash
+gpg --verify [filename].asc [filename]```
 
 Here's an example session, after having retrieved a RabbitMQ
 source archive and its associated detached signature from
 the download area:
 
-<pre class="lang-bash">
+```bash
 gpg --verify rabbitmq-server_3.9.3-1_all.deb.asc rabbitmq-server_3.9.3-1_all.deb
 gpg: Signature made Wed Aug 11 16:20:14 2021 MSK
 gpg:                using RSA key 0A9AF2115F4687BD29803A206B73A36E6026DFCA
@@ -158,7 +159,7 @@ gpg: Good signature from "RabbitMQ Signing Key &lt;info@rabbitmq.com&gt;" [full]
 Primary key fingerprint: 4E30 C634 2FB4 AF5C 6334  2330 79A1 D640 D80A 61F0
      Subkey fingerprint: 5EC4 26E8 A6F3 523D D924  8FC8 EDF4 AE3B 59B0 46FA
 gpg: binary signature, digest algorithm SHA512
-</pre>
+```
 
 If the signature is invalid, a "BAD signature"
 message will be emitted. If that's the case the origin of the package,
@@ -173,9 +174,9 @@ our key being untrusted.
 If you trust the RabbitMQ signing key you avoid the warning output by
 GnuPG by signing it using your own key (to create your private key run `gpg --gen-key`):
 
-<pre class="lang-bash">
+```bash
 gpg --sign-key 0x0A9AF2115F4687BD29803A206B73A36E6026DFCA
-</pre>
+```
 
 
 ## <a id="cloudsmith" class="anchor" href="#cloudsmith">Cloudsmith</a>
@@ -189,11 +190,11 @@ note that the script **does not** currently follow Debian best practices in term
 
 To import the key:
 
-<pre class="lang-bash">
+```bash
 # import the Cloudsmith key
 curl -1sLf https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-server.9F4587F226208342.key -o cloudsmith-rabbitmq-key.asc
 gpg --import cloudsmith-rabbitmq-key.asc
-</pre>
+```
 
 After importing the key please follow the installation instructions in the [Debian](install-debian.html) or [RPM-based Linux](install-rpm.html) guides.
 
@@ -210,10 +211,10 @@ note that the script **does not** currently follow Debian best practices in term
 
 To import the key:
 
-<pre class="lang-bash">
+```bash
 # import the PackageCloud key
 curl -1sLf https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey -o packagecloud-rabbitmq-key.asc
 gpg --import packagecloud-rabbitmq-key.asc
-</pre>
+```
 
 After importing the key please follow the installation instructions in the [Debian](install-debian.html) or [RPM-based Linux](install-rpm.html) guides.

@@ -163,7 +163,7 @@ The code is almost the same as in the
 
 `emit_log_topic.py` ([source](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/python/emit_log_topic.py))
 
-<pre class="lang-python">
+```python
 #!/usr/bin/env python
 import pika
 import sys
@@ -180,11 +180,11 @@ channel.basic_publish(
     exchange='topic_logs', routing_key=routing_key, body=message)
 print(f" [x] Sent {routing_key}:{message}")
 connection.close()
-</pre>
+```
 
 `receive_logs_topic.py` ([source](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/python/receive_logs_topic.py))
 
-<pre class="lang-python">
+```python
 #!/usr/bin/env python
 import pika
 import sys
@@ -218,37 +218,37 @@ channel.basic_consume(
     queue=queue_name, on_message_callback=callback, auto_ack=True)
 
 channel.start_consuming()
-</pre>
+```
 
 To receive all the logs run:
 
-<pre class="lang-bash">
+```bash
 python receive_logs_topic.py "#"
-</pre>
+```
 
 To receive all logs from the facility "`kern`":
 
-<pre class="lang-bash">
+```bash
 python receive_logs_topic.py "kern.*"
-</pre>
+```
 
 Or if you want to hear only about "`critical`" logs:
 
-<pre class="lang-bash">
+```bash
 python receive_logs_topic.py "*.critical"
-</pre>
+```
 
 You can create multiple bindings:
 
-<pre class="lang-bash">
+```bash
 python receive_logs_topic.py "kern.*" "*.critical"
-</pre>
+```
 
 And to emit a log with a routing key "`kern.critical`" type:
 
-<pre class="lang-bash">
+```bash
 python emit_log_topic.py "kern.critical" "A critical kernel error"
-</pre>
+```
 
 Have fun playing with these programs. Note that the code doesn't make
 any assumption about the routing or binding keys, you may want to play

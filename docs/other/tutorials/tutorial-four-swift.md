@@ -22,9 +22,9 @@ Bindings
 In previous examples we were already creating bindings. You may recall
 code like:
 
-<pre class="lang-swift">
+```swift
 q.bind(exchange)
-</pre>
+```
 
 A binding is a relationship between an exchange and a queue. This can
 be simply read as: the queue is interested in messages from this
@@ -34,9 +34,9 @@ Bindings can take an extra `routingKey` parameter. To avoid the
 confusion with an `RMQExchange publish:` parameter we're going to call it a
 `binding key`. This is how we could create a binding with a key:
 
-<pre class="lang-swift">
+```swift
 q.bind(exchange, routingKey: "black")
-</pre>
+```
 
 The meaning of a binding key depends on the exchange type. The
 `fanout` exchanges, which we used previously, simply ignored its
@@ -166,16 +166,16 @@ first.
 
 As always, we need to create an exchange first:
 
-<pre class="lang-swift">
+```swift
 ch.direct("logs")
-</pre>
+```
 
 And we're ready to send a message:
 
-<pre class="lang-swift">
+```swift
 let x = ch.direct("logs")
 x.publish(msg.data(using: .utf8), routingKey: severity)
-</pre>
+```
 
 To simplify things we will assume that 'severity' can be one of
 'info', 'warning', 'error'.
@@ -188,13 +188,13 @@ Receiving messages will work just like in the previous tutorial, with
 one exception - we're going to create a new binding for each severity
 we're interested in.
 
-<pre class="lang-swift">
+```swift
 let q = ch.queue("", options: .exclusive)
 let severities = ["error", "warning", "info"]
 for severity: String in severities {
     q.bind(x, routingKey: severity)
 }
-</pre>
+```
 
 Putting it all together
 -----------------------
@@ -241,7 +241,7 @@ Putting it all together
 
 The code for the `emitLogDirect` method:
 
-<pre class="lang-swift">
+```swift
 func emitLogDirect(_ msg: String, severity: String) {
     let conn = RMQConnection(delegate: RMQConnectionDelegateLogger())
     conn.start()
@@ -251,11 +251,11 @@ func emitLogDirect(_ msg: String, severity: String) {
     print("Sent '\(msg)'")
     conn.close()
 }
-</pre>
+```
 
 The code for `receiveLogsDirect`:
 
-<pre class="lang-swift">
+```swift
 func receiveLogsDirect() {
     let conn = RMQConnection(delegate: RMQConnectionDelegateLogger())
     conn.start()
@@ -272,13 +272,13 @@ func receiveLogsDirect() {
                                        encoding: .utf8))")
     })
 }
-</pre>
+```
 
 To emit an `error` log message just call:
 
-<pre class="lang-swift">
+```swift
 self.emitLogDirect("Hi there!", severity: "error")
-</pre>
+```
 
 ([source code][source])
 

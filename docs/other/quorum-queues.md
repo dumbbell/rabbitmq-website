@@ -502,21 +502,21 @@ removed from the member list of all quorum queues it currently hosts replicas fo
 
 Several [CLI commands](./cli.html) are provided to perform the above operations:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-queues add_member [-p &lt;vhost&gt;] &lt;queue-name&gt; &lt;node&gt;
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 rabbitmq-queues delete_member [-p &lt;vhost&gt;] &lt;queue-name&gt; &lt;node&gt;
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 rabbitmq-queues grow &lt;node&gt; &lt;all | even&gt; [--vhost-pattern &lt;pattern&gt;] [--queue-pattern &lt;pattern&gt;]
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 rabbitmq-queues shrink &lt;node&gt; [--errors-only]
-</pre>
+```
 
 To successfully add and remove members a quorum of replicas in the cluster must be available
 because cluster membership changes are treated as queue state changes.
@@ -533,24 +533,24 @@ Once declared, the RabbitMQ quorum queue leaders may be unevenly distributed acr
 To re-balance use the `rabbitmq-queues rebalance`
 command. It is important to know that this does not change the nodes which the quorum queues span. To modify the membership instead see [managing replicas](#replica-management).
 
-<pre class="lang-bash">
+```bash
 # rebalances all quorum queues
 rabbitmq-queues rebalance quorum
-</pre>
+```
 
 it is possible to rebalance a subset of queues selected by name:
 
-<pre class="lang-bash">
+```bash
 # rebalances a subset of quorum queues
 rabbitmq-queues rebalance quorum --queue-pattern "orders.*"
-</pre>
+```
 
 or quorum queues in a particular set of virtual hosts:
 
-<pre class="lang-bash">
+```bash
 # rebalances a subset of quorum queues
 rabbitmq-queues rebalance quorum --vhost-pattern "production.*"
-</pre>
+```
 
 
 ## <a id="behaviour" class="anchor" href="#behaviour">Quorum Queue Behaviour</a>
@@ -728,13 +728,13 @@ The `rabbit` application has several quorum queue related configuration items av
 
 The following `advanced.config` example modifies all values listed above:
 
-<pre class="lang-erlang">
+```erlang
 [
  %% five replicas by default, only makes sense for nine node clusters
  {rabbit, [{quorum_cluster_size, 5},
            {quorum_commands_soft_limit, 512}]}
 ]
-</pre>
+```
 
 
 ## <a id="poison-message-handling" class="anchor" href="#poison-message-handling">Poison Message Handling for Quorum Queues</a>
@@ -773,10 +773,10 @@ Compaction is the process that reclaims disk space.
 
 The WAL file size limit at which it is flushed to disk can be controlled:
 
-<pre class="lang-ini">
+```ini
 # Flush current WAL file to a segment file on disk once it reaches 64 MiB in size
 raft.wal_max_size_bytes = 64000000
-</pre>
+```
 
 The value defaults to 512 MiB. This means that during steady load, the WAL table memory
 footprint can reach 512 MiB. You can expect your memory usage to look like this:

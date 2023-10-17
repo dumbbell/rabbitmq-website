@@ -156,7 +156,7 @@ The code is almost the same as in the
 
 The code for `emit_log_topic.exs`:
 
-<pre class="lang-elixir">
+```elixir
 {:ok, connection} = AMQP.Connection.open
 {:ok, channel} = AMQP.Channel.open(connection)
 
@@ -174,11 +174,11 @@ AMQP.Basic.publish(channel, "topic_logs", topic, message)
 IO.puts " [x] Sent '[#{topic}] #{message}'"
 
 AMQP.Connection.close(connection)
-</pre>
+```
 
 The code for `receive_logs_topic.exs`:
 
-<pre class="lang-elixir">
+```elixir
 defmodule ReceiveLogsTopic do
   def wait_for_messages(channel) do
     receive do
@@ -210,37 +210,37 @@ AMQP.Basic.consume(channel, queue_name, nil, no_ack: true)
 IO.puts " [*] Waiting for messages. To exit press CTRL+C, CTRL+C"
 
 ReceiveLogsTopic.wait_for_messages(channel)
-</pre>
+```
 
 To receive all the logs run:
 
-<pre class="lang-bash">
+```bash
 mix run receive_logs_topic.exs "#"
-</pre>
+```
 
 To receive all logs from the facility "`kern`":
 
-<pre class="lang-bash">
+```bash
 mix run receive_logs_topic.exs "kern.*"
-</pre>
+```
 
 Or if you want to hear only about "`critical`" logs:
 
-<pre class="lang-bash">
+```bash
 mix run receive_logs_topic.exs "*.critical"
-</pre>
+```
 
 You can create multiple bindings:
 
-<pre class="lang-bash">
+```bash
 mix run receive_logs_topic.exs "kern.*" "*.critical"
-</pre>
+```
 
 And to emit a log with a routing key "`kern.critical`" type:
 
-<pre class="lang-bash">
+```bash
 mix run emit_log_topic.exs "kern.critical" "A critical kernel error"
-</pre>
+```
 
 Have fun playing with these programs. Note that the code doesn't make
 any assumption about the routing or binding keys, you may want to play

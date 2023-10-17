@@ -22,14 +22,14 @@ This guide assumes you have the following:
 
 For example:
 
-<pre class="lang-bash">
+```bash
 kubectl -n rabbitmq-system create secret generic rabbitmq-ca --from-file=ca.crt=$CA_PATH
-</pre>
+```
 
 3. Mount this secret into the Messaging Topology Operator Pod's trust store. Do this by either editing the Deployment manifest,
 or by applying a patch through kubectl:
 
-<pre class="lang-bash">
+```bash
 kubectl -n rabbitmq-system patch deployment messaging-topology-operator --patch "spec:
   template:
     spec:
@@ -44,7 +44,7 @@ kubectl -n rabbitmq-system patch deployment messaging-topology-operator --patch 
         secret:
           defaultMode: 420
           secretName: rabbitmq-ca"
-</pre>
+```
     
 The Topology Operator Pod will be recreated, and will now trust the certificates signed by the newly mounted CA.
 Any  communication the Pod performs with the RabbitmqCluster will be done over HTTPS.

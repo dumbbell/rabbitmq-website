@@ -159,7 +159,7 @@ The code is almost the same as in the
 First let's configure some profiles and beans in the `Tut5Config` class
 of the `tut5` package:
 
-<pre class="lang-java">
+```java
 import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -225,7 +225,7 @@ public class Tut5Config {
 	}
 
 }
-</pre>
+```
 
 We setup our profiles for executing the topics as the choice of `tut5` or `topics`. We
 then created the bean for our `TopicExchange`. The `receiver` profile is the `ReceiverConfig`
@@ -236,7 +236,7 @@ creation of the `Tut5Sender` class.
 The `Tut5Receiver` again uses the `@RabbitListener` annotation to receive messages from the respective
 topics.
 
-<pre class="lang-java">
+```java
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.util.StopWatch;
 
@@ -272,11 +272,11 @@ public class Tut5Receiver {
 		}
 	}
 }
-</pre>
+```
 
 The code for `Tut5Sender.java`:
 
-<pre class="lang-java">
+```java
 package org.springframework.amqp.tutorials.tut5;
 
 import org.springframework.amqp.core.TopicExchange;
@@ -315,7 +315,7 @@ public class Tut5Sender {
 	}
 
 }
-</pre>
+```
 
 Compile and run the examples as described
 in [Tutorial 1](tutorial-one-spring-amqp.html). Or if you have been
@@ -324,14 +324,14 @@ following:
 
 To build the project:
 
-<pre class="lang-bash">
+```bash
 ./mvnw clean package
-</pre>
+```
 
 To execute the sender and receiver with the correct profiles
 execute the jar with the correct parameters:
 
-<pre class="lang-bash">
+```bash
 # shell 1
 java -jar target/rabbitmq-tutorials.jar \
     --spring.profiles.active=topics,receiver \
@@ -340,11 +340,11 @@ java -jar target/rabbitmq-tutorials.jar \
 java -jar target/rabbitmq-tutorials.jar \
     --spring.profiles.active=topics,sender \
     --tutorial.client.duration=60000
-</pre>
+```
 
 The output from the sender will look something like:
 
-<pre class="lang-bash">
+```bash
 Ready ... running for 60000ms
  [x] Sent 'Hello to lazy.orange.elephant 1'
  [x] Sent 'Hello to quick.orange.fox 2'
@@ -356,11 +356,11 @@ Ready ... running for 60000ms
  [x] Sent 'Hello to quick.orange.fox 8'
  [x] Sent 'Hello to lazy.brown.fox 9'
  [x] Sent 'Hello to lazy.pink.rabbit 10'
-</pre>
+```
 
 And the receiver will respond with the following output:
 
-<pre class="lang-bash">
+```bash
 instance 1 [x] Received 'Hello to lazy.orange.elephant 1'
 instance 2 [x] Received 'Hello to lazy.orange.elephant 1'
 instance 2 [x] Done in 2.005s
@@ -373,7 +373,7 @@ instance 1 [x] Received 'Hello to lazy.pink.rabbit 4'
 instance 2 [x] Received 'Hello to lazy.pink.rabbit 4'
 instance 1 [x] Done in 2.006s
 instance 2 [x] Done in 2.006s
-</pre>
+```
 
 
 Have fun playing with these programs. Note that the code doesn't make

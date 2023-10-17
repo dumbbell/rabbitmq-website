@@ -93,14 +93,14 @@ will typically recommend.
 
 The listeners section will look something like this:
 
-<pre class="lang-ini">
+```ini
 Interface: [::], port: 25672, protocol: clustering, purpose: inter-node and CLI tool communication
 Interface: [::], port: 5672, protocol: amqp, purpose: AMQP 0-9-1 and AMQP 1.0
 Interface: [::], port: 5671, protocol: amqp/ssl, purpose: AMQP 0-9-1 and AMQP 1.0 over TLS
 Interface: [::], port: 15672, protocol: http, purpose: HTTP API
 Interface: [::], port: 15671, protocol: https, purpose: HTTP API over TLS (HTTPS)
 Interface: [::], port: 1883, protocol: mqtt, purpose: MQTT
-</pre>
+```
 
 In the above example, there are 6 TCP listeners on the node:
 
@@ -158,14 +158,14 @@ This data will be sent to the node on the opened connection.
 Since `12345` is not a correct AMQP 0-9-1 or AMQP 1.0 protocol header,
 so the server closes TCP connection:
 
-<pre class="lang-bash">
+```bash
 telnet localhost 5672
 # => Trying ::1...
 # => Connected to localhost.
 # => Escape character is '^]'.
 12345 # enter this and hit Enter to send
 # => AMQP	Connection closed by foreign host.
-</pre>
+```
 
 After `telnet` connection succeeds, use `Control + ]` and then `Control + D` to
 quit it.
@@ -173,14 +173,14 @@ quit it.
 The following example connects to `localhost` on port `5673`.
 The connection fails (refused by the OS) since there is no process listening on that port.
 
-<pre class="lang-bash">
+```bash
 telnet localhost 5673
 # => Trying ::1...
 # => telnet: connect to address ::1: Connection refused
 # => Trying 127.0.0.1...
 # => telnet: connect to address 127.0.0.1: Connection refused
 # => telnet: Unable to connect to remote host
-</pre>
+```
 
 Failed or timing out `telnet` connections
 strongly suggest there's a proxy, load balancer or firewall
@@ -200,40 +200,40 @@ Open ports, TCP and UDP connections of a node can be inspected using [netstat](h
 
 The following example uses `lsof` to display OS processes that listen on port 5672 and use IPv4:
 
-<pre class="lang-ini">
+```ini
 sudo lsof -n -i4TCP:5672 | grep LISTEN
-</pre>
+```
 
 Similarly, for programs that use IPv6:
 
-<pre class="lang-ini">
+```ini
 sudo lsof -n -i6TCP:5672 | grep LISTEN
-</pre>
+```
 
 On port 1883:
 
-<pre class="lang-ini">
+```ini
 sudo lsof -n -i4TCP:1883 | grep LISTEN
-</pre>
+```
 
-<pre class="lang-ini">
+```ini
 sudo lsof -n -i6TCP:1883 | grep LISTEN
-</pre>
+```
 
 
 If the above commands produce no output then no local OS processes listen on the given port.
 
 The following example uses `ss` to display listening TCP sockets that use IPv4 and their OS processes:
 
-<pre class="lang-ini">
+```ini
 sudo ss --tcp -f inet --listening --numeric --processes
-</pre>
+```
 
 Similarly, for TCP sockets that use IPv6:
 
-<pre class="lang-ini">
+```ini
 sudo ss --tcp -f inet6 --listening --numeric --processes
-</pre>
+```
 
 For the list of ports used by RabbitMQ and its various
 plugins, see above. Generally all ports used for external
@@ -288,9 +288,9 @@ The following example uses `netstat` to list all TCP connection sockets regardle
 IP addresses will be displayed as numbers instead of being resolved to domain names. Program names will be printed next
 to numeric port values (as opposed to protocol names).
 
-<pre class="lang-bash">
+```bash
 sudo netstat --all --numeric --tcp --programs
-</pre>
+```
 
 Both inbound (client, peer nodes, CLI tools) and outgoing (peer nodes,
 Federation links and Shovels) connections can be inspected this way.
@@ -328,11 +328,11 @@ Lots of connections in states other than `ESTABLISHED` also might be a symptom w
 Evidence of short lived connections can be found in RabbitMQ log files. E.g. here's an example
 of such connection that lasted only a few milliseconds:
 
-<pre class="lang-ini">
+```ini
 2018-06-17 16:23:29.851 [info] &lt;0.634.0&gt; accepting AMQP connection &lt;0.634.0&gt; (127.0.0.1:58588 -> 127.0.0.1:5672)
 2018-06-17 16:23:29.853 [info] &lt;0.634.0&gt; connection &lt;0.634.0&gt; (127.0.0.1:58588 -> 127.0.0.1:5672): user 'guest' authenticated and granted access to vhost '/'
 2018-06-17 16:23:29.855 [info] &lt;0.634.0&gt; closing AMQP connection &lt;0.634.0&gt; (127.0.0.1:58588 -> 127.0.0.1:5672, vhost: '/', user: 'guest')
-</pre>
+```
 
 [1]: /rabbitmqctl.8.html
 [2]: /rabbitmq-diagnostics.8.html

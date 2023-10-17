@@ -40,21 +40,21 @@ together with its key dependency, [`rabbit-common`](https://hex.pm/packages/rabb
 
 ### Mix
 
-<pre class="lang-elixir">
+```elixir
 {:rabbit_common, "~> 3.11"}
-</pre>
+```
 
 ### Rebar 3
 
-<pre class="lang-erlang">
+```erlang
 {rabbit_common, "&version-erlang-client;"}
-</pre>
+```
 
 ### erlang.mk
 
-<pre class="lang-makefile">
+```makefile
 dep_rabbit_common = hex &version-erlang-client;
-</pre>
+```
 
 
 ## Prerequisites

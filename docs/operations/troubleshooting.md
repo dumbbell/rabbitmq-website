@@ -101,12 +101,12 @@ is written to the directory where RabbitMQ was started from. This file contains
 the state of the runtime at the time of the abnormal exit. The termination
 reason will be available within the first few lines, starting with `Slogan`, e.g.:
 
-<pre class="lang-bash">
+```bash
 head -n 3 ./erl_crash.dump
 # =&gt; =erl_crash_dump:0.5
 # =&gt; Sun Aug 25 00:57:34 2019
 # =&gt; Slogan: Kernel pid terminated (application_controller) ({application_start_failure,rabbit,{{timeout_waiting_for_tables,[rabbit_user,rabbit_user_permission,rabbit_topic_permission,rabbit_vhost,rabbit_durable_r
-</pre>
+```
 
 In this specific example, the slogan (uncaught exception message) says that a started node
 timed out [syncing schema metadata from its peers](./clustering.html#restarting), likely because they did not come online
@@ -118,9 +118,9 @@ The `cdv` binary path is dependent on the Erlang version and the location where 
 
 This is an example of how to invoke it:
 
-<pre class="lang-bash">
+```bash
 /usr/local/lib/erlang/lib/observer-2.9.1/priv/bin/cdv ./erl_crash.dump
-</pre>
+```
 
 A successful result of the above command will open a new application window similar to this:
 

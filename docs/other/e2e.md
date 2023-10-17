@@ -63,10 +63,10 @@ Use the `Channel#exchangeBind` method.
 The following example binds an exchange `"destination"`
 to `"source"` with routing key `"routingKey"`.
 
-<pre class="lang-java">
+```java
 Channel ch = conn.createChannel();
 ch.exchangeBind("destination", "source", "routingKey");
-</pre>
+```
 
 ## <a id="dotnet-example" class="anchor" href="#dotnet-example">.NET Client Example</a>
 
@@ -74,7 +74,7 @@ Use the `IModel#ExchangeBind` method.
 The following example binds an exchange `"destination"`
 to `"source"` with routing key `"routingKey"`.
 
-<pre class="lang-csharp">
+```csharp
 var ch = conn.CreateModel();
 ch.ExchangeBind("destination", "source", "routingKey");
-</pre>
+```

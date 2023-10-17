@@ -44,9 +44,9 @@ when they are.
 
 Example (non-encrypted):
 
-<pre class="lang-ini">
+```ini
 amqp://myhost?heartbeat=5&amp;connection_timeout=10000
-</pre>
+```
 
 This specifies a (non-encrypted) network connection to the host
 `myhost`. The heartbeat interval is set to 5 seconds,
@@ -55,13 +55,13 @@ Other parameters are set to their default values.
 
 Example (encrypted):
 
-<pre class="lang-ini">
+```ini
 amqps://myhost?cacertfile=/path/to/ca_certificate.pem
   &amp;certfile=/path/to/client_certificate.pem
   &amp;keyfile=/path/to/client_key.pem
   &amp;verify=verify_peer
   &amp;server_name_indication=myhost
-</pre>
+```
 
 ## <a id="tls" class="anchor" href="#tls">TLS Parameters</a>
 
@@ -140,7 +140,7 @@ against the hostname `myhost`.
 `amqp_client.ssl_options` configuration key in the `rabbitmq.config` or
 `advanced.config` file in this manner:
 
-<pre class="lang-erlang">
+```erlang
 {amqp_client, [
     {ssl_options, [
         {cacertfile, "path-to-ca-certificate"},
@@ -150,7 +150,7 @@ against the hostname `myhost`.
         {fail_if_no_peer_cert, true}
     ]}
 ]}
-</pre>
+```
 
 They will be merged with the TLS parameters from the URI (the latter will take
 precedence) and affect all outgoing RabbitMQ Erlang client connections on the

@@ -141,9 +141,9 @@ Most publishing and message properties are controlled by the operator.
 The Shovel plugin is included in the RabbitMQ distribution.
 To enable it, use [rabbitmq-plugins](./cli.html):
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_shovel
-</pre>
+```
 
 [Management UI](./management.html) users may also wish to enable the `rabbitmq_shovel_management` plugin
 for [Shovel status monitoring](#status).
@@ -259,10 +259,10 @@ on the node used to access management UI.
 
 Shovel status can be obtained by direct query of the Shovel plugin app using [`rabbitmqctl`](./cli.html):
 
-<pre class="lang-bash">
+```bash
 # use the -n switch to target a remote node
 rabbitmqctl shovel_status
-</pre>
+```
 
 The result will return a list of statuses, one per Shovel running.
 

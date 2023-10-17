@@ -29,9 +29,9 @@ This guides describes the process of building the .NET client library from sourc
 
 The repository is hosted on GitHub. Clone it with
 
-<pre class="lang-bash">
+```bash
 git clone https://github.com/rabbitmq/rabbitmq-dotnet-client.git
-</pre>
+```
 
 
 ## <a id="prerequisites" class="anchor" href="#prerequisites">Required Libraries and Tools</a>
@@ -48,9 +48,9 @@ To build the .NET/C# client libraries on Windows, you will need
 
 To build the client with Visual Studio, first run
 
-<pre class="lang-powershell">
+```powershell
 build.bat
-</pre>
+```
 
 in repository root.
 This will perform the required code generation as well as building a release version of the library.
@@ -64,7 +64,8 @@ Then
 
 To build the client without Visual Studio, run
 
-<pre class="lang-powershell">build.bat</pre>
+```powershell
+build.bat```
 
 in repository root.
 This will perform the required code generation as well as building a release version of the library.
@@ -76,9 +77,9 @@ The library can be built on Linux and MacOS using .NET Core 2.
 
 Run
 
-<pre class="lang-bash">
+```bash
 build.sh
-</pre>
+```
 
 This will perform the required
 code generation as well as building a release version of the library.

@@ -418,26 +418,26 @@ are not recommended.
 
 The timeout value is configurable in [rabbitmq.conf](./configure.html#config-file) (in milliseconds):
 
-<pre class="lang-ini">
+```ini
 # 30 minutes in milliseconds
 consumer_timeout = 1800000
-</pre>
+```
 
-<pre class="lang-ini">
+```ini
 # one hour in milliseconds
 consumer_timeout = 3600000
-</pre>
+```
 
 The timeout can be deactivated using [`advanced.config`](configure.html#advanced-config-file). This is **not recommended**:
 
-<pre class="lang-erlang">
+```erlang
 %% advanced.config
 [
   {rabbit, [
     {consumer_timeout, undefined}
   ]}
 ].
-</pre>
+```
 
 Instead of disabling the timeout entirely, consider using a high value (for example, a few hours).
 
@@ -452,10 +452,10 @@ Set the `consumer-timeout` policy key.
 The value must be in milliseconds.
 Whether the timeout should be enforced is evaluated periodically, at one minute intervals.
 
-<pre class="lang-bash">
+```bash
 # override consumer timeout for a group of queues using a policy
 rabbitmqctl set_policy queue_consumer_timeout "with_delivery_timeout\.*" '{"consumer_timeout":3600000}' --apply-to classic_queues
-</pre>
+```
 
 #### Per-queue Delivery Timeouts Using an Optional Queue Argument
 
@@ -512,12 +512,12 @@ must be used.
 Single active consumer can be enabled when declaring a queue, with the
 `x-single-active-consumer` argument set to `true`, e.g. with the Java client:
 
-<pre class="lang-java">
+```java
 Channel ch = ...;
 Map&lt;String, Object&gt; arguments = new HashMap&lt;String, Object&gt;();
 arguments.put("x-single-active-consumer", true);
 ch.queueDeclare("my-queue", false, false, false, arguments);
-</pre>
+```
 
 ### Difference from Exclusive Consumers
 

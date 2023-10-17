@@ -152,9 +152,9 @@ instructions on compiling from source.
 
 To clone the repo from GitHub:
 
-<pre class="lang-bash">
+```bash
 git clone https://github.com/rabbitmq/rabbitmq-dotnet-client
-</pre>
+```
 
 In order to compile or run the RabbitMQ .NET/C# client library,
 please follow the [build instructions](./build-dotnet-client.html).
@@ -165,10 +165,10 @@ please follow the [build instructions](./build-dotnet-client.html).
 The client assembly is strong named. The public key token is 89e7d7c5feba84ce
 and the public part of the signing key is
 
-<pre class="lang-ini">
+```ini
 00240000048000009400000006020000002400005253413100040000010001008d20ec856aeeb8
 c3153a77faa2d80e6e43b5db93224a20cc7ae384f65f142e89730e2ff0fcc5d578bbe96fa98a71
 96c77329efdee4579b3814c0789e5a39b51df6edd75b602a33ceabdfcf19a3feb832f31d825416
 8cd7ba5700dfbca301fbf8db614ba41ba18474de0a5f4c2d51c995bc3636c641c8cbe76f45717b
 fcb943b5.
-</pre>
+```

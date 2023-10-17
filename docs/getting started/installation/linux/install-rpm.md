@@ -117,15 +117,15 @@ that are not essential for running RabbitMQ.
 
 openSUSE package repositories provide Erlang so it can be installed using Zypper:
 
-<pre class="lang-bash">
+```bash
 sudo zypper in erlang
-</pre>
+```
 
 Erlang versions available in the standard repositories will in practice be behind the most recent version.
 To use the last version with the newest features, add the
 [openSUSE Factory repositories for Erlang](http://download.opensuse.org/repositories/devel:/languages:/erlang:/Factory/):
 
-<pre class="lang-bash">
+```bash
 # add the openSUSE erlang factory, obs:// extracts the http url for the matching distro.
 sudo zypper ar -f  obs://devel:languages:erlang:Factory openSUSE-Erlang-Factory
 
@@ -134,7 +134,7 @@ sudo zypper --gpg-auto-import-keys refresh
 
 # install a recent Erlang version
 sudo zypper in erlang
-</pre>
+```
 
 ## <a id="package-dependencies" class="anchor" href="#package-dependencies">Package Dependencies</a>
 
@@ -163,14 +163,14 @@ but the mirror is not.
 Yum will verify signatures of any packages it installs, therefore the first step
 in the process is to import the signing key
 
-<pre class="lang-bash">
+```bash
 ## primary RabbitMQ signing key
 rpm --import 'https://github.com/rabbitmq/signing-keys/releases/download/3.0/rabbitmq-release-signing-key.asc'
 ## modern Erlang repository
 rpm --import 'https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-erlang.E495BB49CC4BBE5B.key'
 ## RabbitMQ server repository
 rpm --import 'https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-server.9F4587F226208342.key'
-</pre>
+```
 
 ### Add Yum Repositories for RabbitMQ and Modern Erlang
 
@@ -184,7 +184,7 @@ The following example sets up a repository that will install RabbitMQ and its Er
 a Cloudsmith mirror, and targets **CentOS Stream 8**. The same repository definition **can be used by recent Fedora releases**,
 and Amazon Linux 2023.
 
-<pre class="lang-ini">
+```ini
 # In /etc/yum.repos.d/rabbitmq.repo
 
 ##
@@ -302,7 +302,7 @@ metadata_expire=300
 pkg_gpgcheck=1
 autorefresh=1
 type=rpm-md
-</pre>
+```
 
 #### Red Hat 9, CentOS Stream 9, Rocky Linux 9, Alma Linux 9, Modern Fedora Releases
 
@@ -310,7 +310,7 @@ The following example sets up a repository that will install RabbitMQ and its Er
 a Cloudsmith mirror,
 and targets **CentOS Stream 9**, Amazon Linux 2023, and modern Fedora releases.
 
-<pre class="lang-ini">
+```ini
 # In /etc/yum.repos.d/rabbitmq.repo
 
 ##
@@ -428,14 +428,14 @@ metadata_expire=300
 pkg_gpgcheck=1
 autorefresh=1
 type=rpm-md
-</pre>
+```
 
 #### OpenSUSE
 
 The following example targets OpenSUSE and only installs the RabbitMQ package repository.
 Erlang is assumed to be provisioned from the [`devel:languages:erlang:Factory`](https://software.opensuse.org/download.html?project=devel%3Alanguages%3Aerlang%3AFactory&package=erlang) repository.
 
-<pre class="lang-ini">
+```ini
 ##
 ## RabbitMQ server
 ##
@@ -481,48 +481,48 @@ metadata_expire=300
 pkg_gpgcheck=1
 autorefresh=1
 type=rpm-md
-</pre>
+```
 
 
 ### Install Packages with dnf (yum)
 
 Update package metadata:
 
-<pre class="lang-bash">
+```bash
 dnf update -y
-</pre>
+```
 
 Next install dependencies from the standard repositories:
 
-<pre class="lang-bash">
+```bash
 ## install these dependencies from standard OS repositories
 dnf install socat logrotate -y
-</pre>
+```
 
 Finally, install modern Erlang and RabbitMQ:
 
-<pre class="lang-bash">
+```bash
 ## install RabbitMQ and zero dependency Erlang
 dnf install -y erlang rabbitmq-server
-</pre>
+```
 
 ### Install Packages with Zypper
 
 First, update Zypper package metadata:
 
-<pre class="lang-bash">
+```bash
 ## refresh the RabbitMQ repositories
 zypper --gpg-auto-import-keys refresh rabbitmq_server
 zypper --gpg-auto-import-keys refresh rabbitmq_server-noarch
 zypper --gpg-auto-import-keys refresh rabbitmq_server-source
-</pre>
+```
 
 Then install the packages:
 
-<pre class="lang-bash">
+```bash
 ## install the package from Cloudsmith repository
 zypper install --repo rabbitmq_server-noarch
-</pre>
+```
 
 
 
@@ -539,7 +539,7 @@ and security patches.
 After [downloading](#downloads) the server package, issue the following command as
 'root':
 
-<pre class="lang-bash">
+```bash
 rpm --import https://github.com/rabbitmq/signing-keys/releases/download/3.0/rabbitmq-release-signing-key.asc
 
 ## install these dependencies from standard OS repositories
@@ -548,11 +548,11 @@ dnf install socat logrotate -y
 # This example assumes the CentOS Stream 8 version of the package, suitable for
 # Red Hat 8, CentOS Stream 9, CentOS Stream 8 and modern Fedora releases.
 dnf install rabbitmq-server-&version-server;-&serverRPMMinorVersion;.el8.noarch.rpm
-</pre>
+```
 
 [RabbitMQ public signing key](signatures.html) can also be [downloaded from rabbitmq.com](https://www.rabbitmq.com/rabbitmq-release-signing-key.asc):
 
-<pre class="lang-bash">
+```bash
 rpm --import https://www.rabbitmq.com/rabbitmq-release-signing-key.asc
 
 ## install these dependencies from standard OS repositories
@@ -561,7 +561,7 @@ dnf install socat logrotate -y
 # This example assumes the CentOS 8 version of the package, suitable for
 # Red Hat 8, CentOS Stream 9, CentOS Stream 8 and modern Fedora releases.
 dnf install rabbitmq-server-&version-server;-&serverRPMMinorVersion;.el8.noarch.rpm
-</pre>
+```
 
 
 ## <a id="downloads" class="anchor" href="#downloads">Direct Downloads</a>
@@ -610,20 +610,20 @@ The server is not started as a daemon by default when the
 RabbitMQ server package is installed. To start the daemon by default
 when the system boots, as an administrator run
 
-<pre class="lang-bash">
+```bash
 systemctl enable rabbitmq-server
-</pre>
+```
 
 As an administrator, start and stop the
 server as usual, e.g. using `systemctl`:
 
-<pre class="lang-bash">
+```bash
 systemctl start rabbitmq-server
 
 systemctl status  rabbitmq-server
 
 systemctl stop rabbitmq-server
-</pre>
+```
 
 
 ## <a id="configuration" class="anchor" href="#configuration">Configuring RabbitMQ</a>
@@ -680,10 +680,10 @@ On distributions that use systemd, the OS limits are controlled via
 a configuration file at `/etc/systemd/system/rabbitmq-server.service.d/limits.conf`.
 For example, to set the max open file handle limit (`nofile`) to `64000`:
 
-<pre class="lang-ini">
+```ini
 [Service]
 LimitNOFILE=64000
-</pre>
+```
 
 See [systemd documentation](https://www.freedesktop.org/software/systemd/man/systemd.exec.html) to learn about
 the supported limits and other directives.
@@ -693,7 +693,7 @@ the supported limits and other directives.
 To configure kernel limits for Docker contains, use the `"default-ulimits"` key in [Docker daemon configuration file](https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file).
 The file has to be installed on Docker hosts at `/etc/docker/daemon.json`:
 
-<pre class="lang-json">
+```json
 {
   "default-ulimits": {
     "nofile": {
@@ -703,7 +703,7 @@ The file has to be installed on Docker hosts at `/etc/docker/daemon.json`:
     }
   }
 }
-</pre>
+```
 
 ### Without systemd (Older Linux Distributions)
 
@@ -712,9 +712,9 @@ RabbitMQ on distributions that do not use systemd is to edit the `/etc/default/r
 (provided by the RabbitMQ Debian package) or [rabbitmq-env.conf](https://www.rabbitmq.com/configure.html)
 to invoke `ulimit` before the service is started.
 
-<pre class="lang-bash">
+```bash
 ulimit -S -n 64000
-</pre>
+```
 
 This <em>soft</em> limit cannot go higher than the <em>hard</em> limit (which defaults to 4096 in many distributions).
 [The hard limit can be increased](https://github.com/basho/basho_docs/blob/master/content/riak/kv/2.2.3/using/performance/open-files-limit.md) via
@@ -730,15 +730,16 @@ with `sysctl`, please refer to the excellent
 [RabbitMQ management UI](management.html) displays the number of file descriptors available
 for it to use on the Overview tab.
 
-<pre class="lang-bash">rabbitmq-diagnostics status</pre>
+```bash
+rabbitmq-diagnostics status```
 
 includes the same value.
 
 The following command
 
-<pre  class="lang-bash">
+```bash
 cat /proc/$RABBITMQ_BEAM_PROCESS_PID/limits
-</pre>
+```
 
 can be used to display effective limits of a running process. `$RABBITMQ_BEAM_PROCESS_PID`
 is the OS PID of the Erlang VM running RabbitMQ, as returned by `rabbitmq-diagnostics status`.
@@ -755,25 +756,25 @@ lists relevant modules and projects.
 To start and stop the server, use the `service` tool.
 The service name is `rabbitmq-server`:
 
-<pre class="lang-bash">
+```bash
 # stop the local node
 sudo service rabbitmq-server stop
 
 # start it back
 sudo service rabbitmq-server start
-</pre>
+```
 
 `service rabbitmq-server status` will report service status
 as observed by systemd (or similar service manager):
 
-<pre class="lang-bash">
+```bash
 # check on service status as observed by service manager
 sudo service rabbitmq-server status
-</pre>
+```
 
 It will produce output similar to this:
 
-<pre class="lang-ini">
+```ini
 Redirecting to /bin/systemctl status rabbitmq-server.service
 ● rabbitmq-server.service - RabbitMQ broker
    Loaded: loaded (/usr/lib/systemd/system/rabbitmq-server.service; enabled; vendor preset: disabled)
@@ -799,12 +800,12 @@ Dec 26 10:21:30 localhost.localdomain rabbitmq-server[957]: Starting broker...
 Dec 26 10:21:32 localhost.localdomain rabbitmq-server[957]: systemd unit for activation check: "rabbitmq-server.service"
 Dec 26 10:21:32 localhost.localdomain systemd[1]: Started RabbitMQ broker.
 Dec 26 10:21:32 localhost.localdomain rabbitmq-server[957]: completed with 6 plugins.
-</pre>
+```
 
 `rabbitmqctl`, `rabbitmq-diagnostics`,
 and other [CLI tools](cli.html) will be available in `PATH` and can be invoked by a `sudo`-enabled user:
 
-<pre class="lang-bash">
+```bash
 # checks if the local node is running and CLI tools can successfully authenticate with it
 sudo rabbitmq-diagnostics ping
 
@@ -817,7 +818,7 @@ sudo rabbitmq-diagnostics cluster_status
 
 # prints effective node configuration
 sudo rabbitmq-diagnostics environment
-</pre>
+```
 
 All `rabbitmqctl` commands will report an error if no node is running.
 See the [CLI tools](cli.html) and [Monitoring](monitoring.html) guides to learn more.
@@ -833,20 +834,20 @@ defaults to `/var/log/rabbitmq` when RabbitMQ is installed via a Linux package m
 Assuming a `systemd`-based distribution, system service logs can be
 inspected using
 
-<pre class="lang-bash">
+```bash
 journalctl --system
-</pre>
+```
 
 which requires superuser privileges.
 Its output can be filtered to narrow it down to RabbitMQ-specific entries:
 
-<pre class="lang-bash">
+```bash
 sudo journalctl --system | grep rabbitmq
-</pre>
+```
 
 The output will look similar to this:
 
-<pre class="lang-ini">
+```ini
 Dec 26 11:03:04 localhost rabbitmq-server[968]: ##  ##
 Dec 26 11:03:04 localhost rabbitmq-server[968]: ##  ##      RabbitMQ 3.12.1. Copyright (c) 2007-2023 VMware, Inc. or its affiliates.
 Dec 26 11:03:04 localhost rabbitmq-server[968]: ##########  Licensed under the MPL 2.0. Website: https://www.rabbitmq.com/
@@ -856,7 +857,7 @@ Dec 26 11:03:04 localhost rabbitmq-server[968]: /var/log/rabbitmq/rabbit@localho
 Dec 26 11:03:04 localhost rabbitmq-server[968]: Starting broker...
 Dec 26 11:03:05 localhost rabbitmq-server[968]: systemd unit for activation check: "rabbitmq-server.service"
 Dec 26 11:03:06 localhost rabbitmq-server[968]: completed with 6 plugins.
-</pre>
+```
 
 ### Log Rotation
 

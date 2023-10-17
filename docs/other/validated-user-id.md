@@ -34,11 +34,11 @@ publisher's identity remains private.
 
 For example (in Java):
 
-<pre class="lang-java">
+```java
 AMQP.BasicProperties properties = new AMQP.BasicProperties();
 properties.setUserId("guest");
 channel.basicPublish("amq.fanout", "", properties, "test".getBytes());
-</pre>
+```
 
 This message will only be published successfully if the user
 is "guest".

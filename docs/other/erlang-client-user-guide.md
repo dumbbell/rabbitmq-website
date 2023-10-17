@@ -55,21 +55,21 @@ Below are dependency snippets to be used with popular build tools: Mix,
 
 ### Mix
 
-<pre class="lang-elixir">
+```elixir
 {:rabbit_common, "~> 3.8"}
-</pre>
+```
 
 ### Rebar 3
 
-<pre class="lang-erlang">
+```erlang
 {rabbit_common, "&version-erlang-client;"}
-</pre>
+```
 
 ### erlang.mk
 
-<pre class="lang-makefile">
+```makefile
 dep_rabbit_common = hex &version-erlang-client;
-</pre>
+```
 
 
 ## <a id="basics" class="anchor" href="#basics">Basics</a>
@@ -93,9 +93,9 @@ RabbitMQ Erlang client is an Erlang application named `amqp_client`.
 As with any Erlang application, to begin using the client it's necessary to first
 make sure it is started:
 
-<pre class="lang-erlang">
+```erlang
 application:ensure_started(amqp_client).
-</pre>
+```
 
 ### <a id="key-modules" class="anchor" href="#key-modules">Key Modules and Concepts</a>
 
@@ -163,9 +163,9 @@ categories:
 To gain access to these records, you need to include the
 amqp_client.hrl in every module that uses the Erlang client:
 
-<pre class="lang-erlang">
+```erlang
 -include("amqp_client.hrl").
-</pre>
+```
 
 
 
@@ -175,9 +175,9 @@ The `amqp_connection` module is used to start a [connection](connections.html) t
 In this example we will use a network connection, which is the recommended
 option for most use cases:
 
-<pre class="lang-erlang">
+```erlang
 {ok, Connection} = amqp_connection:start(#amqp_params_network{})
-</pre>
+```
 
 This function returns an `{ok, Connection}` pair, where `Connection` is the
 pid of a process that maintains a permanent connection.
@@ -262,9 +262,9 @@ for data transfers.
 To start a direct connection, use `amqp_connection:start/1` with the parameter
 set to an `#amqp_params_direct` record:
 
-<pre class="lang-erlang">
+```erlang
 {ok, Connection} = amqp_connection:start(#amqp_params_direct{})
-</pre>
+```
 
 Credentials are optional for direct connections, since Erlang
 distribution relies on [a shared secret](./clustering.html#erlang-cookie), the Erlang cookie, for authentication.
@@ -332,9 +332,9 @@ Once a connection has been established, use the `amqp_connection` module
 to open one or more [channels](channels.html) that will be used
 to define the topology, publish and consume messages:
 
-<pre class="lang-erlang">
+```erlang
 {ok, Channel} = amqp_connection:open_channel(Connection)
-</pre>
+```
 
 This function takes the pid of the connection process and returns
 a `{ok, Channel}` pair, where `Channel` is a pid that represents
@@ -351,13 +351,13 @@ The client tries to use sensible default values for each record.
 For example, when using the `#'exchange.declare'{}` method to declare a transient exchange,
 it is sufficient to only specify a name:
 
-<pre class="lang-erlang">
+```erlang
 #'exchange.declare'{exchange = &lt;&lt;"my_exchange"&gt;&gt;}
-</pre>
+```
 
 The above example is equivalent to this:
 
-<pre class="lang-erlang">
+```erlang
 #'exchange.declare'{exchange    = &lt;&lt;"my_exchange"&gt;&gt;,
                     type        = &lt;&lt;"direct"&gt;&gt;,
                     passive     = false,
@@ -366,7 +366,7 @@ The above example is equivalent to this:
                     internal    = false,
                     nowait      = false,
                     arguments   = []}
-</pre>
+```
 
 
 ## <a id="topology" class="anchor" href="#topology">Defining a Topology: Exchanges, Queues, Bindings</a>
@@ -376,27 +376,27 @@ be used to manage the fundamental objects within AMQP, namely
 exchanges and queues. The following function creates an exchange
 called my_exchange, which by default, is the direct exchange:
 
-<pre class="lang-erlang">
+```erlang
 Declare = #'exchange.declare'{exchange = &lt;&lt;"my_exchange"&gt;&gt;},
 #'exchange.declare_ok'{} = amqp_channel:call(Channel, Declare)
-</pre>
+```
 
 Similarly, a [transient](./queues.html#durability) queue called `my_queue` is created by this code:
 
-<pre class="lang-erlang">
+```erlang
 Declare = #'queue.declare'{queue = &lt;&lt;"my_queue"&gt;&gt;},
 #'queue.declare_ok'{} = amqp_channel:call(Channel, Declare)
-</pre>
+```
 
 To declare a durable queue:
 
-<pre class="lang-erlang">
+```erlang
 Declare = #'queue.declare'{
   queue = &lt;&lt;"my_queue"&gt;&gt;,
   durable = true
 },
 #'queue.declare_ok'{} = amqp_channel:call(Channel, Declare)
-</pre>
+```
 
 In some cases an application wants to use a transient queue and is not interested in the actual name
 of the queue. In this case, it is possible to let the broker generate a random name for a
@@ -404,9 +404,9 @@ queue. To do this, use a `#'queue.declare'{}` method and leave the
 queue attribute undefined. Specifying a blank string for queue name
 would have the same effect.
 
-<pre class="lang-erlang">
+```erlang
 #'queue.declare_ok'{queue = Queue} = amqp_channel:call(Channel, #'queue.declare'{})
-</pre>
+```
 
 The server will generate a queue name unique in this cluster and return this name as
 part of the acknowledgement.
@@ -416,38 +416,38 @@ part of the acknowledgement.
 To create a routing rule from an exchange to a queue, the
 `#'queue.bind'{}` command is used:
 
-<pre class="lang-erlang">
+```erlang
 Binding = #'queue.bind'{queue       = Queue,
                         exchange    = Exchange,
                         routing_key = RoutingKey},
 #'queue.bind_ok'{} = amqp_channel:call(Channel, Binding)
-</pre>
+```
 
 When this routing rule is no longer required, this route can be
 deleted using the `#'queue.unbind'{}` command:
 
-<pre class="lang-erlang">
+```erlang
 Binding = #'queue.unbind'{queue       = Queue,
                           exchange    = Exchange,
                           routing_key = RoutingKey},
 #'queue.unbind_ok'{} = amqp_channel:call(Channel, Binding)
-</pre>
+```
 
 ### Deleting Entities
 
 An exchange can be deleted by the `#'exchange.delete'{}` command:
 
-<pre class="lang-erlang">
+```erlang
 Delete = #'exchange.delete'{exchange = &lt;&lt;"my_exchange"&gt;&gt;},
 #'exchange.delete_ok'{} = amqp_channel:call(Channel, Delete)
-</pre>
+```
 
 Similarly, a queue is deleted using the `#'queue.delete'{}` command:
 
-<pre class="lang-erlang">
+```erlang
 Delete = #'queue.delete'{queue = &lt;&lt;"my_queue"&gt;&gt;},
 #'queue.delete_ok'{} = amqp_channel:call(Channel, Delete)
-</pre>
+```
 
 ### <a id="call-or-cast" class="anchor" href="#call-or-cast">Synchronous and Asynchronous Protocol Methods, Calls and Casts</a>
 
@@ -475,11 +475,11 @@ To publish a message to an exchange with a particular routing key,
 the `#'basic.publish'{}` method.
 Messages are represented using the `#amqp_msg{}` record:
 
-<pre class="lang-erlang">
+```erlang
 Payload = &lt;&lt;"foobar"&gt;&gt;,
 Publish = #'basic.publish'{exchange = X, routing_key = Key},
 amqp_channel:cast(Channel, Publish, #amqp_msg{payload = Payload})
-</pre>
+```
 
 By default, the properties field of the `#amqp_msg{}` record contains
 a minimal set of [message properties](./publishers.html#message-properties) as a `#'P_basic'{}` properties record.
@@ -488,13 +488,13 @@ If an application needs to override any of the defaults, for example,
 to send persistent messages, the `#amqp_msg{}` needs to
 be constructed accordingly:
 
-<pre class="lang-erlang">
+```erlang
 Payload = &lt;&lt;"foobar"&gt;&gt;,
 Publish = #'basic.publish'{exchange = X, routing_key = Key},
 Props = #'P_basic'{delivery_mode = 2}, %% persistent message
 Msg = #amqp_msg{props = Props, payload = Payload},
 amqp_channel:cast(Channel, Publish, Msg)
-</pre>
+```
 
 Full list of [message properties](./publishers.html#message-properties) can be found
 in the Publishers guide.
@@ -525,19 +525,19 @@ avoided when possible).
 To add a consumer to a queue (subscribe to a queue), the
 `#'basic.consume'{}` method is used in one of two ways:
 
-<pre class="lang-erlang">
+```erlang
 #'basic.consume_ok'{consumer_tag = Tag} =
   amqp_channel:subscribe(Channel, #'basic.consume'{queue = Q}, Consumer)
-</pre>
+```
 
 or
 
-<pre class="lang-erlang">
+```erlang
 %% A consumer process is not provided so the calling
 process (`self()`) will be the consumer
 #'basic.consume_ok'{consumer_tag = Tag} =
   amqp_channel:call(Channel, #'basic.consume'{queue = Q})
-</pre>
+```
 
 The consumer argument is the pid of a process to which the client library
 will deliver messages.
@@ -554,7 +554,7 @@ as a message to the consumer process.
 When a consumer process is subscribed to a queue, it will receive
 messages in its mailbox. An example receive loop looks like this:
 
-<pre class="lang-erlang">
+```erlang
 loop(Channel) ->
     receive
         %% This is the first message received
@@ -576,7 +576,7 @@ loop(Channel) ->
             %% Loop
             loop(Channel)
     end.
-</pre>
+```
 
 In the above example, the process consumes the consumer registration (subscription)
 notification and then proceeds to wait for delivery messages to
@@ -598,9 +598,9 @@ immediately after sending them down the connection.
 To cancel a consumer, use the consumer tag returned
 with the `#'basic.consume_ok'{}` response:
 
-<pre class="lang-erlang">
+```erlang
 amqp_channel:call(Channel, #'basic.cancel'{consumer_tag = Tag})
-</pre>
+```
 
 A cancelled consumer may still receive "in flight" deliveries, e.g. those
 currently in TCP buffers at the time of consumer cancellation.
@@ -636,15 +636,15 @@ delivery of published messages.
 When a channel is no longer required, a client should close it.
 This is achieved using `amqp_channel:close/1`:
 
-<pre class="lang-erlang">
+```erlang
 amqp_channel:close(Channel)
-</pre>
+```
 
 To close the connection, `amqp_connection:close/1` is used:
 
-<pre class="lang-erlang">
+```erlang
 amqp_connection:close(Connection)
-</pre>
+```
 
 Closing a connection will automatically implicitly close all channels
 on that connection.
@@ -669,9 +669,9 @@ prefetch buffer that the broker will maintain for outstanding
 unacknowledged messages on a single channel. This is achieved
 using the #'basic.qos'{} command:
 
-<pre class="lang-erlang">
+```erlang
 amqp_channel:call(Channel, #'basic.qos'{prefetch_count = Prefetch})
-</pre>
+```
 
 Applications are recommended to use a prefetch. Learn more in the
 [Publisher Confirms and Consumer Acknowledgements guide](./confirms.html).
@@ -699,7 +699,7 @@ that can process `#'basic.return'{}` frames.
 
 Here is an example of unrouteable message handling:
 
-<pre class="lang-erlang">
+```erlang
 amqp_channel:register_return_handler(Channel, self()),
 amqp_channel:call(Channel, #'exchange.declare'{exchange = X}),
 Publish = #'basic.publish'{exchange = X, routing_key = SomeKey,
@@ -710,7 +710,7 @@ receive
         #'basic.return'{reply_text = &lt;&lt;"unroutable"&gt;&gt;, exchange = X} = BasicReturn
         %% Do something with the returned message
 end
-</pre>
+```
 
 
 ## <a id="polling" class="anchor" href="#polling">Receiving Messages Using the "Fetch API"</a>
@@ -722,11 +722,11 @@ yield no results. Therefore using this approach **is highly discouraged**.
 
 This is achieved using the `#'basic.get'{}` command:
 
-<pre class="lang-erlang">
+```erlang
 Get = #'basic.get'{queue = Q, no_ack = true},
 {#'basic.get_ok'{}, Content} = amqp_channel:call(Channel, Get),
 #amqp_msg{payload = Payload} = Content
-</pre>
+```
 
 The payload that is returned is an Erlang binary, and it is up to
 the application to decode it, as the structure of this content is
@@ -736,9 +736,9 @@ If the queue were empty when the `#'basic.get'{}` command was
 invoked, then the channel will return an `#'basic.get_empty'`
 result, as illustrated here:
 
-<pre class="lang-erlang">
+```erlang
 #'basic.get_empty'{} = amqp_channel:call(Channel, Get)
-</pre>
+```
 
 Note that the previous example sets the no_ack flag on the
 `#'basic.get'{}` command. This tells the broker that the receiver
@@ -751,13 +751,13 @@ semantics, rather, they will want to explicitly acknowledge the
 receipt of a message. This is done with the #'basic.ack'{}
 command, where the no_ack field is turned off by default:
 
-<pre class="lang-erlang">
+```erlang
 Get = #'basic.get'{queue = Q},
 {#'basic.get_ok'{delivery_tag = Tag}, Content}
     = amqp_channel:call(Channel, Get),
 %% Do something with the message payload.......and then ack it
 amqp_channel:cast(Channel, #'basic.ack'{delivery_tag = Tag})
-</pre>
+```
 
 Notice that the `#'basic.ack'{}` method was sent using
 `amqp_channel:cast/2` instead of `amqp_channel:call/2`. This is
@@ -771,7 +771,7 @@ Below is a complete example of basic usage of the library. For the sake of simpl
 it does not use [publisher confirms](./confirms.html) and uses a [polling consumer](#polling) which performs
 [manual acknowledgements](./confirms.html).
 
-<pre class="lang-erlang">
+```erlang
 -module(amqp_example).
 
 -include("amqp_client.hrl").
@@ -810,7 +810,7 @@ test() ->
     amqp_connection:close(Connection),
 
     ok.
-</pre>
+```
 
 In this example, a queue is created with a server generated name
 and a message is published directly to the queue. This makes use
@@ -834,13 +834,13 @@ used compiles dependencies under the `./deps` directory.
 Then to compile the example code manually, `erlc` can be used with `ERL_LIBS` pointing to the
 `./deps` directory:
 
-<pre class="lang-bash">
+```bash
 ERL_LIBS=deps erlc -o ebin amqp_example.erl
-</pre>
+```
 
 And then to run your application you could set the Erlang run-time like this:
 
-<pre class="lang-bash">
+```bash
 ERL_LIBS=deps erl -pa ebin
 # => Erlang/OTP 23 [erts-11.0] [source] [64-bit] [smp:8:8] [ds:8:8:10] [async-threads:16]
 # =>
@@ -848,4 +848,4 @@ ERL_LIBS=deps erl -pa ebin
 # => 1> amqp_example:test().
 # => ok
 # => 2>
-</pre>
+```

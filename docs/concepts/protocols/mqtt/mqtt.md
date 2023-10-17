@@ -85,9 +85,9 @@ tweak the defaults.
 The MQTT plugin is included in the RabbitMQ distribution. Before clients can successfully
 connect, it must be enabled using [rabbitmq-plugins](./cli.html):
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_mqtt
-</pre>
+```
 
 Now that the plugin is enabled, MQTT clients will be able to connect provided that
 they have a set of credentials for an existing user with the appropriate permissions.
@@ -112,12 +112,12 @@ or HTTP API.
 For example, the following commands create a new user for MQTT connections with full access
 to the default [virtual host](./vhosts.html) used by this plugin:
 
-<pre class="lang-bash">
+```bash
 # username and password are both "mqtt-test"
 rabbitmqctl add_user mqtt-test mqtt-test
 rabbitmqctl set_permissions -p / mqtt-test ".*" ".*" ".*"
 rabbitmqctl set_user_tags mqtt-test management
-</pre>
+```
 
 Note that colons may not appear in usernames.
 
@@ -175,16 +175,16 @@ does not. Therefore a default set of credentials is used for anonymous connectio
 The `mqtt.default_user` and `mqtt.default_pass` configuration keys are used to specify
 the credentials:
 
-<pre class="lang-ini">
+```ini
 mqtt.default_user = some-user
 mqtt.default_pass = s3kRe7
-</pre>
+```
 
 It is possible to disable anonymous connections:
 
-<pre class="lang-ini">
+```ini
 mqtt.allow_anonymous = false
-</pre>
+```
 
 If the `mqtt.allow_anonymous` key is set to `false` then clients **must** provide credentials.
 
@@ -238,7 +238,7 @@ error and **fail to subscribe**.
 
 Below is a `rabbitmq.conf` example that opts in to use quorum queues for durable subscriptions:
 
-<pre class="lang-ini">
+```ini
 # Must ONLY be enabled for new clusters before any clients declare durable
 # subscriptions.
 #
@@ -247,7 +247,7 @@ Below is a `rabbitmq.conf` example that opts in to use quorum queues for durable
 # Consumers that churn through queues (use very short-lived queues) will not get
 # any quorum queue benefits anyway.
 mqtt.durable_queue_type = quorum
-</pre>
+```
 
 While quorum queues are designed for data safety and predictable efficient recovery
 from replica failures, they also have downsides. A quorum queue by definition requires
@@ -280,11 +280,11 @@ the log stored in memory will reduce memory footprint of the plugin in case of
 
 The configuration key of interest is `raft.wal_max_size_bytes`:
 
-<pre class="lang-ini">
+```ini
 # if quorum queues are not used, configure a lower max WAL segment
 # limit compared to the default of 512 MiB, e.g. 64 MiB
 raft.wal_max_size_bytes = 67108864
-</pre>
+```
 
 If [quorum queues](./quorum-queues.html) are adopted at a later point, this setting
 should be revisited to be closer to the default one.
@@ -294,7 +294,7 @@ should be revisited to be closer to the default one.
 
 Here is a sample [configuration](./configure.html#config-file) that demonstrates a number of MQTT plugin settings:
 
-<pre class="lang-ini">
+```ini
 mqtt.listeners.tcp.default = 1883
 ## Default MQTT with TLS port is 8883
 # mqtt.listeners.ssl.default = 8883
@@ -310,7 +310,7 @@ mqtt.exchange         = amq.topic
 # 24 hours by default
 mqtt.subscription_ttl = 86400000
 mqtt.prefetch         = 10
-</pre>
+```
 
 ### <a id="tcp-listeners" class="anchor" href="#tcp-listeners">TCP Listeners</a>
 
@@ -325,17 +325,17 @@ to contain a `tcp_listeners` variable for the `rabbitmq_mqtt` application.
 For example, a minimalistic configuration file which changes the listener
 port to 12345 would look like:
 
-<pre class="lang-ini">
+```ini
 mqtt.listeners.tcp.1 = 12345
-</pre>
+```
 
 while one which changes the listener to listen only on localhost (for
 both IPv4 and IPv6) would look like:
 
-<pre class="lang-ini">
+```ini
 mqtt.listeners.tcp.1 = 127.0.0.1:1883
 mqtt.listeners.tcp.2 = ::1:1883
-</pre>
+```
 
 ### TCP Listener Options
 
@@ -345,7 +345,7 @@ The settings use a common prefix, `mqtt.tcp_listen_options`, and control
 things such as TCP buffer sizes, inbound TCP connection queue length, whether [TCP keepalives](./heartbeats.html#tcp-keepalives)
 are enabled and so on. See the [Networking guide](networking.html) for details.
 
-<pre class="lang-ini">
+```ini
 mqtt.listeners.tcp.1 = 127.0.0.1:1883
 mqtt.listeners.tcp.2 = ::1:1883
 
@@ -358,7 +358,7 @@ mqtt.tcp_listen_options.nodelay   = true
 
 mqtt.tcp_listen_options.exit_on_close = true
 mqtt.tcp_listen_options.send_timeout  = 120
-</pre>
+```
 
 ### <a id="tls" class="anchor" href="#tls">TLS Support</a>
 
@@ -368,7 +368,7 @@ TLS-enabled MQTT connections, add a TLS listener for MQTT using the `mqtt.listen
 The plugin will use core RabbitMQ server
 certificates and key (just like AMQP 0-9-1 and AMQP 1.0 listeners do):
 
-<pre class="lang-ini">
+```ini
 ssl_options.cacertfile = /path/to/ca_certificate.pem
 ssl_options.certfile   = /path/to/server_certificate.pem
 ssl_options.keyfile    = /path/to/server_key.pem
@@ -378,7 +378,7 @@ ssl_options.fail_if_no_peer_cert  = true
 # default TLS-enabled port for MQTT connections
 mqtt.listeners.ssl.default = 8883
 mqtt.listeners.tcp.default = 1883
-</pre>
+```
 
 Note that RabbitMQ rejects SSLv3 connections by default because that protocol
 is known to be compromised.
@@ -404,7 +404,7 @@ First way is mapping MQTT plugin (TCP or TLS) listener ports to vhosts. The mapp
 is specified thanks to the `mqtt_port_to_vhost_mapping` [global runtime parameter](./parameters.html).
 Let's take the following plugin configuration:
 
-<pre class="lang-ini">
+```ini
 mqtt.listeners.tcp.1 = 1883
 mqtt.listeners.tcp.2 = 1884
 
@@ -414,7 +414,7 @@ mqtt.listeners.ssl.2 = 8884
 # (other TLS settings are omitted for brevity)
 
 mqtt.vhost            = /
-</pre>
+```
 
 Note the plugin listens on ports 1883, 1884, 8883, and 8884. Imagine you
 want clients connecting to ports 1883 and 8883 to connect to the `vhost1` virtual
@@ -422,24 +422,24 @@ host, and clients connecting to ports 1884 and 8884 to connect to the `vhost2`
 virtual host. You can specify port-to-vhost mapping by setting the
 `mqtt_port_to_vhost_mapping` global parameter with `rabbitmqctl`:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_global_parameter mqtt_port_to_vhost_mapping \
     '{"1883":"vhost1", "8883":"vhost1", "1884":"vhost2", "8884":"vhost2"}'
-</pre>
+```
 
 with `rabbitmqctl.bat` on Windows:
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat set_global_parameter mqtt_port_to_vhost_mapping ^
     "{""1883"":""vhost1"", ""8883"":""vhost1"", ""1884"":""vhost2"", ""8884"":""vhost2""}"
-</pre>
+```
 
 and with the HTTP API:
 
-<pre class="lang-bash">
+```bash
 PUT /api/global-parameters/mqtt_port_to_vhost_mapping
 # => {"value": {"1883":"vhost1", "8883":"vhost1", "1884":"vhost2", "8884":"vhost2"}}
-</pre>
+```
 
 If there's no mapping for a given port (because the port cannot be found in
 the `mqtt_port_to_vhost_mapping` global parameter JSON document or if the global parameter
@@ -481,9 +481,9 @@ force all TLS clients to have a verifiable client certificate.
 To switch this feature on, set `ssl_cert_login` to `true` for the
 `rabbitmq_mqtt` application. For example:
 
-<pre class="lang-ini">
+```ini
 mqtt.ssl_cert_login = true
-</pre>
+```
 
 By default this will set the username to an RFC4514-ish string form of
 the certificate's subject's Distinguished Name, similar to that
@@ -491,9 +491,9 @@ produced by OpenSSL's "-nameopt RFC2253" option.
 
 To use the Common Name instead, add:
 
-<pre class="lang-ini">
+```ini
 ssl_cert_login_from = common_name
-</pre>
+```
 
 to your configuration.
 
@@ -510,24 +510,24 @@ virtual hosts, respectively.
 
 Global parameters can be set up with `rabbitmqctl`:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_global_parameter mqtt_default_vhosts \
     '{"O=client,CN=guest": "vhost1", "O=client,CN=rabbit": "vhost2"}'
-</pre>
+```
 
 With `rabbitmqctl`, on Windows:
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl set_global_parameter mqtt_default_vhosts ^
     "{""O=client,CN=guest"": ""vhost1"", ""O=client,CN=rabbit"": ""vhost2""}'
-</pre>
+```
 
 And with the HTTP API:
 
-<pre class="lang-bash">
+```bash
 PUT /api/global-parameters/mqtt_default_vhosts
 # => {"value": {"O=client,CN=guest": "vhost1", "O=client,CN=rabbit": "vhost2"}}
-</pre>
+```
 
 Note that:
 
@@ -549,7 +549,7 @@ option is interpreted in the same way as the [queue TTL](https://www.rabbitmq.co
 parameter, so the value `86400000` means 24 hours. To disable the TTL feature, just set
 the `subscription_ttl`  to `undefined` in the configuration file:
 
-<pre class="lang-ini">
+```ini
 listeners.tcp.default = 5672
 mqtt.default_user     = guest
 mqtt.default_pass     = guest
@@ -559,7 +559,7 @@ mqtt.exchange         = amq.topic
 mqtt.subscription_ttl = undefined
 mqtt.prefetch         = 10
 ...
-</pre>
+```
 
 Note that disabling queue TTL carries a risk: short-lived clients that don't use clean sessions
 can leave queues and messages behind, which will consume resources and require manual
@@ -583,9 +583,9 @@ publish any messages. The exchange is expected to be a topic exchange.
 The MQTT plugin supports the [proxy protocol](http://www.haproxy.org/download/1.8/doc/proxy-protocol.txt).
 This feature is disabled by default, to enable it for MQTT clients:
 
-<pre class="lang-ini">
+```ini
 mqtt.proxy_protocol = true
-</pre>
+```
 
 See the [Networking Guide](./networking.html#proxy-protocol) for more information
 about the proxy protocol.
@@ -600,9 +600,9 @@ topics into AMQP routing keys](#implementation).
 
 To solve this, the `sparkplug` configuration entry can be set to `true`:
 
-<pre class="lang-ini">
+```ini
 mqtt.sparkplug = true
-</pre>
+```
 
 When the Sparkplug support is enabled, the MQTT plugin will not translate the
 `spAvM.N`/`spBvM.N` part of the names of topics.
@@ -631,9 +631,9 @@ different benefits, trade-offs, and limitations.
 
 Before the plugin is disabled on a node, or a node removed from the cluster, it must be decommissioned using [`rabbitmqctl`](./cli.html):
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl decommission_mqtt_node &lt;node&gt;
-</pre>
+```
 
 ## <a id="retained" class="anchor" href="#retained">Retained Messages and Stores</a>
 
@@ -650,7 +650,7 @@ With the second one, there is a limit of 2 GB per vhost. Both are node-local
 
 To configure the store, use <code>rabbitmq_mqtt.retained_message_store</code> configuration key:
 
-<pre class="lang-ini">
+```ini
 mqtt.default_user     = guest
 mqtt.default_pass     = guest
 mqtt.allow_anonymous  = true
@@ -666,7 +666,7 @@ mqtt.retained_message_store_dets_sync_interval = 2000
 
 mqtt.listeners.ssl = none
 mqtt.listeners.tcp.default = 1883
-</pre>
+```
 
 The value must be a module that implements the store:
 

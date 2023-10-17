@@ -122,36 +122,36 @@ To add an upstream, use the `rabbitmqctl set_parameter` command. It accepts thre
 
 The following example configures an upstream named "origin" which can be contacted at `remote-host.local:5672`:
 
-<pre class="lang-bash">
+```bash
 # Adds a federation upstream named "origin"
 rabbitmqctl set_parameter federation-upstream origin '{"uri":"amqp://remote-host.local:5672"}'
-</pre>
+```
 
 On Windows, use <code>rabbitmqctl.bat</code> and suitable PowerShell quoting:
 
-<pre class="lang-powershell">
+```powershell
 # Adds a federation upstream named "origin"
 rabbitmqctl.bat set_parameter federation-upstream origin "{""uri"":""amqp://remote-host.local:5672""}"
-</pre>
+```
 
 Once an upstream has been specified, a policy that controls federation can be added.
 It is added just like any other [policy](parameters.html#policies), using `rabbitmqctl set_policy`:
 
-<pre class="lang-bash">
+```bash
 # Adds a policy named "queue-federation"
 rabbitmqctl set_policy queue-federation "^federated\." '{"federation-upstream-set":"all"}' \
     --priority 10 \
     --apply-to queues
-</pre>
+```
 
 Here's a Windows version of the above example:
 
-<pre class="lang-powershell">
+```powershell
 # Adds a policy named "queue-federation"
 rabbitmqctl.bat set_policy queue-federation "^federated\." "{""federation-upstream-set"":""all""}" ^
     --priority 10 ^
     --apply-to queues
-</pre>
+```
 
 In the example above, the policy will match queues whose name begins with a `federated.` prefix
 in the default virtual host. Those queues will set up federation links for all declared upstreams.
@@ -165,9 +165,9 @@ If no queues matched, no links will be started.
 
 To deactivate federation for the matching queues, delete the policy using its name:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl clear_policy queue-federation
-</pre>
+```
 
 
 ## <a id="loops" class="anchor" href="#loops">Complex Topologies and Loop Handling</a>

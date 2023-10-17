@@ -41,14 +41,14 @@ To illustrate how an RPC service could be used we're going to
 create a simple client class. It's going to expose a method named `call`
 which sends an RPC request and blocks until the answer is received:
 
-<pre class="lang-ruby">
+```ruby
 client = FibonacciClient.new('rpc_queue')
 
 puts ' [x] Requesting fib(30)'
 response = client.call(30)
 
 puts " [.] Got #{response}"
-</pre>
+```
 
 > #### A note on RPC
 >
@@ -79,14 +79,14 @@ receive a response we need to send a 'callback' queue address with the
 request. We can use the default queue.
 Let's try it:
 
-<pre class="lang-ruby">
+```ruby
 queue = channel.queue('', exclusive: true)
 exchange = channel.default_exchange
 
 exchange.publish(message, routing_key: 'rpc_queue', reply_to: queue.name)
 
 # ... then code to read a response message from the callback_queue ...
-</pre>
+```
 
 > #### Message properties
 >
@@ -208,13 +208,13 @@ Putting it all together
 
 The Fibonacci task:
 
-<pre class="lang-ruby">
+```ruby
 def fibonacci(value)
   return value if value.zero? || value == 1
 
   fibonacci(value - 1) + fibonacci(value - 2)
 end
-</pre>
+```
 
 We declare our fibonacci function. It assumes only valid positive integer input.
 (Don't expect this one to work for big numbers,
@@ -223,7 +223,7 @@ and it's probably the slowest recursive implementation possible).
 
 The code for our RPC server [rpc_server.rb](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/ruby/rpc_server.rb) looks like this:
 
-<pre class="lang-ruby">
+```ruby
 #!/usr/bin/env ruby
 require 'bunny'
 
@@ -283,7 +283,7 @@ begin
 rescue Interrupt => _
   server.stop
 end
-</pre>
+```
 
 
 
@@ -300,7 +300,7 @@ The server code is rather straightforward:
 
 The code for our RPC client [rpc_client.rb](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/ruby/rpc_client.rb):
 
-<pre class="lang-ruby">
+```ruby
 #!/usr/bin/env ruby
 require 'bunny'
 require 'thread'
@@ -371,7 +371,7 @@ response = client.call(30)
 puts " [.] Got #{response}"
 
 client.stop
-</pre>
+```
 
 
 Now is a good time to take a look at our full example source code (which includes basic exception handling) for
@@ -380,17 +380,17 @@ Now is a good time to take a look at our full example source code (which include
 
 Our RPC service is now ready. We can start the server:
 
-<pre class="lang-bash">
+```bash
 ruby rpc_server.rb
 # => [x] Awaiting RPC requests
-</pre>
+```
 
 To request a fibonacci number run the client:
 
-<pre class="lang-bash">
+```bash
 ruby rpc_client.rb
 # => [x] Requesting fib(30)
-</pre>
+```
 
 The design presented here is not the only possible implementation of a RPC
 service, but it has some important advantages:

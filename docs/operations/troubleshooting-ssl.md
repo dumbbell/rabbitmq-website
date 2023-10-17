@@ -67,14 +67,14 @@ or the <code>listeners</code> section in <code>[rabbitmq-diagnostics](./rabbitmq
 
 The listeners section will look something like this:
 
-<pre class="lang-ini">
+```ini
 Interface: [::], port: 25672, protocol: clustering, purpose: inter-node and CLI tool communication
 Interface: [::], port: 5672, protocol: amqp, purpose: AMQP 0-9-1 and AMQP 1.0
 Interface: [::], port: 5671, protocol: amqp/ssl, purpose: AMQP 0-9-1 and AMQP 1.0 over TLS
 Interface: [::], port: 15672, protocol: http, purpose: HTTP API
 Interface: [::], port: 15671, protocol: https, purpose: HTTP API over TLS (HTTPS)
 Interface: [::], port: 1883, protocol: mqtt, purpose: MQTT
-</pre>
+```
 
 In the above example, there are 6 TCP listeners on the node. Two of them accept TLS-enabled connections:
 
@@ -87,10 +87,10 @@ In the above example, there are 6 TCP listeners on the node. Two of them accept 
 If the above steps are not an option, inspecting node's [log file](./logging.html) can be a viable alternative.
 It should contain an entry about a TLS listener being enabled, looking like this:
 
-<pre class="lang-plaintext">
+```plaintext
 2018-09-02 14:24:58.611 [info] &lt;0.664.0&gt; started TCP listener on [::]:5672
 2018-09-02 14:24:58.614 [info] &lt;0.680.0&gt; started SSL listener on [::]:5671
-</pre>
+```
 
 If the node is configured to use TLS but a message similar to the above is not logged,
 it is possible that the configuration file was placed at an incorrect location and was not read by
@@ -131,69 +131,69 @@ Another key requirement for establishing TLS connections to the broker
 is TLS support in the broker. Confirm that the Erlang VM has support
 for TLS by running
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics --silent tls_versions
-</pre>
+```
 
 Or, on Windows
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics.bat --silent tls_versions
-</pre>
+```
 
 The output will look like this:
 
-<pre class="lang-ini">
+```ini
 tlsv1.2
 tlsv1.1
 tlsv1
 sslv3
-</pre>
+```
 
 With versions that do not provide <code>rabbitmq-diagnostics tls_versions</code>, use
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl eval 'ssl:versions().'
-</pre>
+```
 
 Or, on Windows
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat eval 'ssl:versions().'
-</pre>
+```
 
 The output in this case will look like so:
 
-<pre class="lang-erlang">
+```erlang
 [{ssl_app,"9.1"},
  {supported,['tlsv1.2','tlsv1.1',tlsv1]},
  {supported_dtls,['dtlsv1.2',dtlsv1]},
  {available,['tlsv1.2','tlsv1.1',tlsv1,sslv3]},
  {available_dtls,['dtlsv1.2',dtlsv1]}]
-</pre>
+```
 
 If an error is reported instead, confirm that the Erlang/OTP installation [includes TLS support](./ssl.html#erlang-otp-requirements).
 
 It is also possible to list cipher suites available on a node:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics cipher_suites --format openssl --silent
-</pre>
+```
 
 Or, on Windows:
 
-<pre class="lang-powershell">
+```powershell
 rabbitmq-diagnostics.bat cipher_suites --format openssl --silent
-</pre>
+```
 
 It is also possible to inspect what TLS versions are supported by the local Erlang runtime.
 To do so, run <code>erl</code> (or <code>werl.exe</code> on Windows) on the command line to open an Erlang shell and
 enter
 
-<pre class="lang-erlang">
+```erlang
 %% the trailing dot is significant!
 ssl:versions().
-</pre>
+```
 
 Note that this will report supported versions on the local node (for the runtime found in <code>PATH</code>),
 which may be different from that used by RabbitMQ node(s) inspected.
@@ -246,10 +246,10 @@ The example will assume you have the following [certificate and key files](./ssl
 
 In one terminal window or tab execute the following command:
 
-<pre class="lang-bash">
+```bash
 openssl s_server -accept 8443 \
   -cert server_certificate.pem -key server_key.pem -CAfile ca_certificate.pem
-</pre>
+```
 
 It will start an OpenSSL <code>s_server</code> that uses the provided
 CA certificate bundler, server certificate and private key. It will be used
@@ -258,11 +258,11 @@ to confidence check the certificates with test TLS connections against this exam
 In another terminal window, run the following command, substituting <code>CN_NAME</code>
 with the expected hostname or <code>CN</code> name from the certificate:
 
-<pre class="lang-bash">
+```bash
 openssl s_client -connect localhost:8443 \
   -cert client_certificate.pem -key client_key.pem -CAfile ca_certificate.pem \
   -verify 8 -verify_hostname CN_NAME
-</pre>
+```
 
 It will open a new TLS connection to the example TLS server started above. You may leave
 off the <code>-verify_hostname</code> argument but OpenSSL will no longer perform that
@@ -275,9 +275,9 @@ server, similar to <code>telnet</code>.
 If the [trust chain](./ssl.html#peer-verification) could be established, the second terminal will display
 a verification confirmation with the code of <code>0</code>:
 
-<pre class="lang-ini">
+```ini
 Verify return code: 0 (ok)
-</pre>
+```
 
 Just like with command line tools, a non-zero code communicates an error of some kind.
 
@@ -301,9 +301,9 @@ Certificate's key usage properties can also limit what cipher suites can be used
 See [Configuring Cipher Suites](./ssl.html#cipher-suites) and [Public Key Usage Extensions](./ssl.html#key-usage) in the main TLS guide
 to learn more.
 
-<pre class="lang-bash">
+```bash
 openssl ciphers -v
-</pre>
+```
 
 will display all cipher suites supported by the local build of OpenSSL.
 
@@ -316,17 +316,17 @@ This check establishes whether the broker is likely to be configured correctly, 
 to configure a RabbitMQ client. The tool can also be useful to compare the behaviour of different clients.
 The example assumes a node running on <code>localhost</code> on [default TLS port for AMQP 0-9-1 and AMQP 1.0](networking.html#ports), 5671:
 
-<pre class="lang-bash">
+```bash
 openssl s_client -connect localhost:5671 -cert client_certificate.pem -key client_key.pem -CAfile ca_certificate.pem
-</pre>
+```
 
 The output should appear similar to the case where port 8443 was used. The node log file
 should [contain a new entry when the connection is established](./logging.html#logged-events):
 
-<pre class="lang-ini">
+```ini
 2018-09-27 15:46:20 [info] &lt;0.1082.0&gt; accepting AMQP connection &lt;0.1082.0&gt; (127.0.0.1:50915 -> 127.0.0.1:5671)
 2018-09-27 15:46:20 [info] &lt;0.1082.0&gt; connection &lt;0.1082.0&gt; (127.0.0.1:50915 -> 127.0.0.1:5671): user 'user' authenticated and granted access to vhost 'virtual_host'
-</pre>
+```
 
 The node will expect clients to perform protocol handshake (AMQP 0-9-1, AMQP 1.0 and so on). If that doesn't
 happen within a short time window (10 seconds by default for most protocols), the node will close the
@@ -348,7 +348,7 @@ TLS connections from TLS-capable clients on port 5679.
 
 Parameters are passed via a config file named <code>stunnel.conf</code>. It has the following content:
 
-<pre  class="lang-ini">
+```ini
 foreground = yes
 
 [rabbit-amqp]
@@ -356,14 +356,14 @@ connect = localhost:5672
 accept = 5679
 cert = client/key-cert.pem
 debug = 7
-</pre>
+```
 
 `stunnel` is started as follows:
 
-<pre  class="lang-bash">
+```bash
 cat client_key.pem client_certificate.pem > client/key-cert.pem
 stunnel stunnel.conf
-</pre>
+```
 
 `stunnel` requires a certificate and its corresponding private key. The certificate
 and private key files must be concatenated as shown above with the <code>cat</code> command.

@@ -79,9 +79,9 @@ which accepts virtual host name as the only mandatory argument.
 
 Here's an example that creates a virtual host named `qa1`:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl add_vhost qa1
-</pre>
+```
 
 ### Using HTTP API
 
@@ -91,9 +91,9 @@ where `{name}` is the name of the virtual host
 Here's an example that uses [curl](https://curl.haxx.se/) to create a virtual host `vh1` by contacting
 a node at `rabbitmq.local:15672`:
 
-<pre class="lang-bash">
+```bash
 curl -u userename:pa$sw0rD -X PUT http://rabbitmq.local:15672/api/vhosts/vh1
-</pre>
+```
 
 
 ### <a id="preprovisioning" class="anchor" href="#preprovisioning">Bulk Creation and Pre-provisioning</a>
@@ -128,22 +128,22 @@ The `rabbitmqctl add_vhost` command accepts a virtual host name as well as a num
 Here's an example that creates a virtual host named `qa1` with [quorum queues](./quorum-queues.html) for default queue type,
 a description and two tags:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl add_vhost qa1 --description "QA environment 1" --default-queue-type quorum --tags qa,project-a
-</pre>
+```
 
 `rabbitmqctl update_vhost_metadata` can be used to update all or some of the metadata values
 demonstrated above:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl update_vhost_metadata qa1 --description "QA environment for issue 1662" --default-queue-type quorum --tags qa,project-a,qa-1662
-</pre>
+```
 
 To inspect virtual host metadata, use `rabbitmqctl list_vhots` and provide the additional column(s):
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl -q --formatter=pretty_table list_vhosts name description tags default_queue_type
-</pre>
+```
 
 
 ### Using HTTP API
@@ -155,26 +155,26 @@ Here's an example that uses [curl](https://curl.haxx.se/) to create a virtual ho
 a node at `rabbitmq.local:15672`. [Quorum queues](./quorum-queues.html) will be used for default queue type,
 a description and two tags:
 
-<pre class="lang-bash">
+```bash
 curl -u userename:pa$sw0rD -X PUT http://rabbitmq.local:15672/api/vhosts/qa1 \
                            -H "content-type: application/json" \
                            --data-raw '{"description": "QA environment 1", "tags": "qa,project-a", "default_queue_type": "quorum"}'
-</pre>
+```
 
 can be used to update all or some of the metadata values
 demonstrated above:
 
-<pre class="lang-bash">
+```bash
 curl -u userename:pa$sw0rD -X PUT http://rabbitmq.local:15672/api/vhosts/qa1 \
                            -H "content-type: application/json" \
                            --data-raw '{"description": "QA environment for issue 1662", "tags": "qa,project-a,qa-1662", "default_queue_type": "quorum"}'
-</pre>
+```
 
 Virtual host metadata is returned by the `GET /api/vhosts/{name}` endpoint:
 
-<pre class="lang-bash">
+```bash
 curl -u userename:pa$sw0rD -X GET http://rabbitmq.local:15672/api/vhosts/qa1
-</pre>
+```
 
 
 ## <a id="default-queue-type" class="anchor" href="#default-queue-type">Default Queue Type</a>
@@ -206,9 +206,9 @@ which accepts virtual host name as the only mandatory argument.
 
 Here's an example that deletes a virtual host named `qa1`:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl delete_vhost qa1
-</pre>
+```
 
 ### Using HTTP API
 
@@ -218,9 +218,9 @@ where `{name}` is the name of the virtual host
 Here's an example that uses [curl](https://curl.haxx.se/) to delete a virtual host `vh1` by contacting
 a node at `rabbitmq.local:15672`:
 
-<pre class="lang-bash">
+```bash
 curl -u userename:pa$sw0rD -X DELETE http://rabbitmq.local:15672/api/vhosts/vh1
-</pre>
+```
 
 
 ## <a id="limits" class="anchor" href="#limits">Limits</a>
@@ -241,36 +241,36 @@ It requires a vhost parameter and a JSON document of limit definitions.
 To limit the total number of concurrent client connections in vhost
 `vhost_name`, use the following limit definition:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_vhost_limits -p vhost_name '{"max-connections": 256}'
-</pre>
+```
 
 To block client connections to a vhost, set the limit to a zero:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_vhost_limits -p vhost_name '{"max-connections": 0}'
-</pre>
+```
 
 To lift the limit, set it to a negative value:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_vhost_limits -p vhost_name '{"max-connections": -1}'
-</pre>
+```
 
 ### Configuring Max Number of Queues
 
 To limit the total number of queues in vhost
 `vhost_name`, use the following limit definition:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_vhost_limits -p vhost_name '{"max-queues": 1024}'
-</pre>
+```
 
 To lift the limit, set it to a negative value:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_vhost_limits -p vhost_name '{"max-queues": -1}'
-</pre>
+```
 
 
 ## Virtual Hosts and STOMP

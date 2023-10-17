@@ -46,9 +46,9 @@ When one RabbitMQ node determines that another node has gone
 down it will log a message giving the other node's name and
 the reason, like:
 
-<pre class="lang-ini">
+```ini
 2018-11-22 10:44:33.654 [info] node rabbit@peer-hostname down: net_tick_timeout
-</pre>
+```
 
 In this case the `net_tick_timeout` event tells us that
 the other node was detected as down due to the net ticktime
@@ -81,11 +81,11 @@ carefully considered. All nodes in a cluster must use the same
 configuration demonstrates doubling the default `net_ticktime` from
 60 to 120 seconds:
 
-<pre class="lang-erlang">
+```erlang
 [
   {kernel, [{net_ticktime,  120}]}
 ].
-</pre>
+```
 
 ## <a id="http-api" class="anchor" href="#http-api">Effects on HTTP API</a>
 

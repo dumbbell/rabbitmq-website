@@ -39,25 +39,25 @@ The limits can be configured using [`rabbitmqctl set_user_limits`](./cli.html) o
 To limit how many connection a user can open, set the `max-connections` limit to
 a positive integer:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_user_limits user1 '{"max-connections": 10}'
-</pre>
+```
 
 To set the limit over the HTTP API, use the following endpoint:
 
-<pre class="lang-ini">
+```ini
 PUT /api/user-limits/{username}/{limit}
-</pre>
+```
 
 and a request body like this:
 
-<pre class="lang-javascript">
+```javascript
 {"value": 20}
-</pre>
+```
 
 Here is an example that uses `curl`:
 
-<pre class="lang-bash">
+```bash
 # using the HTTP API
 curl -v -u guest:guest -X PUT http://localhost:15672/api/user-limits/user1/max-connections \
                        -H "content-type: application/json" \
@@ -66,33 +66,33 @@ curl -v -u guest:guest -X PUT http://localhost:15672/api/user-limits/user1/max-c
   "value": 20
 }
 EOF
-</pre>
+```
 
 ## <a id="channels" class="anchor" href="#channels">Maximum Number of Channels</a>
 
 To limit how many channels, in total, a user can open, set the `max-channels` limit to
 a positive integer:
 
-<pre class="lang-bash">
+```bash
 # using CLI tools
 rabbitmqctl set_user_limits guest '{"max-connections": 10, "max-channels": 20}'
-</pre>
+```
 
 To set the limit over the HTTP API, use the following endpoint:
 
-<pre class="lang-ini">
+```ini
 PUT /api/user-limits/{username}/{limit}
-</pre>
+```
 
 and a request body like this:
 
-<pre class="lang-javascript">
+```javascript
 {"value": 20}
-</pre>
+```
 
 Here is an example that uses `curl` to set a limit for user `user1`:
 
-<pre class="lang-bash">
+```bash
 # using the HTTP API
 curl -v -u guest:guest -X PUT http://localhost:15672/api/user-limits/user1/max-channels \
                        -H "content-type: application/json" \
@@ -101,7 +101,7 @@ curl -v -u guest:guest -X PUT http://localhost:15672/api/user-limits/user1/max-c
   "value": 20
 }
 EOF
-</pre>
+```
 
 The limit is applied to the total number of channels across all connections opened
 by the user. Therefore, it must be equal or greater than that the aforementioned maximum
@@ -113,7 +113,7 @@ To clear all limits for a user, use [`rabbitmqctl clear_user_limits`](./cli.html
 
 Here are some examples that clear all limits for user `user1`:
 
-<pre class="lang-bash">
+```bash
 # clears the maximum number of connections limit
 rabbitmqctl clear_user_limits user1 'max-connections'
 
@@ -122,21 +122,21 @@ rabbitmqctl clear_user_limits user1 'max-channels'
 
 # clears all limits in a single operation
 rabbitmqctl clear_user_limits user1 all
-</pre>
+```
 
 To clear the limit over the HTTP API, use the following endpoint:
 
-<pre class="lang-ini">
+```ini
 DELETE /api/user-limits/{username}/{limit}
-</pre>
+```
 
 without a request body.
 
 Here is an example that uses `curl` to clear all limits of user `user1`:
 
-<pre class="lang-bash">
+```bash
 # using the HTTP API
 curl -v -u guest:guest -X DELETE http://localhost:15672/api/user-limits/user1/max-channels
 
 curl -v -u guest:guest -X DELETE http://localhost:15672/api/user-limits/user1/max-connections
-</pre>
+```

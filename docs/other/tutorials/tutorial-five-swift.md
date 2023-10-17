@@ -140,7 +140,7 @@ The code is almost the same as in the
 
 The code for `emitLogTopic`:
 
-<pre class="lang-swift">
+```swift
 func emitLogTopic(_ msg: String, routingKey: String) {
     let conn = RMQConnection(delegate: RMQConnectionDelegateLogger())
     conn.start()
@@ -150,11 +150,11 @@ func emitLogTopic(_ msg: String, routingKey: String) {
     print("Sent '\(msg)'")
     conn.close()
 }
-</pre>
+```
 
 The code for `receiveLogsTopic`:
 
-<pre class="lang-swift">
+```swift
 func receiveLogsTopic(_ routingKeys: [Any]) {
     let conn = RMQConnection(delegate: RMQConnectionDelegateLogger())
     conn.start()
@@ -170,37 +170,37 @@ func receiveLogsTopic(_ routingKeys: [Any]) {
                                               encoding: .utf8))")
     })
 }
-</pre>
+```
 
 To receive all the logs:
 
-<pre class="lang-swift">
+```swift
 self.receiveLogsTopic(["#"])
-</pre>
+```
 
 To receive all logs from the facility "`kern`":
 
-<pre class="lang-swift">
+```swift
 self.receiveLogsTopic(["kern.*"])
-</pre>
+```
 
 Or if you want to hear only about "`critical`" logs:
 
-<pre class="lang-swift">
+```swift
 self.receiveLogsTopic(["*.critical"])
-</pre>
+```
 
 You can create multiple bindings:
 
-<pre class="lang-swift">
+```swift
 self.receiveLogsTopic(["kern.*", "*.critical"])
-</pre>
+```
 
 And to emit a log with a routing key "`kern.critical`" type:
 
-<pre class="lang-swift">
+```swift
 self.emitLogTopic("A critical kernel error", routingKey: "kern.critical")
-</pre>
+```
 
 Have fun playing with these methods. Note that the code doesn't make
 any assumption about the routing or binding keys, you may want to play

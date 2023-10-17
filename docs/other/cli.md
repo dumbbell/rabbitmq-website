@@ -92,31 +92,31 @@ any missing arguments when executed.
 
 To find out what commands are available, use the `help` command:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl help
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics help
-</pre>
+```
 
 The command can display usage information for a particular command:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics help status
-</pre>
+```
 
 Alternatively, the `--help` option can be used:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl --help
-</pre>
+```
 
 including for individual commands:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics status --help
-</pre>
+```
 
 
 ## <a id="rabbitmqctl" class="anchor" href="#rabbitmqctl">rabbitmqctl</a>
@@ -178,27 +178,27 @@ the same [authentication requirements](#authentication) apply.
 To contact a remote node, use the `--node` (`-n`) option that `rabbitmqctl`, `rabbitmq-diagnostics` and other core CLI tools
 accept. The following example contact the node `rabbit@remote-host.local` to find out its status:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics status -n rabbit@remote-host.local
-</pre>
+```
 
 Some commands, such as
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics status
-</pre>
+```
 
 can be used against any node. Others, such as
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl shutdown
-</pre>
+```
 
 or
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl wait
-</pre>
+```
 
 can only be run on the same host or in the same container as their target node. These commands typically
 rely on or modify something in the local environment, e.g. the local [enabled plugins file](./plugins.html).
@@ -219,9 +219,9 @@ Most CLI commands are invoked against a node called target node. To specify a ta
 use the `--node` (`-n`) option. For example, to run a [health check](./monitoring.html)
 on node `rabbit@warp10.local`:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics -n rabbit@warp10 check_alarms
-</pre>
+```
 
 Some commands accept both a target node and another node name. For example,
 `rabbitmqctl forget_cluster_node` accepts both a target node (that will perform the action)
@@ -242,11 +242,11 @@ to `true`.
 For CLI tools, either `RABBITMQ_USE_LONGNAME` must be set or the `--longnames` option
 must be specified:
 
-<pre class="lang-bash">
+```bash
 # this example assumes that host1.messaging.eng.coolcorporation.banana is a hostname
 # that successfully resolves
 rabbitmq-diagnostics -n rabbit@host1.messaging.eng.coolcorporation.banana check_alarms --longnames
-</pre>
+```
 
 ## <a id="passing-arguments" class="anchor" href="#passing-arguments">Options and Positional Arguments</a>
 
@@ -256,41 +256,41 @@ This section provides some examples and focuses on edge cases and lesser known f
 Different commands take different arguments. Some are named options such as `--node` (aliased as `-n`),
 others are positional arguments, such as the username and password arguments in
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl add_user &lt;username&gt; &lt;password&gt;
-</pre>
+```
 
 A specific example:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl add_user "a-user" "a-pa$$w0rd"
-</pre>
+```
 
 Options can be provided before or after positional arguments with one exception: anything
 that follows a double hyphen (`--`) will be treated as positional arguments:
 
-<pre class="lang-bash">
+```bash
 # all values after the double hyphen (--) will be treated as positional arguments,
 # even if they begin with a hyphen or a double hyphen
 rabbitmqctl add_user --node rabbit@host1.messaging.eng.coolcorporation.banana -- "a-user" "a-pa$$w0rd"
-</pre>
+```
 
 The explicit positional argument separator must be used when positional arguments begin with a hyphen or a double
 hyphen (such as generated passwords), to make sure they are not parsed as options:
 
-<pre class="lang-bash">
+```bash
 # Since "--!a-pa$$w0rd" is explicitly provided as a positional argument, it won't
 # be mistakenly considered for an unsupported option, even though it starts with a double hyphen
 rabbitmqctl add_user --node rabbit@host1.messaging.eng.coolcorporation.banana -- "a-user" "--!a-pa$$w0rd"
-</pre>
+```
 
 Option values can be passed as `--option <value>` or `--option=<value>`. The latter variant must be used
 when the value begins with a hyphen (`-`), otherwise it would be treated as an option:
 
-<pre class="lang-bash">
+```bash
 # an alternative way of providing an option value
 rabbitmqctl add_user --node=rabbit@host1.messaging.eng.coolcorporation.banana -- "a-user" "a-pa$$w0rd"
-</pre>
+```
 
 `rabbitmqctl`, `rabbitmq-diagnostics`, `rabbitmq-plugins`, and `rabbitmq-queues` support [command aliases](#aliases).
 
@@ -363,15 +363,15 @@ As an alternative, the option "`-setcookie <value>`" can be added
 to `RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS` <a href="./configure.html">environment variable value</a>
 to override the cookie value used by a RabbitMQ node:
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="-setcookie cookie-value"
-</pre>
+```
 
 CLI tools can take a cookie value using a command line flag:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics status --erlang-cookie "cookie-value"
-</pre>
+```
 
 Both are **the least secure options** and generally **not recommended**.
 
@@ -382,14 +382,14 @@ Both are **the least secure options** and generally **not recommended**.
 Starting with [version `3.8.6`](./changelog.html), `rabbitmq-diagnostics` includes a command
 that provides relevant information on the Erlang cookie file used by CLI tools:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics erlang_cookie_sources
-</pre>
+```
 
 The command will report on the effective user, user home directory and the expected location
 of the cookie file:
 
-<pre class="lang-plaintext">
+```plaintext
 Cookie File
 
 Effective user: antares
@@ -409,16 +409,16 @@ Env variable  (Deprecated)
 
 RABBITMQ_ERLANG_COOKIE value set? false
 RABBITMQ_ERLANG_COOKIE value length: 0
-</pre>
+```
 
 #### Server Nodes
 
 When a node starts, it will [log](./logging.html) the home directory location of its effective user:
 
-<pre class="lang-plaintext">
+```plaintext
 node           : rabbit@cdbf4de5f22d
 home dir       : /var/lib/rabbitmq
-</pre>
+```
 
 Unless any [server directories](./relocate.html) were overridden, that's the directory where
 the cookie file will be looked for, and created by the node on first boot if it does not already exist.
@@ -442,20 +442,20 @@ such as "Connection attempt from disallowed node", "", "Could not auto-cluster".
 
 For example, when a CLI tool connects and tries to authenticate using a mismatching secret value:
 
-<pre class="lang-plaintext">
+```plaintext
 2020-06-15 13:03:33 [error] &lt;0.1187.0&gt; ** Connection attempt from node 'rabbitmqcli-99391-rabbit@warp10' rejected. Invalid challenge reply. **
-</pre>
+```
 
 When a CLI tool such as `rabbitmqctl` fails to authenticate with RabbitMQ,
 the message usually says
 
-<pre class="lang-plaintext">
+```plaintext
 * epmd reports node 'rabbit' running on port 25672
 * TCP connection succeeded but Erlang distribution failed
 * suggestion: hostname mismatch?
 * suggestion: is the cookie set correctly?
 * suggestion: is the Erlang distribution using TLS?
-</pre>
+```
 
 This means that TCP connection from a CLI tool to a RabbitMQ node
 succeeded but authentication attempt was rejected by the server. The
@@ -473,7 +473,7 @@ cookie hash value when they fail to authenticate with the target node.
 When a recent Erlang/OTP version is used, authentication failures contain
 more information and cookie mismatches can be identified better:
 
-<pre class="lang-plaintext">
+```plaintext
 rabbit@warp10:
   * connected to epmd (port 4369) on warp10
   * epmd reports node 'rabbit' running on port 25672
@@ -485,7 +485,7 @@ current node details:
 - node name: 'rabbitmq-cli-63@warp10'
 - home dir: /home/username
 - cookie hash: Sg08R8+G85EYHZ3H/9NUfg==
-</pre>
+```
 
 
 #### Possible Reason 2: Node Name Type Mismatch
@@ -506,9 +506,9 @@ Other reasons include a hostname mismatch in node name used by the target Rabbit
 to the CLI tool (e.g. via the `-n` flag). For example, if a node runs using `rabbit@rmq1.eng.megacorp.local`
 as its name but `rabbitmqctl` is invoked as
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics status -n rabbit@rmq-dev.eng.megacorp.local
-</pre>
+```
 
 then even if `rmq-dev.eng.megacorp.local` and `rmq1.eng.megacorp.local` resolve to the same IP address,
 the server will reject `rabbitmqctl`'s authentication attempt. This scenario is relatively
@@ -517,7 +517,7 @@ rare.
 When a recent Erlang/OTP version is used, authentication failures contain
 more information and hostname mismatches can be identified better:
 
-<pre class="lang-plaintext">
+```plaintext
 rabbit@localhost:
   * connected to epmd (port 4369) on localhost
   * epmd reports node 'rabbit' running on port 25672
@@ -530,7 +530,7 @@ current node details:
 - node name: 'rabbitmq-cli-30@warp10'
 - home dir: /Users/antares
 - cookie hash: Sg08R8+G85EYHZ3H/9NUfg==
-</pre>
+```
 
 
 #### Other Possible Reasons
@@ -553,21 +553,21 @@ and so on.
 To retrieve node status, use `rabbitmq-diagnostics status` or `rabbitmq-diagnostics.bat status`
 with an optional `--node` target:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics  status
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics  status --node rabbit@target-hostname.local
-</pre>
+```
 
-<pre class="lang-powershell">
+```powershell
 rabbitmq-diagnostics .bat status
-</pre>
+```
 
-<pre class="lang-powershell">
+```powershell
 rabbitmq-diagnostics .bat status --node rabbit@target-hostname.local
-</pre>
+```
 
 ### Starting a node
 
@@ -586,21 +586,21 @@ the node, which depends on the package typed used when RabbitMQ was installed.
 To stop a node using RabbitMQ CLI tools, use
 `rabbitmqctl shutdown` or `rabbitmqctl.bat shutdown` with an optional `--node` target:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl shutdown
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl shutdown --node rabbit@target-hostname.local
-</pre>
+```
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat shutdown
-</pre>
+```
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat shutdown --node rabbit@target-hostname.local
-</pre>
+```
 
 ## <a id="http-api-cli" class="anchor" href="#http-api-cli">rabbitmqadmin</a>
 
@@ -669,14 +669,14 @@ instead of typing `rabbitmqctl environment` it may be more convenient to define 
 Aliases are loaded from a file specified via the `RABBITMQ_CLI_ALIASES_FILE` environment
 variable:
 
-<pre class="lang-bash">
+```bash
 export RABBITMQ_CLI_ALIASES_FILE=/path/to/cli_aliases.conf
-</pre>
+```
 
 The aliases file uses a very minimalistic ini-style `alias = command` format, for
 example:
 
-<pre class="lang-ini">
+```ini
 env = environment
 st  = status --quiet
 
@@ -685,57 +685,57 @@ lq  = list_queues --quiet
 lu  = list_users --quiet
 
 cs  = cipher_suites --openssl-format --quiet
-</pre>
+```
 
 With this alias file in place it will be possible to use
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl env
-</pre>
+```
 
 which would expand to
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl environment
-</pre>
+```
 
 or
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl lq
-</pre>
+```
 
 which would expand to
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_queues --quiet
-</pre>
+```
 
 The last alias in the example above configures a `rabbitmq-diagnostics` command:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics cs
-</pre>
+```
 
 would expand to
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics cipher_suites --openssl-format --quiet
-</pre>
+```
 
 All tools process aliases the same way. As long as the expanded command is recognized,
 aliases can be used with any tool or even more than one. For example,
 both `rabbitmqctl` and `rabbitmq-diagnostics` provide the `environment` command
 so the `env` alias works for both of them exactly the same way:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics env
-</pre>
+```
 
 would expand to
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics environment
-</pre>
+```
 
 The file will be consulted only if the command invoked is not provided by the tool.

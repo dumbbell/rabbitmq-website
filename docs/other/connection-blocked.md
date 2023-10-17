@@ -67,7 +67,7 @@ interface implementations. They can be registered on a
 `Connection` using the
 `Connection.addBlockedListener` method:
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 Connection connection = factory.newConnection();
 connection.addBlockedListener(new BlockedListener() {
@@ -79,7 +79,7 @@ connection.addBlockedListener(new BlockedListener() {
         // Connection is now unblocked
     }
 });
-</pre>
+```
 
 
 ## <a id="dotnet" class="anchor" href="#dotnet">Using Blocked Connection Notifications with .NET Client</a>
@@ -88,7 +88,7 @@ With the [official .NET client](./dotnet-api-guide.html), blocked connection
 notifications can be received by registering for the
 `ConnectionBlocked` and `ConnectionUnblocked` events in `IConnection`:
 
-<pre class="lang-csharp">
+```csharp
   public void HandleBlocked(object sender, ConnectionBlockedEventArgs args)
   {
       // Connection is now blocked
@@ -101,4 +101,4 @@ notifications can be received by registering for the
 
 Conn.ConnectionBlocked   += HandleBlocked;
 Conn.ConnectionUnblocked += HandleUnblocked;
-</pre>
+```

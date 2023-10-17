@@ -63,9 +63,9 @@ Use [Stream PerfTest](https://github.com/rabbitmq/rabbitmq-stream-perf-test) to 
 The Stream plugin is included in the RabbitMQ distribution. Before clients can successfully
 connect, it must be enabled using [rabbitmq-plugins](./cli.html):
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_stream
-</pre>
+```
 
 ## <a id="configuration" class="anchor" href="#configuration">Plugin Configuration</a>
 
@@ -81,17 +81,17 @@ via [`rabbitmq.conf`](./configure.html#configuration-files).
 Below is a minimalistic configuration file which changes the listener
 port to 12345:
 
-<pre class="lang-ini">
+```ini
 stream.listeners.tcp.1 = 12345
-</pre>
+```
 
 while one which changes the listener to listen only on localhost (for
 both IPv4 and IPv6) would look like:
 
-<pre class="lang-ini">
+```ini
 stream.listeners.tcp.1 = 127.0.0.1:5552
 stream.listeners.tcp.2 = ::1:5552
-</pre>
+```
 
 ### <a id="tcp-listeners-options" class="anchor" href="#tcp-listeners-options">TCP Listener Options</a>
 
@@ -101,7 +101,7 @@ The settings use a common prefix, `stream.tcp_listen_options`, and control
 things such as TCP buffer sizes, inbound TCP connection queue length, whether [TCP keepalives](./heartbeats.html#tcp-keepalives)
 are enabled and so on. See the [Networking guide](./networking.html) for details.
 
-<pre class="lang-ini">
+```ini
 stream.listeners.tcp.1 = 127.0.0.1:5552
 stream.listeners.tcp.2 = ::1:5552
 
@@ -114,7 +114,7 @@ stream.tcp_listen_options.nodelay   = true
 
 stream.tcp_listen_options.exit_on_close = true
 stream.tcp_listen_options.send_timeout  = 120
-</pre>
+```
 
 ### <a id="heartbeats" class="anchor" href="#heartbeats">Heartbeat Timeout</a>
 
@@ -126,10 +126,10 @@ A [similar mechanism](./heartbeats.html) is used by the messaging protocols that
 
 The default value for stream protocol connections is 60 seconds.
 
-<pre class="lang-ini">
+```ini
 # use a lower heartbeat timeout value
 stream.heartbeat = 20
-</pre>
+```
 
 Setting heartbeat timeout value too low can lead to false
 positives (peer being considered unavailable while it is not
@@ -152,10 +152,10 @@ So each connection has a maximum number of outstanding unconfirmed messages allo
 The connection is unblocked when a given number of messages is confirmed (`credits_required_for_unblocking`, defaults to 12,500).
 You can change those values according to your workload:
 
-<pre class="lang-ini">
+```ini
 stream.initial_credits = 100000
 stream.credits_required_for_unblocking = 25000
-</pre>
+```
 
 High values for these settings can improve publishing throughput at the cost of higher memory consumption (which can lead to a broker crash).
 Low values can help to cope with a lot of moderately fast-publishing connections.
@@ -200,10 +200,10 @@ The `advertised_host` and `advertised_port` keys allow to specify which informat
 the topology of streams. One can set those settings according to their infrastructure, so that clients can connect
 to cluster nodes:
 
-<pre class="lang-ini">
+```ini
 stream.advertised_host = rabbitmq-1
 stream.advertised_port = 12345
-</pre>
+```
 
 The [Connecting to Streams](https://blog.rabbitmq.com/posts/2021/07/connecting-to-streams/) blog post covers why the `advertised_host` and `advertised_port` settings are necessary in some deployments.
 
@@ -213,10 +213,10 @@ The [Connecting to Streams](https://blog.rabbitmq.com/posts/2021/07/connecting-t
 RabbitMQ Stream protocol uses a maximum frame size limit. The default is 1 MiB and the value
 can be increased if necessary:
 
-<pre class="lang-ini">
+```ini
 # in bytes
 stream.frame_max = 2097152
-</pre>
+```
 
 
 ## <a id="tls" class="anchor" href="#tls">TLS Support</a>
@@ -227,7 +227,7 @@ TLS-enabled stream connections, add a TLS listener for streams using the `stream
 The plugin will use core RabbitMQ server
 certificates and key (just like AMQP 0-9-1 and AMQP 1.0 listeners do):
 
-<pre class="lang-ini">
+```ini
 ssl_options.cacertfile = /path/to/tls/ca_certificate.pem
 ssl_options.certfile   = /path/to/tls/server_certificate.pem
 ssl_options.keyfile    = /path/to/tls/server_key.pem
@@ -237,7 +237,7 @@ ssl_options.fail_if_no_peer_cert = true
 stream.listeners.tcp.1 = 5552
 # default TLS-enabled port for stream connections
 stream.listeners.ssl.1 = 5551
-</pre>
+```
 
 This configuration creates a standard TCP listener on port 5552 and
 a TLS listener on port 5551.
@@ -245,10 +245,10 @@ a TLS listener on port 5551.
 When a TLS listener is set up, you may want to deactivate all non-TLS ones.
 This can be configured like so:
 
-<pre class="lang-ini">
+```ini
 stream.listeners.tcp   = none
 stream.listeners.ssl.1 = 5551
-</pre>
+```
 
 Just like for [plain connections](#advertised-host-port), it is possible to configure advertised TLS host and port.
 When TLS is used, the plugin returns the following metadata:
@@ -258,9 +258,9 @@ When TLS is used, the plugin returns the following metadata:
 
 It is possible to override this behavior by setting together or individually the `advertised_tls_host` and `advertised_tls_port` configuration entries:
 
-<pre class="lang-ini">
+```ini
 stream.advertised_host = private-rabbitmq-1
 stream.advertised_port = 12345
 stream.advertised_tls_host = public-rabbitmq-1
 stream.advertised_tls_port = 12344
-</pre>
+```

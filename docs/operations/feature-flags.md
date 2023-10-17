@@ -63,9 +63,11 @@ upgrade to the next minor or major RabbitMQ version is possible.
 ### Key CLI Tool Commands
 
  *  To list feature flags:
-    <pre class="lang-bash">rabbitmqctl list_feature_flags</pre>
+    ```bash
+rabbitmqctl list_feature_flags```
  *  To enable a feature flag (or all currently disabled flags):
-    <pre class="lang-bash">rabbitmqctl enable_feature_flag &lt;all | name&gt;</pre>
+    ```bash
+rabbitmqctl enable_feature_flag &lt;all | name&gt;```
 
 It is also possible to list and enable feature flags from the
 [Management plugin UI](./management.html), in "*Admin > Feature flags*".
@@ -144,7 +146,7 @@ isolated node, or remain disabled by default if it belongs to a cluster.
 
 **To list the feature flags**, use `rabbitmqctl list_feature_flags`:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_feature_flags
 
 # => Listing feature flags ...
@@ -152,18 +154,18 @@ rabbitmqctl list_feature_flags
 # => empty_basic_get_metric	enabled
 # => implicit_default_bindings	enabled
 # => quorum_queue	enabled
-</pre>
+```
 
 For improved table readability, switch to the `pretty_table` formatter:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl -q --formatter pretty_table list_feature_flags \
   name state provided_by desc doc_url
-</pre>
+```
 
 which would produce a table that looks like this:
 
-<pre class="lang-bash" style="line-height: 1.2em;">
+```bash" style="line-height: 1.2em;
 ┌───────────────────────────┬─────────┬───────────────────────────┬───────┬────────────┐
 │ name                      │ state   │ provided_by               │ desc  │ doc_url    │
 ├───────────────────────────┼─────────┼───────────────────────────┼───────┼────────────┤
@@ -173,7 +175,7 @@ which would produce a table that looks like this:
 ├───────────────────────────┼─────────┼───────────────────────────┼───────┼────────────┤
 │ quorum_queue              │ enabled │ rabbit                    │ (...) │ http://... │
 └───────────────────────────┴─────────┴───────────────────────────┴───────┴────────────┘
-</pre>
+```
 
 As shown in the example above, the `list_feature_flags` command accepts
 a list of columns to display. The available columns are:
@@ -199,21 +201,21 @@ feature flags are enabled.
 
 **To enable a feature flag**, use `rabbitmqctl enable_feature_flag`:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl enable_feature_flag &lt;name&gt;
-</pre>
+```
 
 **To enable all feature flags**, use `rabbitmqctl enable_feature_flag all`:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl enable_feature_flag &lt;all&gt;
-</pre>
+```
 
 The `list_feature_flags` command can be used again to verify the feature
 flags' states. Assuming all feature flags were disabled initially, here
 is the state after enabling the `quorum_queue` feature flag:
 
-<pre class="lang-bash" style="line-height: 1.2em;">
+```bash" style="line-height: 1.2em;
 rabbitmqctl -q --formatter pretty_table list_feature_flags
 
 ┌───────────────────────────┬──────────┐
@@ -225,7 +227,7 @@ rabbitmqctl -q --formatter pretty_table list_feature_flags
 ├───────────────────────────┼──────────┤
 │ quorum_queue              │ enabled  │
 └───────────────────────────┴──────────┘
-</pre>
+```
 
 It is also possible to list and enable feature flags from the
 [Management Plugin UI](./management.html), in "*Admin > Feature flags*":
@@ -247,9 +249,11 @@ By default a new and unclustered node will start with all supported feature flag
 There are two ways to do this:
 
  1. Using the `RABBITMQ_FEATURE_FLAGS` environment variable:
-  <pre class="lang-bash">RABBITMQ_FEATURE_FLAGS=quorum_queue,implicit_default_bindings</pre>
+  ```bash
+RABBITMQ_FEATURE_FLAGS=quorum_queue,implicit_default_bindings```
  2. Using the `forced_feature_flags_on_init` configuration parameter:
-  <pre class="lang-erlang">{rabbit, [{forced_feature_flags_on_init, [quorum_queue, implicit_default_bindings]}]}</pre>
+  ```erlang
+{rabbit, [{forced_feature_flags_on_init, [quorum_queue, implicit_default_bindings]}]}```
 
 The environment variable has precedence over the configuration parameter.
 
@@ -624,7 +628,7 @@ The two most important parts of a feature flag are:
  * the migration function
 
 The declaration is a module attribute which looks like this:
-<pre class="lang-erlang">
+```erlang
 -rabbit_feature_flag(
    {quorum_queue,
     #{desc          => "Support queues of type quorum",
@@ -632,11 +636,11 @@ The declaration is a module attribute which looks like this:
       stability     => stable,
       migration_fun => {?MODULE, quorum_queue_migration}
      }}).
-</pre>
+```
 
 The migration function is a stateless function which looks like this:
 
-<pre class="lang-erlang">
+```erlang
 quorum_queue_migration(FeatureName, _FeatureProps, enable) ->
     Tables = ?quorum_queue_tables,
     rabbit_table:wait(Tables),
@@ -648,7 +652,7 @@ quorum_queue_migration(_FeatureName, _FeatureProps, is_enabled) ->
     Fields = amqqueue:fields(amqqueue_v2),
     mnesia:table_info(rabbit_queue, attributes) =:= Fields andalso
     mnesia:table_info(rabbit_durable_queue, attributes) =:= Fields.
-</pre>
+```
 
 More implementation docs can be found in
 the [`rabbit_feature_flags` module source
@@ -657,12 +661,12 @@ code](https://github.com/rabbitmq/rabbitmq-server/blob/main/deps/rabbit/src/rabb
 Erlang's `edoc` reference can be generated locally from a RabbitMQ
 repository clone or source archive:
 
-<pre class="lang-bash">
+```bash
 gmake edoc
 # =>  ... Ignore warnings and errors...
 
 # Now open `doc/rabbit_feature_flags.html` in the browser.
-</pre>
+```
 
 #### How to Adapt and Run Testsuites with mixed-version clusters
 
@@ -677,7 +681,7 @@ There are helper functions in `rabbitmq-ct-heleprs` to ease that check.
 Here is an example, taken from the `dynamic_qq_SUITE.erl` testsuite in
 rabbitmq-server:
 
-<pre class="lang-erlang">
+```erlang
 init_per_testcase(Testcase, Config) ->
     % (...)
 
@@ -705,7 +709,7 @@ init_per_testcase(Testcase, Config) ->
             end_per_testcase(Testcase, Config1),
             Skip
     end.
-</pre>
+```
 
 It is possible to run testsuites locally in the context of a
 mixed-version cluster. If configured to do so, `rabbitmq-ct-helpers`
@@ -724,12 +728,12 @@ To run a testsuite in the context of a mixed-version cluster:
     appropriate branch or tag. This will be the **secondary Umbrella**.
     In this example, the `v3.11.x` branch is used:
 
-    <pre class="lang-bash">
+    ```bash
     git clone https://github.com/rabbitmq/rabbitmq-server.git secondary-umbrella
     cd secondary-umbrella
     git checkout v3.11.x
     make co
-    </pre>
+    ```
 
     <p class="box-info">
     Currently, when using the `v3.11.x` branch, `deps/rabbit_common` and
@@ -739,25 +743,25 @@ To run a testsuite in the context of a mixed-version cluster:
  2. Compile RabbitMQ or the plugin being tested in the secondary
     Umbrella. The `rabbitmq-federation` plugin is used as an example:
 
-    <pre class="lang-bash">
+    ```bash
     cd secondary-umbrella/deps/rabbitmq_federation
     make dist
-    </pre>
+    ```
 
  3. Go to RabbitMQ or the same plugin in the primary copy:
 
-    <pre class="lang-bash">
+    ```bash
     cd /path/to/primary/rabbitmq_federation
-    </pre>
+    ```
 
  4. Run the testsuite. Here, two environment variables are specified to
     configure the "mixed-version cluster" mode:
 
-    <pre class="lang-bash">
+    ```bash
     SECONDARY_UMBRELLA=/path/to/secondary-umbrella \
     RABBITMQ_FEATURE_FLAGS= \
     make tests
-    </pre>
+    ```
 
     The first environment variable, `SECONDARY_UMBRELLA`, tells
     `rabbitmq-ct-helpers` where to find the secondary Umbrella, as

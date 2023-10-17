@@ -41,11 +41,11 @@ To illustrate how an RPC service could be used we're going to
 create a simple client class. It's going to expose a method named `call`
 which sends an RPC request and blocks until the answer is received:
 
-<pre class="lang-java">
+```java
 FibonacciRpcClient fibonacciRpc = new FibonacciRpcClient();
 String result = fibonacciRpc.call("4");
 System.out.println( "fib(4) is " + result);
-</pre>
+```
 
 > #### A note on RPC
 >
@@ -76,7 +76,7 @@ receive a response we need to send a 'callback' queue address with the
 request. We can use the default queue (which is exclusive in the Java client).
 Let's try it:
 
-<pre class="lang-java">
+```java
 callbackQueueName = channel.queueDeclare().getQueue();
 
 BasicProperties props = new BasicProperties
@@ -87,13 +87,13 @@ BasicProperties props = new BasicProperties
 channel.basicPublish("", "rpc_queue", props, message.getBytes());
 
 // ... then code to read a response message from the callback_queue ...
-</pre>
+```
 
 We need this new import:
 
-<pre class="lang-java">
+```java
 import com.rabbitmq.client.AMQP.BasicProperties;
-</pre>
+```
 
 > #### Message properties
 >
@@ -214,13 +214,13 @@ Putting it all together
 
 The Fibonacci task:
 
-<pre class="lang-java">
+```java
 private static int fib(int n) {
     if (n == 0) return 0;
     if (n == 1) return 1;
     return fib(n-1) + fib(n-2);
 }
-</pre>
+```
 
 We declare our fibonacci function. It assumes only valid positive integer input.
 (Don't expect this one to work for big numbers,
@@ -268,23 +268,23 @@ Now is a good time to take a look at our full example source code (which include
 
 Compile and set up the classpath as usual (see [tutorial one](tutorial-one-java.html)):
 
-<pre class="lang-bash">
+```bash
 javac -cp $CP RPCClient.java RPCServer.java
-</pre>
+```
 
 Our RPC service is now ready. We can start the server:
 
-<pre class="lang-bash">
+```bash
 java -cp $CP RPCServer
 # => [x] Awaiting RPC requests
-</pre>
+```
 
 To request a fibonacci number run the client:
 
-<pre class="lang-bash">
+```bash
 java -cp $CP RPCClient
 # => [x] Requesting fib(30)
-</pre>
+```
 
 The design presented here is not the only possible implementation of a RPC
 service, but it has some important advantages:

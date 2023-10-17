@@ -42,12 +42,12 @@ This argument should be a positive integer between 1 and 255,
 indicating the maximum priority the queue should support. For example,
 using the Java client:
 
-<pre class="lang-java">
+```java
 Channel ch = ...;
 Map&lt;String, Object&gt; args = new HashMap&lt;String, Object&gt;();
 args.put("x-max-priority", 10);
 ch.queueDeclare("my-priority-queue", true, false, false, args);
-</pre>
+```
 
 Publishers can then publish prioritised messages using the
 `priority` field of

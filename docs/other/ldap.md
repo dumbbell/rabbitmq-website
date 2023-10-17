@@ -58,9 +58,9 @@ components such as `eldap` **must be installed separately** from the main runtim
 
 On Debian and Ubuntu, `eldap` is provided by the `erlang-eldap` package:
 
-<pre class="lang-bash">
+```bash
 sudo apt-get install -y erlang-eldap
-</pre>
+```
 
 LDAP support **cannot** be used on Erlang installations where the library is not available.
 
@@ -71,7 +71,8 @@ Please see the [Erlang compatibility guide](which-erlang.html) to learn more.
 
 The LDAP plugin ships with RabbitMQ. To enable it, use
 [rabbitmq-plugins](man/rabbitmq-plugins.8.html):
-<pre class="lang-erlang">rabbitmq-plugins enable rabbitmq_auth_backend_ldap</pre>
+```erlang
+rabbitmq-plugins enable rabbitmq_auth_backend_ldap```
 
 
 ## <a id="essential-configuration" class="anchor" href="#essential-configuration">Enabling LDAP AuthN and AuthZ backends</a>
@@ -87,36 +88,36 @@ This involves
 The following example will configure RabbitMQ to **only** use LDAP for authentication and authorisation,
 and ignore the internal database:
 
-<pre class="lang-ini">
+```ini
 # use LDAP exclusively for authentication and authorisation
 auth_backends.1 = ldap
-</pre>
+```
 
 In [`advanced.config` file](./configure.html#erlang-term-config-file), the same settings would look like this:
 
-<pre class="lang-erlang">
+```erlang
 {rabbit, [
   {auth_backends, [rabbit_auth_backend_ldap]}
 ]}
-</pre>
+```
 
 The following example will instruct the node to try LDAP first and then fall back to the internal
 database if the user cannot be authenticated through LDAP:
 
-<pre class="lang-ini">
+```ini
 # try LDAP first
 auth_backends.1 = ldap
 # fall back to the internal database
 auth_backends.2 = internal
-</pre>
+```
 
 Same example in the [`advanced.config` format](./configure.html#erlang-term-config-file):
 
-<pre class="lang-erlang">
+```erlang
 {rabbit,[
   {auth_backends, [rabbit_auth_backend_ldap, rabbit_auth_backend_internal]}
 ]}
-</pre>
+```
 
 In the following example, LDAP will be used for authentication first.
 If the user is found in LDAP then the password will be checked against LDAP and
@@ -125,21 +126,21 @@ users in LDAP must exist in the internal database as well, optionally with a bla
 If the user is not found in LDAP then a second
 attempt is made using only the internal database.
 
-<pre class="lang-ini">
+```ini
 # use LDAP for authentication first
 auth_backends.1.authn = ldap
 # use internal database for authorisation
 auth_backends.1.authz = internal
 # fall back to the internal database
 auth_backends.2 = internal
-</pre>
+```
 
 In the [advanced config format](./configure.html#erlang-term-config-file):
 
-<pre class="lang-erlang">
+```erlang
 {rabbit,[{auth_backends, [{rabbit_auth_backend_ldap, rabbit_auth_backend_internal},
                            rabbit_auth_backend_internal]}]}
-</pre>
+```
 
 ## <a id="basic" class="anchor" href="#basic">Configuration</a>
 
@@ -159,53 +160,53 @@ List values can be hostnames or IP addresses. This value must be configured. The
 example configures the plugin to use two LDAP servers. They will be tried
 in order until connection to one of them succeeds:
 
-<pre class="lang-ini">
+```ini
 auth_ldap.servers.1 = ldap.eng.megacorp.local
 auth_ldap.servers.2 = 192.168.0.100
-</pre>
+```
 
 The same examples using the classic config format:
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbitmq_auth_backend_ldap, [
     {servers, ["ldap.eng.megacorp.local", "192.168.0.100"]}
   ]}
 ].
-</pre>
+```
 
 LDAP servers typically use port `389` and that's the port the
 LDAP plugin will use by default. `auth_ldap.port` can be used
 to override this:
 
-<pre class="lang-ini">
+```ini
 auth_ldap.servers.1 = ldap.eng.megacorp.local
 auth_ldap.servers.2 = 192.168.0.100
 
 auth_ldap.port      = 6389
-</pre>
+```
 
 The same examples using the classic config format:
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbitmq_auth_backend_ldap, [
     {servers, ["ldap.eng.megacorp.local", "192.168.0.100"]},
     {port,    6389}
   ]}
 ].
-</pre>
+```
 
 TCP connections to LDAP servers can be given a timeout using the `auth_ldap.timeout`
 configuration key:
 
-<pre class="lang-ini">
+```ini
 auth_ldap.servers.1 = ldap.eng.megacorp.local
 auth_ldap.servers.2 = 192.168.0.100
 
 # 15 seconds in milliseconds
 auth_ldap.timeout   = 15000
-</pre>
+```
 
 The default is `infinity`, or no timeout.
 
@@ -213,25 +214,25 @@ LDAP server connections are pooled to avoid excessive connection churn and LDAP 
 load. By default the pool has up to 64 connections. This can be controlled using the
 `auth_ldap.connection_pool_size` setting:
 
-<pre class="lang-ini">
+```ini
 auth_ldap.servers.1 = ldap.eng.megacorp.local
 auth_ldap.servers.2 = 192.168.0.100
 
 auth_ldap.connection_pool_size = 256
-</pre>
+```
 
 Pooled connections without activity are closed after a period of time
 configurable via `auth_ldap.idle_timeout`, in milliseconds
 or `infinity`:
 
-<pre class="lang-ini">
+```ini
 auth_ldap.servers.1 = ldap.eng.megacorp.local
 auth_ldap.servers.2 = 192.168.0.100
 
 auth_ldap.connection_pool_size = 256
 # 300 seconds in milliseconds
 auth_ldap.idle_timeout = 300000
-</pre>
+```
 
 Values between 120 and 300 seconds are recommended.
 
@@ -247,14 +248,14 @@ Client side TLS settings are configured using `ssl_options`, which
 are very similar to [TLS settings elsewhere in RabbitMQ](./ssl.html).
 TLS settings for LDAP connections can only be configured via the advanced config file:
 
-<pre class="lang-ini">
+```ini
 auth_ldap.servers.1 = ldap.eng.megacorp.local
 auth_ldap.servers.2 = 192.168.0.100
 
 auth_ldap.use_ssl   = true
-</pre>
+```
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbitmq_auth_backend_ldap, [
      {ssl_options, [{cacertfile,"/path/to/ca_certificate.pem"},
@@ -264,11 +265,11 @@ auth_ldap.use_ssl   = true
                     {fail_if_no_peer_cert, true}]}
    ]}
 ].
-</pre>
+```
 
 An example that uses both of the above and uses the [advanced.config format](configure.html):
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbitmq_auth_backend_ldap, [
      {use_ssl,     true},
@@ -279,7 +280,7 @@ An example that uses both of the above and uses the [advanced.config format](con
                     {fail_if_no_peer_cert, true}]}
    ]}
 ].
-</pre>
+```
 
 ## <a id="query-caching" class="anchor" href="#query-caching">LDAP Query Caching for Efficiency and Reduced Load</a>
 
@@ -422,19 +423,19 @@ To do the lookup before binding, set `dn_lookup_bind`, `dn_lookup_base` and
 credentials first to do the lookup, then bind with the user's DN and password
 to do the login.
 
-<pre class="lang-ini">
+```ini
 auth_ldap.dn_lookup_bind.user_dn = CN=myuser,OU=users,DC=gopivotal,DC=com
 auth_ldap.dn_lookup_bind.password = test1234
 auth_ldap.dn_lookup_attribute = userPrincipalName
 auth_ldap.dn_lookup_base = DC=gopivotal,DC=com
-</pre>
+```
 
 Consider the following example:
 
-<pre class="lang-ini">
+```ini
 auth_ldap.dn_lookup_attribute = userPrincipalName
 auth_ldap.dn_lookup_base = DC=gopivotal,DC=com
-</pre>
+```
 
 With this configuration it is possible to authenticate using an email address
 (`userPrincipalName` values are typically email addresses)
@@ -478,20 +479,20 @@ Lastly, the value of `false` (the default) deactivates LDAP traffic logging.
 
 The following examples sets LDAP logging level to `network`:
 
-<pre class="lang-ini">
+```ini
 auth_ldap.log = network
-</pre>
+```
 
 The same examples in the classic config format:
 
-<pre class="lang-ini">
+```ini
 [
   {rabbitmq_auth_backend_ldap, [
     %% ...
     {log, network}
   ]}
 ]
-</pre>
+```
 
 ### <a id="other-bind" class="anchor" href="#other-bind">Binding for Authorisation Queries</a>
 
@@ -506,20 +507,20 @@ user) or `anon` (to bind anonymously), or be presented by two
 options `other_bind.user_dn` and `other_bind.password`
 to bind with a specified username and password. For example:
 
-<pre class="lang-ini">
+```ini
 auth_ldap.other_bind.user_dn = a-username
 auth_ldap.other_bind.password = a-password
-</pre>
+```
 
 Using the classic config format:
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbitmq_auth_backend_ldap, [
     {other_bind, {"a-username", "a-password"}}
   ]}
 ].
-</pre>
+```
 
 Note that it is not possible to use the
 default `as_user` configuration when users connect
@@ -538,14 +539,14 @@ the `{in_group_nested, ...}` query only. For more info see the [section on queri
 In the following example `ou=groups,dc=example,dc=com` is the directory that contains all groups.
 Note that it uses the [classic config format](configure.html):
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbitmq_auth_backend_ldap, [
     %% ...
     {group_lookup_base, "ou=groups,dc=example,dc=com"}
   ]}
 ]
-</pre>
+```
 
 Default value is `'none'`.
 
@@ -705,27 +706,30 @@ have.
 
 ### <a id="constant-query" class="anchor" href="#constant-query">Constant Query</a>
 
-<pre class="lang-erlang">{constant, Bool}</pre>
+```erlang
+{constant, Bool}```
 
 This will always return either true or false, unconditionally granting
 or denying access. Example:
 
-<pre class="lang-erlang">
+```erlang
 {tag_queries, [{administrator, {constant, false}},
  {management,    {constant, true}}]}
-</pre>
+```
 
 This grants all users the ability to use the management
 plugin, but makes none of them administrators.
 
 ### <a id="exists-query" class="anchor" href="#exists-query">Exists Query</a>
 
-<pre class="lang-erlang">{exists, Pattern}</pre>
+```erlang
+{exists, Pattern}```
 
 This will substitute variables into the pattern, and return true if
 there exists an object with the resulting DN. Example:
 
-<pre class="lang-erlang">{vhost_access_query, {exists, "ou=${vhost},ou=vhosts,dc=example,dc=com"}}</pre>
+```erlang
+{vhost_access_query, {exists, "ou=${vhost},ou=vhosts,dc=example,dc=com"}}```
 
 This grants access to all virtual hosts which exist as
 organisational units
@@ -734,15 +738,18 @@ users.
 
 ### <a id="in-group-query" class="anchor" href="#in-group-query">In Group Query</a>
 
-<pre class="lang-erlang">{in_group, Pattern}</pre>
-<pre class="lang-erlang">{in_group, Pattern, AttributeName}</pre>
+```erlang
+{in_group, Pattern}```
+```erlang
+{in_group, Pattern, AttributeName}```
 
 Like the Exists Query, substitutes arguments into a pattern to look
 for an object. However, this query returns true if the logged in
 user is a member; checking either against the `member`
 attribute, or any named attribute. Example:
 
-<pre class="lang-erlang">{vhost_access_query, {in_group, "cn=${vhost}-users,ou=vhosts,dc=example,dc=com"}}</pre>
+```erlang
+{vhost_access_query, {in_group, "cn=${vhost}-users,ou=vhosts,dc=example,dc=com"}}```
 
 This grants access to virtual hosts when the user is listed
 as a `member` attribute of an appropriately named
@@ -751,9 +758,12 @@ within `ou=vhosts,dc=example,dc=com`.
 
 ### <a id="in-nested-group-query" class="anchor" href="#in-nested-group-query">In Nested Group Query</a>
 
-<pre class="lang-erlang">{in_group_nested, Pattern}</pre>
-<pre class="lang-erlang">{in_group_nested, Pattern, AttributeName}</pre>
-<pre class="lang-erlang">{in_group_nested, Pattern, AttributeName, Scope}</pre>
+```erlang
+{in_group_nested, Pattern}```
+```erlang
+{in_group_nested, Pattern, AttributeName}```
+```erlang
+{in_group_nested, Pattern, AttributeName, Scope}```
 
 Similar to the `in_group` query but also traverses group hierarchy,
 e.g. if the logged in user is a member of the group which is a member of
@@ -778,12 +788,12 @@ recommended to use plain `{in_group, ...}` query
 when possible: nested groups can be challenging to reason
 about. Example:
 
-<pre class="lang-erlang">
+```erlang
 [
   {group_lookup_base, "ou=groups,dc=example,dc=com"},
   {vhost_access_query, {in_group_nested, "cn=${vhost}-groups,ou=groups,dc=example,dc=com"}, "member", single_level}
 ]
-</pre>
+```
 
 This grants access to virtual hosts when the user a member in group
 hierarchy defined by the `member` attribute values and located
@@ -791,7 +801,8 @@ in the `ou=groups,dc=example,dc=com` directory.
 
 ### <a id="for-query" class="anchor" href="#for-query">For Query</a>
 
-<pre class="lang-erlang">{for, [{Name, Value, SubQuery}, ...]}</pre>
+```erlang
+{for, [{Name, Value, SubQuery}, ...]}```
 
 This allows you to split up a query and handle different cases with
 different subqueries.
@@ -810,7 +821,7 @@ values (e.g. `name` might be
 
 Example:
 
-<pre class="lang-erlang">
+```erlang
 {resource_access_query,
  {for, [{resource, exchange, {for, [{permission, configure,
                                      {in_group, "cn=wheel,dc=example,dc=com"}
@@ -819,16 +830,19 @@ Example:
                                     {permission, read,  {constant, true}}
                                    ]}},
                                    {resource, queue,    {constant, true}}]}}
-</pre>
+```
 
 This allows members of the `wheel` group to declare and
 delete exchanges, and allow all users to do everything else.
 
 ### <a id="boolean-query" class="anchor" href="#boolean-query">Boolean Queries</a>
 
-<pre class="lang-erlang">{'not', SubQuery}</pre>
-<pre class="lang-erlang">{'and', [SubQuery1, SubQuery2, SubQuery3, ...]}</pre>
-<pre class="lang-erlang">{'or', [SubQuery1, SubQuery2, SubQuery3, ...]}</pre>
+```erlang
+{'not', SubQuery}```
+```erlang
+{'and', [SubQuery1, SubQuery2, SubQuery3, ...]}```
+```erlang
+{'or', [SubQuery1, SubQuery2, SubQuery3, ...]}```
 
 These can be used to combine subqueries with boolean logic. The
 'and' and 'or' queries each take an arbitrarily long list of
@@ -839,7 +853,8 @@ Note that 'and', 'or' and 'not' are reserved words in Erlang,
 therefore the keywords need to be quoted with single quotes in the
 configuration file, as above. Example:
 
-<pre class="lang-erlang">{resource_access_query,
+```erlang
+{resource_access_query,
  {'or',
   [{'and',
     [{equals, "${name}", "test1"},
@@ -848,14 +863,15 @@ configuration file, as above. Example:
     [{equals, "${name}", "test2"},
      {'not', {equals, "${username}", "user1"}}]}
   ]}}
-</pre>
+```
 
 This example gives full access to objects called "test1" to "user1",
 and access to "test2" to everyone but "user1".
 
 ### <a id="equals-query" class="anchor" href="#equals-query">Equals Query</a>
 
-<pre class="lang-erlang">{equals, StringSubQuery1, StringSubQuery2}</pre>
+```erlang
+{equals, StringSubQuery1, StringSubQuery2}```
 
 Takes two strings, and checks that the one matches the
 other. Note that both strings are subqueries (of the
@@ -866,7 +882,8 @@ This can be useful in order to compare the value of one of
 the string substitution variables with a constant, or with
 an attribute value, etc. Example:
 
-<pre class="lang-erlang">{resource_access_query,
+```erlang
+{resource_access_query,
  {for, [{permission, configure, {equals, {attribute, "${user_dn}", "description"},
                                          {string, "can-declare-${resource}s"}
                                 }
@@ -874,7 +891,7 @@ an attribute value, etc. Example:
         {permission, write, {constant, true}},
         {permission, read,  {constant, true}}
        ]
-}</pre>
+}```
 
 This grants permissions to declare and delete exchanges and
 queues based on the presence of the strings
@@ -884,24 +901,26 @@ read exchanges to everyone.
 
 ### <a id="match-query" class="anchor" href="#match-query">Match Query</a>
 
-<pre class="lang-erlang">{match, StringSubQuery, RESubQuery}</pre>
+```erlang
+{match, StringSubQuery, RESubQuery}```
 
 Takes a string and a regular expression, and checks that the one
 matches the other. Note that the string and the regular expression are
 both subqueries (of the `string` and `attribute`
 types below) in turn. Example:
 
-<pre class="lang-erlang">
+```erlang
 {resource_access_query, {match, {string, "${name}"},
                       {string, "^${username}-"}}
-}</pre>
+}```
 
 This allows users to configure, read and write any object whose name
 begins with their own username followed by a hyphen.
 
 ### <a id="string-subquery" class="anchor" href="#string-subquery">String Sub-query</a>
 
-<pre class="lang-erlang">{string, Pattern}</pre>
+```erlang
+{string, Pattern}```
 
 Just substitutes arguments into a string. As this returns a string
 rather than a boolean it should be used within a `match`
@@ -911,7 +930,8 @@ you can use a plain string instead of
 
 ### <a id="attributes-subquery" class="anchor" href="#attributes-subquery">Attribute Sub-query</a>
 
-<pre class="lang-erlang">{attribute, DNPattern, AttributeName}</pre>
+```erlang
+{attribute, DNPattern, AttributeName}```
 
 Returns the value of an attribute of an object retrieved from
 LDAP. As this returns a string rather than a boolean it should be
@@ -935,7 +955,7 @@ The [standard config](./configure.html#config-file)
 (rabbitmq.conf) is used to configure authentication backends and
 several LDAP plugin parameters:
 
-<pre class="lang-plaintext">
+```plaintext
 auth_backends.1 = ldap
 
 auth_ldap.servers.1  = my-ldap-server
@@ -943,11 +963,11 @@ auth_ldap.user_dn_pattern = cn=${username},ou=People,dc=example,dc=com
 auth_ldap.use_ssl    = false
 auth_ldap.port       = 389
 auth_ldap.log        = false
-</pre>
+```
 
 [Advanced config](./configure.html#advanced-config-file) is used to define LDAP queries:
 
-<pre class="lang-erlang">
+```erlang
 [{rabbitmq_auth_backend_ldap,[
     {vhost_access_query,    {in_group,
                               "ou=${vhost}-users,ou=vhosts,dc=example,dc=com"}},
@@ -969,12 +989,12 @@ auth_ldap.log        = false
      {tag_queries,           [{administrator, {constant, false}},
                               {management,    {constant, true}}]}
 ]}].
-</pre>
+```
 
 Alternatively, you can use the [classic config format](./configure.html#erlang-term-config-file)
 to configure everything in a single file:
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbit, [{auth_backends, [rabbit_auth_backend_ldap]}]},
   {rabbitmq_auth_backend_ldap,
@@ -1004,7 +1024,7 @@ to configure everything in a single file:
                               {management,    {constant, true}}]}
    ]
   }
-].</pre>
+].```
 
 
 ## <a id="troubleshooting" class="anchor" href="#troubleshooting">Troubleshooting</a>

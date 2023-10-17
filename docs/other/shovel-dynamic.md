@@ -66,21 +66,21 @@ local RabbitMQ cluster to the queue `"target-queue"` on a remote RabbitMQ node, 
 A shovel is declared using the `rabbitmqctl set_parameter` command with component name `shovel`, a shovel
 name and a definition body which is a JSON document:
 
-<pre class="lang-bash">
+```bash
 # my-shovel here is the name of the shovel
 rabbitmqctl set_parameter shovel my-shovel \
   '{"src-protocol": "amqp091", "src-uri": "amqp://", "src-queue": "source-queue", "dest-protocol": "amqp091", "dest-uri": "amqp://remote-server", "dest-queue": "target-queue"}'
-</pre>
+```
 
 On Windows `rabbitmqctl` is named `rabbitmqctl.bat` and command line value escaping will be
 different:
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat set_parameter shovel my-shovel ^
   "{""src-protocol"": ""amqp091"", ""src-uri"":""amqp://localhost"", ""src-queue"": ""source-queue"", ^
    ""dest-protocol"": ""amqp091"", ""dest-uri"": ""amqp://remote.rabbitmq.local"", ^
    ""dest-queue"": ""target-queue""}"
-</pre>
+```
 
 The body in this example includes a few keys:
 
@@ -176,9 +176,9 @@ There are other Shovel definition keys that will be covered later in this guide.
 To declare a shovel using the HTTP API, make sure that the [management](./management.html) plugin
 is enabled, then use the following endpoint:
 
-<pre class="lang-ini">
+```ini
 PUT /api/parameters/shovel/{vhost}/{name}
-</pre>
+```
 
 where `{vhost}` is the virtual host in which the Shovel should be started and `{name}`
 is the name of the new shovel. The endpoint requires that the user that invokes it
@@ -186,7 +186,7 @@ has `policymaker` privileges (tag).
 
 The request body is a JSON document similar in structure to that described earlier in this guide:
 
-<pre class="lang-ini">
+```ini
 {
   "value": {
     "src-protocol": "amqp091",
@@ -197,7 +197,7 @@ The request body is a JSON document similar in structure to that described earli
     "dest-queue": "destination-queue"
   }
 }
-</pre>
+```
 
 Below is an example that uses `curl` to declare a shovel on a local node using
 [default user credentials](./access-control.html#default-state). The shovel will
@@ -207,7 +207,7 @@ Note that this exact command would fail if invoked against
 a remote node. Please [add a new user](./access-control.html) tagged as `policymaker`
 for your own experiments.
 
-<pre class="lang-bash">
+```bash
 # Note: this user's access is limited to localhost!
 curl -v -u guest:guest -X PUT http://localhost:15672/api/parameters/shovel/%2f/my-shovel \
                        -H "content-type: application/json" \
@@ -223,7 +223,7 @@ curl -v -u guest:guest -X PUT http://localhost:15672/api/parameters/shovel/%2f/m
   }
 }
 EOF
-</pre>
+```
 
 ### Using Management UI
 
@@ -244,15 +244,15 @@ Then
 Use `rabbitmqctl shovel_status` to inspect dynamic shovels in a cluster. The `rabbitmq_shovel`
 plugin must be enabled on the host where this command is executed.
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl shovel_status --formatter=pretty_table
-</pre>
+```
 
 The output can be formatted as JSON and redirected to a tool such as [`jq`](https://stedolan.github.io/jq/):
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl shovel_status --formatter=json | jq
-</pre>
+```
 
 ### Using HTTP API
 
@@ -260,27 +260,27 @@ rabbitmqctl shovel_status --formatter=json | jq
 shovels in a cluster. The endpoint is provided by the `rabbitmq_shovel_management` plugin
 which must be enabled on the target node.
 
-<pre class="lang-ini">
+```ini
 # Note: this user's access is limited to localhost!
  curl -v -u guest:guest -X GET http://localhost:15672/api/shovels/
-</pre>
+```
 
 To inspect shovels in a specific virtual host, use `GET /api/shovels/{vhost}`
 `{vhost}` is the virtual host name. The value must be percent-encoded.
 
-<pre class="lang-ini">
+```ini
 # Note: this user's access is limited to localhost!
  curl -v -u guest:guest -X GET http://localhost:15672/api/shovels/%2f
-</pre>
+```
 
 To inspect status of a specific shovels, use `GET /api/shovels/vhost/{vhost}/{name}`
 `{vhost}` is the virtual host in which the Shovel is running and `{name}`
 is the name of the shovel.  Both values must be percent-encoded.
 
-<pre class="lang-ini">
+```ini
 # Note: this user's access is limited to localhost!
  curl -v -u guest:guest -X GET http://localhost:15672/api/shovels/vhost/%2f/my-shovel
-</pre>
+```
 
 ### Using Management UI
 
@@ -300,9 +300,9 @@ when the shovel is stopped, and consumed again after the restart.
 Use `rabbitmqctl restart_shovel` to restart a shovel using its name. The `rabbitmq_shovel`
 plugin must be enabled on the host where this command is executed.
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl restart_shovel "my-shovel"
-</pre>
+```
 
 ### Using HTTP API
 
@@ -313,10 +313,10 @@ which must be enabled on the target node.
 `{vhost}` is the virtual host in which the Shovel is running and `{name}`
 is the name of the shovel to be restarted.  Both values must be percent-encoded.
 
-<pre class="lang-ini">
+```ini
 # Note: this user's access is limited to localhost!
  curl -v -u guest:guest -X DELETE http://localhost:15672/api/shovels/vhost/%2f/my-shovel/restart
-</pre>
+```
 
 ### Using Management UI
 
@@ -331,9 +331,9 @@ is the name of the shovel to be restarted.  Both values must be percent-encoded.
 To delete a Shovel using CLI tools, use `rabbitmqctl clear_parameter` and pass `shovel` for
 component name and the name of the shovel that should be deleted:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl clear_parameter shovel "my-shovel"
-</pre>
+```
 
 ### Using HTTP API
 
@@ -343,10 +343,10 @@ to delete a shovel.
 `{vhost}` is the virtual host in which the Shovel is running and `{name}`
 is the name of the shovel to be deleted. Both values must be percent-encoded.
 
-<pre class="lang-bash">
+```bash
 # Note: this user's access is limited to localhost!
 curl -v -u guest:guest -X DELETE http://localhost:15672/api/parameters/shovel/%2f/my-shovel
-</pre>
+```
 
 
 ## <a id="amqp091-reference" class="anchor" href="#amqp091-reference">AMQP 0-9-1 Shovel Definition Reference</a>

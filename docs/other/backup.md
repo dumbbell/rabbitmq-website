@@ -87,9 +87,9 @@ Definitions are stored in an internal database located in the node's data
 directory. To get the directory path, run the following
 command against a running RabbitMQ node:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics status | grep -A 2 -B 2 "Node data directory"
-</pre>
+```
 
 If the node isn't running, it is possible to inspect [default data directories](./relocate.html).
 
@@ -105,9 +105,9 @@ copy the messages, skip copying the [message directories](#manual-messages-backu
 Internal node database stores node's name in certain records. Should node name change, the database must first
 be updated to reflect the change using the following [rabbitmqctl](./cli.html) command:
 
-<pre class="lang-sh">
+```sh
 rabbitmqctl rename_cluster_node &lt;oldnode&gt; &lt;newnode&gt;
-</pre>
+```
 
 The command can take multiple old name/new name pairs if multiple nodes in a cluster are being renamed
 at the same time.

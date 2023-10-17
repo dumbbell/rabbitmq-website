@@ -89,7 +89,7 @@ There are a few exchange types available: `direct`, `topic`, `headers`
 and `fanout`. We'll focus on the last one -- the fanout. Let's configure
 a bean to describe an exchange of this type, and call it `tut.fanout`:
 
-<pre class="lang-java">
+```java
 import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -142,7 +142,7 @@ public class Tut3Config {
 		return new Tut3Sender();
 	}
 }
-</pre>
+```
 
 We follow the same approach as in the previous two tutorials.  We create three
 profiles for the tutorial (`tut3`, `pub-sub`, or `publish-subscribe`). They are
@@ -160,9 +160,9 @@ messages.
 >
 > To list the exchanges on the server you can run the ever useful `rabbitmqctl`:
 >
-> <pre class="lang-bash">
+> ```bash
 > sudo rabbitmqctl list_exchanges
-> </pre>
+> ```
 >
 > In this list there will be some `amq.*` exchanges and the default (unnamed)
 > exchange. These are created by default, but it is unlikely you'll need to
@@ -176,9 +176,9 @@ messages.
 >
 > Recall how we published a message before:
 >
-> <pre class="lang-java">
+> ```java
 >    template.convertAndSend(queue.getName(), message)
-> </pre>
+> ```
 >
 > The first parameter is the routing key and the `RabbitTemplate`
 > sends messages by default to the default exchange. Each queue is automatically
@@ -188,7 +188,7 @@ messages.
 
 Now, we can publish to our named exchange instead:
 
-<pre class="lang-java">
+```java
 @Autowired
 private RabbitTemplate template;
 
@@ -196,7 +196,7 @@ private RabbitTemplate template;
 private FanoutExchange fanout;   // configured in Tut3Config above
 
 template.convertAndSend(fanout.getName(), "", message);
-</pre>
+```
 
 From now on the `fanout` exchange will append messages to our queue.
 
@@ -223,7 +223,7 @@ automatically deleted. To do this with the Spring AMQP client,
 we defined an _AnonymousQueue_, which creates a non-durable,
 exclusive, auto-delete queue with a generated name:
 
-<pre class="lang-java">
+```java
 @Bean
 public Queue autoDeleteQueue1() {
 	return new AnonymousQueue();
@@ -233,7 +233,7 @@ public Queue autoDeleteQueue1() {
 public Queue autoDeleteQueue2() {
 	return new AnonymousQueue();
 }
-</pre>
+```
 
 At this point, our queues have random queue names. For example,
 it may look like `spring.gen-1Rx9HOqvTAaHeeZrQWu8Pg`.
@@ -269,20 +269,20 @@ between exchange and a queue is called a _binding_. In the above
 `Tut3Config` you can see that we have two bindings, one for each
 `AnonymousQueue`.
 
-<pre class="lang-java">
+```java
 @Bean
 public Binding binding1(FanoutExchange fanout,
         Queue autoDeleteQueue1) {
 	return BindingBuilder.bind(autoDeleteQueue1).to(fanout);
 }
-</pre>
+```
 
 > #### Listing bindings
 >
 > You can list existing bindings using, you guessed it,
-> <pre class="lang-bash">
+> ```bash
 > rabbitmqctl list_bindings
-> </pre>
+> ```
 
 Putting it all together
 -----------------------
@@ -327,7 +327,7 @@ nameless one. We need to supply a `routingKey` when sending, but its
 value is ignored for `fanout` exchanges. Here goes the code for
 `tut3.Sender.java` program:
 
-<pre class="lang-java">
+```java
 package org.springframework.amqp.tutorials.tut3;
 
 import org.springframework.amqp.core.FanoutExchange;
@@ -364,7 +364,7 @@ public class Tut3Sender {
 	}
 
 }
-</pre>
+```
 
 [Tut3Sender.java source](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/spring-amqp/src/main/java/org/springframework/amqp/tutorials/tut3/Tut3Sender.java)
 
@@ -378,7 +378,7 @@ but that's okay for us; if no consumer is listening yet we can safely discard th
 
 The code for `Tut3Receiver.java`:
 
-<pre class="lang-java">
+```java
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.util.StopWatch;
 
@@ -413,36 +413,36 @@ public class Tut3Receiver {
 	}
 
 }
-</pre>
+```
 
 [Tut3Receiver.java source](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/spring-amqp/src/main/java/org/springframework/amqp/tutorials/tut3/Tut3Receiver.java)
 
 Compile as before and we're ready to execute the fanout sender and receiver.
 
-<pre class="lang-bash">
+```bash
 ./mvnw clean package
-</pre>
+```
 
 And of course, to execute the tutorial do the following:
 
-<pre class="lang-bash">
+```bash
 # shell 1
 java -jar target/rabbitmq-tutorials.jar --spring.profiles.active=pub-sub,receiver \
     --tutorial.client.duration=60000
 # shell 2
 java -jar target/rabbitmq-tutorials.jar --spring.profiles.active=pub-sub,sender \
     --tutorial.client.duration=60000
-</pre>
+```
 
 Using `rabbitmqctl list_bindings` you can verify that the code actually
 creates bindings and queues as we want. With two `ReceiveLogs.java`
 programs running you should see something like:
 
-<pre class="lang-bash">
+```bash
 sudo rabbitmqctl list_bindings
 tut.fanout	exchange	8b289c9c-a1eb-4a3a-b6a9-163c4fdcb6c2	queue		[]
 tut.fanout	exchange	d7e7d193-65b1-4128-a532-466a5256fd31	queue		[]
-</pre>
+```
 
 The interpretation of the result is straightforward: data from
 exchange `logs` goes to two queues with server-assigned names. And

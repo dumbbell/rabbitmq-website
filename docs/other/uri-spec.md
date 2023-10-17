@@ -4,7 +4,6 @@ description: RabbitMQ URI Specification
 weight: 10
 ---
 
-<?xml-stylesheet type="text/xml" href="page.xsl"?>
 <!--
 Copyright (c) 2007-2023 VMware, Inc. or its affiliates.
 
@@ -94,7 +93,7 @@ rules.  All names in these rules not defined here are taken
 from <a
 href="http://www.ietf.org/rfc/rfc3986.txt">RFC3986</a>.
 
-<pre class="lang-plaintext">
+```plaintext
 amqp_URI       = "amqp://" amqp_authority [ "/" vhost ] [ "?" query ]
 
 amqp_authority = [ amqp_userinfo "@" ] host [ ":" port ]
@@ -106,7 +105,7 @@ username       = *( unreserved / pct-encoded / sub-delims )
 password       = *( unreserved / pct-encoded / sub-delims )
 
 vhost          = segment
-</pre>
+```
 
 Once a URI has been successfully parsed according to this
 syntax, the connection parameters are determined as
@@ -249,9 +248,9 @@ distinct ports for the two types of connections.
 Apart from the scheme identifier, the syntax of the "amqps"
 URI scheme is identical to that of the "amqp" URI scheme:
 
-<pre class="lang-">
+```
 amqps_URI      = "amqps://" amqp_authority [ "/" vhost ]
-</pre>
+```
 
 The interpretation of an amqps URI differs from the
 corresponding "plain" URI in two ways. In all other respects,

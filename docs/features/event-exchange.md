@@ -57,9 +57,9 @@ gets published, don't allow them access.
 
 The plugin requires no configuration, just activate it:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_event_exchange
-</pre>
+```
 
 Each event has various properties associated with it. These are
 translated into AMQP 0-9-1 data encoding and inserted in the message headers. The

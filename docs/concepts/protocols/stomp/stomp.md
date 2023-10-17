@@ -39,9 +39,9 @@ tweak the defaults.
 The STOMP plugin is included in the RabbitMQ distribution. Before clients can successfully
 connect, it must be enabled using [rabbitmq-plugins](./cli.html):
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_stomp
-</pre>
+```
 
 ## <a id="configuration" class="anchor" href="#configuration">Plugin Configuration</a>
 
@@ -58,17 +58,17 @@ to contain a `tcp_listeners` variable for the `rabbitmq_stomp` application.
 For example, a minimalistic configuration file which changes the listener
 port to 12345 would look like:
 
-<pre class="lang-ini">
+```ini
 stomp.listeners.tcp.1 = 12345
-</pre>
+```
 
 while one which changes the listener to listen only on localhost (for
 both IPv4 and IPv6) would look like:
 
-<pre class="lang-ini">
+```ini
 stomp.listeners.tcp.1 = 127.0.0.1:61613
 stomp.listeners.tcp.2 = ::1:61613
-</pre>
+```
 
 #### TCP Listener Options
 
@@ -78,7 +78,7 @@ The settings use a common prefix, `stomp.tcp_listen_options`, and control
 things such as TCP buffer sizes, inbound TCP connection queue length, whether [TCP keepalives](./heartbeats.html#tcp-keepalives)
 are enabled and so on. See the [Networking guide](networking.html) for details.
 
-<pre class="lang-ini">
+```ini
 stomp.listeners.tcp.1 = 127.0.0.1:61613
 stomp.listeners.tcp.2 = ::1:61613
 
@@ -91,7 +91,7 @@ stomp.tcp_listen_options.nodelay   = true
 
 stomp.tcp_listen_options.exit_on_close = true
 stomp.tcp_listen_options.send_timeout  = 120
-</pre>
+```
 
 ### <a id="tls" class="anchor" href="#tls">TLS Support</a>
 
@@ -101,7 +101,7 @@ TLS-enabled STOMP connections, add a TLS listener for STOMP using the `stomp.lis
 The plugin will use core RabbitMQ server
 certificates and key (just like AMQP 0-9-1 and AMQP 1.0 listeners do):
 
-<pre class="lang-ini">
+```ini
 ssl_options.cacertfile = /path/to/tls/ca_certificate.pem
 ssl_options.certfile   = /path/to/tls/server_certificate.pem
 ssl_options.keyfile    = /path/to/tls/server_key.pem
@@ -111,7 +111,7 @@ ssl_options.fail_if_no_peer_cert = true
 stomp.listeners.tcp.1 = 61613
 # default TLS-enabled port for STOMP connections
 stomp.listeners.ssl.1 = 61614
-</pre>
+```
 
 This configuration creates a standard TCP listener on port 61613 and
 a TLS listener on port 61614.
@@ -119,10 +119,10 @@ a TLS listener on port 61614.
 When a TLS listener is set up, you may want to deactivate all non-TLS ones.
 This can be configured like so:
 
-<pre class="lang-ini">
+```ini
 stomp.listeners.tcp   = none
 stomp.listeners.ssl.1 = 61614
-</pre>
+```
 
 
 ### <a id="default-credentials" class="anchor" href="#default-credentials">Default User</a>
@@ -133,10 +133,10 @@ and `passcode` headers if a default is configured.
 To configure a default login and passcode, add a `default_user`
 section to the `rabbitmq_stomp` application configuration. For example:
 
-<pre class="lang-ini">
+```ini
 stomp.default_user = guest
 stomp.default_pass = guest
-</pre>
+```
 
 The configuration example above makes `guest`/`guest` the default
 login/passcode pair.
@@ -153,9 +153,9 @@ force all TLS clients to have a verifiable client certificate.
 To switch this feature on, set `ssl_cert_login` to `true` for the
 `rabbitmq_stomp` application. For example:
 
-<pre class="lang-ini">
+```ini
 stomp.ssl_cert_login = true
-</pre>
+```
 
 By default this will set the username to an RFC4514-ish string form of
 the certificate's subject's Distinguished Name, similar to that
@@ -163,9 +163,9 @@ produced by OpenSSL's "-nameopt RFC2253" option.
 
 To use the Common Name instead, add:
 
-<pre class="lang-ini">
+```ini
 ssl_cert_login_from = common_name
-</pre>
+```
 
 to your configuration.
 
@@ -185,11 +185,11 @@ the default user or the user supplied in the SSL certificate.
 To enable implicit connect, set `implicit_connect` to `true` for the
 `rabbit_stomp` application. For example:
 
-<pre class="lang-ini">
+```ini
 stomp.default_user = guest
 stomp.default_pass = guest
 stomp.implicit_connect = true
-</pre>
+```
 
 Implicit connect is *not* enabled by default.
 
@@ -201,9 +201,9 @@ Implicit connect is *not* enabled by default.
 The STOMP plugin supports the [proxy protocol](http://www.haproxy.org/download/1.8/doc/proxy-protocol.txt).
 This feature is turned off by default. To turn it on for STOMP clients:
 
-<pre class="lang-ini">
+```ini
 stomp.proxy_protocol = true
-</pre>
+```
 
 See the [Networking Guide](./networking.html#proxy-protocol) for more information
 about the proxy protocol.
@@ -212,9 +212,9 @@ about the proxy protocol.
 
 By default frame size limit is 4Mb. When a frame exceeds the limit it's an error and connection closed.
 
-<pre class="lang-ini">
+```ini
 stomp.max_frame_size = 4 * 1024 * 1024
-</pre>
+```
 
 ## <a id="d" class="anchor" href="#d">Destinations</a>
 The STOMP specification does not prescribe what kinds of destinations
@@ -340,9 +340,9 @@ created against the queue.
 A different default exchange than `amq.topic` can be specified
 using the `stomp.default_topic_exchange` configuration setting:
 
-<pre class="lang-ini">
+```ini
 stomp.default_topic_exchange = some.exchange
-</pre>
+```
 
 ### <a id="d.dts" class="anchor" href="#d.dts">Durable Topic Subscriptions</a>
 
@@ -368,13 +368,13 @@ subscription is not deleted when last subscriber disconnects.
 When creating a durable subscription,
 the `id` header must be specified. For example:
 
-<pre class="lang-plaintext">
+```plaintext
 SUBSCRIBE
 destination:/topic/my-durable
 id:1234
 durable:true
 auto-delete:false
-</pre>
+```
 
 #### AMQP 0-9-1 Semantics
 
@@ -507,15 +507,15 @@ All server-named queues created by the STOMP plugin are prefixed with `stomp-`
 which makes it easy to match the queues in a policy. For example, to limit
 STOMP queue length to 1000 messages, create the following policy:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_policy stomp-queues "^stomp-" '{"max-length":1000}' --apply-to queues
-</pre>
+```
 
 with `rabbitmqctl.bat` on Windows:
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat set_policy stomp-queues "^stomp-" "{""max-length"":1000}" --apply-to queues
-</pre>
+```
 
 Note that only one policy is applied to a queue at a time, so to specify
 multiple arguments (e.g. queue length limit and dead lettering) one
@@ -541,9 +541,9 @@ When omitted, the default virtual host (`/`) is presumed.
 To configure a different default virtual host, add a `default_vhost`
 section to the `rabbitmq_stomp` application configuration, e.g.
 
-<pre class="lang-ini">
+```ini
 stomp.default_vhost = /
-</pre>
+```
 
 If a `host` header is specified it must be one of the
 virtual hosts known to the RabbitMQ server, otherwise the connection is

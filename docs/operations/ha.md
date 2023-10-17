@@ -243,21 +243,21 @@ is not online):
 
 When a new queue mirror is added, the event is logged:
 
-<pre class="lang-plaintext">
+```plaintext
 2018-03-01 07:26:33.121 [info] &lt;0.1360.0&gt; Mirrored queue 'two.replicas' in vhost '/': Adding mirror on node hare@warp10: &lt;37324.1148.0&gt;
-</pre>
+```
 
 It is possible to list queue leader and mirrors using `rabbitmqctl list_queues`. In this
 example we also display queue policy since it's highly relevant:
 
-<pre class="lang-bash">
+```bash
 # mirror_pids is a new field alias introduced in RabbitMQ 3.11.4
 rabbitmqctl list_queues name policy pid mirror_pids
 
 # =&gt; Timeout: 60.0 seconds ...
 # =&gt; Listing queues for vhost / ...
 # =&gt; two.replicas ha-two &lt;hare@warp10.1.2223.0&gt; [&lt;rabbit@warp10.3.1360.0&gt;]
-</pre>
+```
 
 If a queue that's expected to be mirroring is not, this usually means that its name
 doesn't match that specified in the policy that controls mirroring or that another
@@ -336,9 +336,9 @@ unavailable until the node comes back.
 All operations on a durable queue with unavailable leader node
 will fail with a message in server logs that looks like this:
 
-<pre class="lang-ini">
+```ini
 operation queue.declare caused a channel exception not_found: home node 'rabbit@hostname' of durable queue 'queue-name' in vhost '/' is down or inaccessible
-</pre>
+```
 
 A non-durable one will be deleted.
 
@@ -356,25 +356,25 @@ cluster, with [automatic synchronisation](#configuring-synchronisation):
   <tr>
     <th>rabbitmqctl</th>
     <td>
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_policy ha-two "^two\." \
   '{"ha-mode":"exactly","ha-params":2,"ha-sync-mode":"automatic"}'
-</pre>
+```
           </td>
         </tr>
         <tr>
           <th>rabbitmqctl (Windows)</th>
           <td>
-<pre class="lang-bash">
+```bash
 rabbitmqctl.bat set_policy ha-two "^two\." ^
    "{""ha-mode"":""exactly"",""ha-params"":2,""ha-sync-mode"":""automatic""}"
- </pre>
+ ```
           </td>
         </tr>
         <tr>
           <th>HTTP API</th>
           <td>
-<pre class="lang-ini">
+```ini
 PUT /api/policies/%2f/ha-two
 {
   "pattern":"^two\.",
@@ -384,7 +384,7 @@ PUT /api/policies/%2f/ha-two
     "ha-sync-mode":"automatic"
   }
 }
-</pre>
+```
     </td>
   </tr>
   <tr>
@@ -426,27 +426,28 @@ See [To How Many Nodes to Mirror?](#replication-factor) above:
   <tr>
     <th>rabbitmqctl</th>
     <td>
-<pre class="lang-bash">
+```bash
 # Note that mirroring to all nodes is rarely necessary.
 # Consider mirroring to the majority (N/2+1) nodes with "ha-mode":"exactly" instead.
 rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
-</pre>
+```
     </td>
   </tr>
   <tr>
     <th>rabbitmqctl (Windows)</th>
     <td>
-<pre class="lang-powershell">
+```powershell
 # Note that mirroring to all nodes is rarely necessary.
 # Consider mirroring to the majority (N/2+1) nodes with "ha-mode":"exactly" instead.
 rabbitmqctl.bat set_policy ha-all "^ha\." "{""ha-mode"":""all""}"
-</pre>
+```
     </td>
   </tr>
   <tr>
     <th>HTTP API</th>
     <td>
-      <pre class="lang-ini">PUT /api/policies/%2f/ha-all {"pattern":"^ha\.", "definition":{"ha-mode":"all"}}</pre>
+      ```ini
+PUT /api/policies/%2f/ha-all {"pattern":"^ha\.", "definition":{"ha-mode":"all"}}```
     </td>
   </tr>
   <tr>
@@ -477,22 +478,25 @@ cluster:
   <tr>
     <th>rabbitmqctl</th>
     <td>
-      <pre class="lang-bash">rabbitmqctl set_policy ha-nodes "^nodes\." \
-'{"ha-mode":"nodes","ha-params":["rabbit@nodeA", "rabbit@nodeB"]}'</pre>
+      ```bash
+rabbitmqctl set_policy ha-nodes "^nodes\." \
+'{"ha-mode":"nodes","ha-params":["rabbit@nodeA", "rabbit@nodeB"]}'```
     </td>
   </tr>
   <tr>
     <th>rabbitmqctl (Windows)</th>
     <td>
-      <pre class="lang-powershell">rabbitmqctl set_policy ha-nodes "^nodes\." ^
-"{""ha-mode"":""nodes"",""ha-params"":[""rabbit@nodeA"", ""rabbit@nodeB""]}"</pre>
+      ```powershell
+rabbitmqctl set_policy ha-nodes "^nodes\." ^
+"{""ha-mode"":""nodes"",""ha-params"":[""rabbit@nodeA"", ""rabbit@nodeB""]}"```
     </td>
   </tr>
   <tr>
     <th>HTTP API</th>
     <td>
-      <pre class="lang-ini">PUT /api/policies/%2f/ha-nodes
-{"pattern":"^nodes\.", "definition":{"ha-mode":"nodes", "ha-params":["rabbit@nodeA", "rabbit@nodeB"]}</pre>
+      ```ini
+PUT /api/policies/%2f/ha-nodes
+{"pattern":"^nodes\.", "definition":{"ha-mode":"nodes", "ha-params":["rabbit@nodeA", "rabbit@nodeB"]}```
     </td>
   </tr>
   <tr>
@@ -642,13 +646,13 @@ consumer's responsibility to reissue
 
 For example (in Java):
 
-<pre class="lang-java">
+```java
 Channel channel = ...;
 Consumer consumer = ...;
 Map&lt;String, Object> args = new HashMap&lt;String, Object>();
 args.put("x-cancel-on-ha-failover", true);
 channel.basicConsume("my-queue", false, args, consumer);
-</pre>
+```
 
 This creates a new consumer with the argument set.
 
@@ -689,22 +693,22 @@ a common scenario with lazy queues, for example.
 
 To see mirror status (whether they are synchronised), use:
 
-<pre class="lang-bash">
+```bash
 # mirror_pids is a new field alias introduced in RabbitMQ 3.11.4
 rabbitmqctl list_queues name mirror_pids synchronised_mirror_pids
-</pre>
+```
 
 It is possible to manually synchronise a queue:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl sync_queue {name}
-</pre>
+```
 
 Or cancel an in-progress synchronisation:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl cancel_sync_queue {name}
-</pre>
+```
 
 These features are also available through the management plugin.
 

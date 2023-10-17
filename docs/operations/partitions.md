@@ -49,22 +49,22 @@ If two nodes come back into contact, both having thought the other is down, the 
 determine that a partition has occurred. This will be written to
 the RabbitMQ log in a form like:
 
-<pre class="lang-plaintext">
+```plaintext
 2020-05-18 06:55:37.324 [error] &lt;0.341.0&gt; Mnesia(rabbit@warp10): ** ERROR ** mnesia_event got {inconsistent_database, running_partitioned_network, rabbit@hostname2}
-</pre>
+```
 
 Partition presence can be identified via server [logs](./logging.html),
 [HTTP API](./management.html) (for [monitoring](./monitoring.html))
 and a [CLI command](./cli.html):
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics cluster_status
-</pre>
+```
 
 <code>rabbitmq-diagnostics cluster_status</code> will normally show an
 empty list for partitions:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics cluster_status
 # => Cluster status of node rabbit@warp10 ...
 # => Basics
@@ -78,12 +78,12 @@ rabbitmq-diagnostics cluster_status
 # => (none)
 # =>
 # => ...edited out for brevity...
-</pre>
+```
 
 However, if a network partition has occurred then information
 about partitions will appear there:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl cluster_status
 # => Cluster status of node rabbit@warp10 ...
 # => Basics
@@ -96,7 +96,7 @@ rabbitmqctl cluster_status
 # =>
 # => Node flopsy@warp10 cannot communicate with hare@warp10
 # => Node rabbit@warp10 cannot communicate with hare@warp10
-</pre>
+```
 
 The HTTP API will return partition
 information for each node under <code>partitions</code>
@@ -243,7 +243,7 @@ If using the <code>pause_if_all_down</code> mode, additional parameters are requ
 
 Example [config snippet](./configure.html#config-file) that uses <code>pause_if_all_down</code>:
 
-<pre class="lang-plaintext">
+```plaintext
 cluster_partition_handling = pause_if_all_down
 
 ## Recovery strategy. Can be either 'autoheal' or 'ignore'
@@ -252,7 +252,7 @@ cluster_partition_handling.pause_if_all_down.recover = ignore
 ## Node names to check
 cluster_partition_handling.pause_if_all_down.nodes.1 = rabbit@myhost1
 cluster_partition_handling.pause_if_all_down.nodes.2 = rabbit@myhost2
-</pre>
+```
 
 ### <a id="options" class="anchor" href="#options">Which Mode to Pick?</a>
 

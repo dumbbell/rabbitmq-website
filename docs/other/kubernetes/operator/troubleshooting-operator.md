@@ -43,9 +43,9 @@ Check the [resource-limits example](https://github.com/rabbitmq/cluster-operator
 
 An error such as
 
-<pre class="lang-plaintext">
+```plaintext
 pods POD-NAME is forbidden: unable to validate against any pod security policy: []
-</pre>
+```
 
 as an event of the underlying `ReplicaSet` of the Kubernetes Operator deployment, or as an
 event of the underlying `StatefulSet` of the `RabbitmqCluster`.
@@ -60,13 +60,13 @@ Potential solution is to create the PodSecurityPolicy and RBAC resources by foll
 ### <a id="pods-restart-on-startup" class="anchor" href="#pods-restart-on-startup">Pods Restart on Startup</a>
 The RabbitMQ container might fail at Pod startup and log a message such as
 
-<pre class="lang-plaintext">
+```plaintext
 epmd error for host rabbitmq-server-1.rabbitmq-nodes.mynamespace: nxdomain (non-existing domain)
-</pre>
+```
 or
-<pre class="lang-plaintext">
+```plaintext
 Error during startup: {error,no_epmd_port}
-</pre>
+```
 
 The Pod restarts and becomes `Ready` eventually.
 
@@ -86,31 +86,31 @@ Potential solution to resolve this issue:
  * Ensure there are no messages in the queue, or that it is acceptable to delete those messages.
  * Delete the queue by force by running:
 
-<pre class="lang-bash">
+```bash
 kubectl delete pod --force --grace-period=0 POD-NAME
-</pre>
+```
 
 This example uses a Pod name:
 
-<pre class="lang-bash">
+```bash
 kubectl delete pod --force rabbit-rollout-restart-server-1
 # warning: Immediate deletion does not wait for confirmation that the running resource has been terminated. The resource may continue to run on the cluster indefinitely.
 # pod 'rabbit-rollout-restart-server-1' force deleted
-</pre>
+```
 
 ### <a id='check-instance-status'></a> Check the Status of an Instance
 
 To view the status of an instance by running, use
 
-<pre class="lang-bash">
+```bash
 kubectl -n NAMESPACE get all
-</pre>
+```
 
 Where `NAMESPACE` is the Kubernetes namespace of the instance.
 
 For example:
 
-<pre class="lang-bash">
+```bash
 kubectl -n rmq-instance-1 get all
 # NAME                   READY   STATUS    RESTARTS   AGE
 # pod/example-server-0   1/1      Running   0          2m27s
@@ -121,7 +121,7 @@ kubectl -n rmq-instance-1 get all
 <br/>
 # NAME                             READY   AGE
 # statefulset.apps/example-server  1/1     2m28s
-</pre>
+```
 
 ### <a id="operator-failure-on-startup" class="anchor" href="#operator-failure-on-startup">Cluster Operator Fails on Startup</a>
 
@@ -145,12 +145,12 @@ Potential solution to resolve this issue:
 
 A RabbitMQ instance has status.conditions that describe the current state of the RabbitMQ cluster.
 To get the status, run:
-<pre class="lang-bash">
+```bash
 kubectl describe rmq RMQ_NAME
-</pre>
+```
 
 Example status conditions may look like:
-<pre class="lang-yaml">
+```yaml
 Name:         test-rabbit
 Namespace:    rabbitmq-system
 API Version:  rabbitmq.com/v1beta1
@@ -178,11 +178,11 @@ Status:
     Status:                True
     Type:                  ReconcileSuccess
 ...
-</pre>
+```
 If the status condition `ReconcileSuccess` is false, that means the last reconcile has errored and RabbitMQ cluster configuration could be out of date. Checking out Cluster Operator logs is useful to understand why reconcile failed.
 
 To get Operator logs:
 
-<pre class="lang-bash">
+```bash
 kubectl -n rabbitmq-system logs -l app.kubernetes.io/name=rabbitmq-cluster-operator
-</pre>
+```

@@ -8,9 +8,9 @@ If some RabbitMQ topology objects could not be created, a good source of informa
 
 To inspect the logs, run
 
-<pre class="lang-bash">
+```bash
 kubectl -n rabbitmq-system logs -l app.kubernetes.io/name=messaging-topology-operator
-</pre>
+```
 
 
 ### Status
@@ -20,19 +20,19 @@ that describes the current state of the resource.
 
 For example, to get the status of a queue with name 'my-queue', run:
 
-<pre class="lang-bash">
+```bash
 kubectl get queues.rabbitmq.com my-queue -oyaml
-</pre>
+```
 
 or
 
-<pre class="lang-bash">
+```bash
 kubectl describe queues.rabbitmq.com my-queue
-</pre>
+```
 
 An example status for a queue may look like:
 
-<pre class="lang-yaml">
+```yaml
 apiVersion: rabbitmq.com/v1beta1
 kind: Queue
 metadata:
@@ -47,4 +47,4 @@ status:
     type: Ready
     Reason: "SuccessfulCreateOrUpdate" # status false result in reason FailedCreateOrUpdate
     Message: "" # set with error message when status is false
-</pre>
+```

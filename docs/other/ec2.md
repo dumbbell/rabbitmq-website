@@ -96,7 +96,8 @@ See the [File and Directory Locations](./relocate.html) for details.
 Those directories can be symlinks to a dedicated storage volume. The node must be stopped
 before symlinking is performed:
 
-<pre class="lang-bash">sudo service rabbitmq-server stop</pre>
+```bash
+sudo service rabbitmq-server stop```
 
 We recommend performing symlinking and other storage preparation steps before installing
 RabbitMQ when possible.

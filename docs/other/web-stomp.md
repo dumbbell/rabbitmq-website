@@ -45,9 +45,9 @@ RabbitMQ Web STOMP is fully compatible with the [RabbitMQ STOMP](./stomp.html) p
 
 To enable the plugin run [rabbitmq-plugins](./man/rabbitmq-plugins.8.html):
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_web_stomp
-</pre>
+```
 
 ## <a id="usage" class="anchor" href="#usage">Usage</a>
 
@@ -61,9 +61,9 @@ is included as part of [RabbitMQ Web STOMP examples](https://github.com/rabbitmq
 
 The WebSocket endpoint is available on the `/ws` path:
 
-<pre class="lang-plaintext">
+```plaintext
 ws://127.0.0.1:15674/ws
-</pre>
+```
 
 This endpoint will only work with Websocket capable clients. Note that
 some configuration is necessary in order to accept binary messages.
@@ -71,23 +71,23 @@ some configuration is necessary in order to accept binary messages.
 In order to establish connection from the browser using WebSocket
 you may use code like:
 
-<pre class="lang-html">
+```html
 &lt;!-- include the client library --&gt;
 &lt;script src="stomp.js"&gt;&lt;/script&gt;
-</pre>
+```
 
-<pre class="lang-javascript">
+```javascript
 &lt;script&gt;
 var ws = new WebSocket('ws://127.0.0.1:15674/ws');
 var client = Stomp.over(ws);
 [...]
-</pre>
+```
 
 Once you have the `client` object you can follow API's exposed by
 stomp.js library. The next step is usually to establish a STOMP
 connection with the broker:
 
-<pre class="lang-javascript">
+```javascript
 [...]
 var on_connect = function() {
     console.log('connected');
@@ -97,7 +97,7 @@ var on_error =  function() {
 };
 client.connect('guest', 'guest', on_connect, on_error, '/');
 [...]
-</pre>
+```
 
 
 ## <a id="examples" class="anchor" href="#examples">Web STOMP Examples</a>
@@ -107,9 +107,9 @@ A few simple Web STOMP examples are provided as a
 plugin. To get it running follow the installation instructions for that plugin
 and enable the plugin:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_web_stomp_examples
-</pre>
+```
 
 The examples will be available under
 [http://127.0.0.1:15670/](http://127.0.0.1:15670/) url. You will see two examples:
@@ -133,9 +133,9 @@ to contain a `tcp_config` section with a `port` variable for the `rabbitmq_web_s
 For example, a complete configuration file which changes the listener
 port to 12345 would look like:
 
-<pre class="lang-ini">
+```ini
 web_stomp.tcp.port = 12345
-</pre>
+```
 
 You can use the `tcp_config` section to specify any TCP option you need.
 See the [RabbitMQ Networking guide](networking.html) and [Ranch documentation](https://ninenines.eu/docs/en/ranch/2.1/guide/)
@@ -149,14 +149,14 @@ to learn more about TLS support in RabbitMQ.
 
 TLS configuration parameters are provided in the `web_stomp.ssl` section:
 
-<pre class="lang-ini">
+```ini
 web_stomp.ssl.port       = 15673
 web_stomp.ssl.backlog    = 1024
 web_stomp.ssl.cacertfile = /path/to/ca_certificate.pem
 web_stomp.ssl.certfile   = /path/to/server_certificate.pem
 web_stomp.ssl.keyfile    = /path/to/server_key.pem
 web_stomp.ssl.password   = changeme
-</pre>
+```
 
 The TLS listener port, server certificate file, private key and CA certificate bundle are mandatory options.
 Password is also mandatory if the private key uses one.
@@ -173,7 +173,7 @@ RabbitMQ TLS guide has [a section on TLS versions](./ssl.html#disabling-tls-vers
 in the [advanced config format](./configure.html#advanced-config-file) that configures cipher suites
 and a number of other [TLS options](./ssl.html) for the plugin:
 
-<pre class="lang-ini">
+```ini
 web_stomp.ssl.port       = 15673
 web_stomp.ssl.backlog    = 1024
 web_stomp.ssl.certfile   = /path/to/server_certificate.pem
@@ -197,7 +197,7 @@ web_stomp.ssl.ciphers.6 = ECDH-RSA-AES256-GCM-SHA384
 web_stomp.ssl.ciphers.7 = ECDH-ECDSA-AES256-SHA384
 web_stomp.ssl.ciphers.8 = ECDH-RSA-AES256-SHA384
 web_stomp.ssl.ciphers.9 = DHE-RSA-AES256-GCM-SHA384
-</pre>
+```
 
 
 #### Troubleshooting TLS (WSS)
@@ -218,21 +218,21 @@ in the CONNECT frame, if any, are ignored.
 This is an advanced feature that is only exposed via the [advanced configuration file](./configure.html#configuration-files)
 or the <a href="./configure.html#erlang-term-config-file">classic config format</a>:
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbitmq_web_stomp,
       [{use_http_auth, true}]}
 ].
-</pre>
+```
 
 ### <a id="proxy-protocol" class="anchor" href="#proxy-protocol">Proxy Protocol</a>
 
 The Web STOMP plugin supports the [proxy protocol](http://www.haproxy.org/download/1.8/doc/proxy-protocol.txt).
 This feature is deactivated by default, to activate it for clients:
 
-<pre class="lang-ini">
+```ini
 web_stomp.proxy_protocol = true
-</pre>
+```
 
 See the [Networking Guide](./networking.html#proxy-protocol) for more information
 about the proxy protocol.
@@ -253,16 +253,16 @@ By default, the Web STOMP plugin will expect to handle messages
 encoded as UTF-8. The WebSocket endpoint exposed by this plugin can be switched to binary mode if needed
 using the `ws_frame` option:
 
-<pre class="lang-ini">
+```ini
 web_stomp.ws_frame = binary
-</pre>
+```
 
 ### <a id="http-options" class="anchor" href="#http-options">HTTP Options</a>
 
 Generic HTTP server settings can be specified using `web_stomp.cowboy_opts.*` keys,
 for example:
 
-<pre class="lang-ini">
+```ini
 # connection inactivity timeout
 web_stomp.cowboy_opts.idle_timeout = 60000
 # max number of pending requests allowed on a connection
@@ -273,11 +273,11 @@ web_stomp.cowboy_opts.max_headers   = 100
 web_stomp.cowboy_opts.max_empty_lines = 5
 # max request line length allowed in requests
 web_stomp.cowboy_opts.max_request_line_length
-</pre>
+```
 
 ### <a id="websocket-options" class="anchor" href="#websocket-options">WebSocket Options</a>
 
-<pre class="lang-ini">
+```ini
 # WebSocket traffic compression is enabled by default
 web_stomp.ws_opts.compress = true
 
@@ -285,4 +285,4 @@ web_stomp.ws_opts.compress = true
 web_stomp.ws_opts.idle_timeout = 60000
 
 web_stomp.ws_opts.max_frame_size = 50000
-</pre>
+```

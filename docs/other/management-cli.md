@@ -85,15 +85,15 @@ On Debian-derived
 systems, copy the file to `/etc/bash_completion.d` to make it
 available system-wide:
 
-<pre class="lang-bash">
+```bash
 sudo sh -c 'rabbitmqadmin --bash-completion > /etc/bash_completion.d/rabbitmqadmin'
-</pre>
+```
 
 ## Examples
 
 ### Get a list of exchanges
 
-<pre class="lang-bash">
+```bash
 rabbitmqadmin -V test list exchanges
 # => +-------------+---------+-------+---------+-------------+
 # => |    name     | durable | vhost |  type   | auto_delete |
@@ -105,11 +105,11 @@ rabbitmqadmin -V test list exchanges
 # => | amq.match   | True    | test  | headers | False       |
 # => | amq.topic   | True    | test  | topic   | False       |
 # => +-------------+---------+-------+---------+-------------+
-</pre>
+```
 
 ### Get a list of queues, with some columns specified
 
-<pre class="lang-bash">
+```bash
 rabbitmqadmin list queues vhost name node messages message_stats.publish_details.rate
 # => +-------+----------------------------------+-------------------+----------+------------------------------------+
 # => | vhost |               name               |       node        | messages | message_stats.publish_details.rate |
@@ -117,11 +117,11 @@ rabbitmqadmin list queues vhost name node messages message_stats.publish_details
 # => | /     | amq.gen-UELtxwb8OGJ9XHlHJq0Jug== | rabbit@smacmullen | 0        | 100.985821591                      |
 # => | /     | test                             | rabbit@misstiny   | 5052     | 100.985821591                      |
 # => +-------+----------------------------------+-------------------+----------+------------------------------------+
-</pre>
+```
 
 ### Get a list of queues, with all the detail we can take
 
-<pre class="lang-bash">
+```bash
 rabbitmqadmin -f long -d 3 list queues
 # =>     --------------------------------------------------------------------------------
 # =>
@@ -131,67 +131,67 @@ rabbitmqadmin -f long -d 3 list queues
 # =>         backing_queue_status.avg_ack_egress_rate: 100.944672225
 # =>        backing_queue_status.avg_ack_ingress_rate: 100.944672225
 # => ...
-</pre>
+```
 
 
 ### Connect to another host as another user
 
-<pre class="lang-bash">
+```bash
 rabbitmqadmin -H myserver -u simon -p simon list vhosts
 # => +------+
 # => | name |
 # => +------+
 # => | /    |
 # => +------+
-</pre>
+```
 
 ### Declare an exchange
 
-<pre class="lang-bash">
+```bash
 rabbitmqadmin declare exchange name=my-new-exchange type=fanout
 # => exchange declared
-</pre>
+```
 
 ### Declare a queue, with optional parameters
 
-<pre class="lang-bash">
+```bash
 rabbitmqadmin declare queue name=my-new-queue durable=false
 # => queue declared
-</pre>
+```
 
 ### Publish a message
 
-<pre class="lang-bash">
+```bash
 rabbitmqadmin publish exchange=amq.default routing_key=test payload="hello, world"
 # => Message published
-</pre>
+```
 
 ### And get it back
 
-<pre class="lang-bash">
+```bash
 rabbitmqadmin get queue=test ackmode=ack_requeue_false
 # => +-------------+----------+---------------+--------------+------------------+-------------+
 # => | routing_key | exchange | message_count |   payload    | payload_encoding | redelivered |
 # => +-------------+----------+---------------+--------------+------------------+-------------+
 # => | test        |          | 0             | hello, world | string           | False       |
 # => +-------------+----------+---------------+--------------+------------------+-------------+
-</pre>
+```
 
 ### Export Configuration (Definitions)
 
-<pre class="lang-bash">
+```bash
 rabbitmqadmin export rabbit.definitions.json
 # => Exported configuration for localhost to "rabbit.config"
-</pre>
+```
 
 ### Import Configuration (Definitions), quietly
 
-<pre class="lang-bash">
+```bash
 rabbitmqadmin -q import rabbit.definitions.json
-</pre>
+```
 
 ### Close all connections
 
-<pre class="lang-bash">
+```bash
 rabbitmqadmin -f tsv -q list connections name | while read conn ; do rabbitmqadmin -q close connection name="${conn}" ; done
-</pre>
+```

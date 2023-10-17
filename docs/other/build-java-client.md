@@ -29,10 +29,10 @@ This guides describes the process of building the Java client library from sourc
 
 The repository is hosted on GitHub. Clone two repositories with
 
-<pre class="lang-bash">
+```bash
 git clone https://github.com/rabbitmq/rabbitmq-codegen.git rabbitmq_codegen
 git clone https://github.com/rabbitmq/rabbitmq-java-client.git
-</pre>
+```
 
 The code generation repository is a dependency of
 the Java client library.
@@ -59,11 +59,11 @@ that the <code>rabbitmq-java-client</code> and
 <code>rabbitmq_codegen</code> directories are in
 the same directory. Then, from the <code>rabbitmq-java-client</code> directory, run
 
-<pre class="lang-bash">
+```bash
 cd rabbitmq-java-client
 
 ./mvnw clean package -Ddeps.dir=../ -DskipTests
-</pre>
+```
 
 The generated JAR file will be in <code>target</code> directory.
 

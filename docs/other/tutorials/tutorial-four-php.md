@@ -38,9 +38,9 @@ Bindings
 In previous examples we were already creating bindings. You may recall
 code like:
 
-<pre class="lang-php">
+```php
 $channel->queue_bind($queue_name, 'logs');
-</pre>
+```
 
 A binding is a relationship between an exchange and a queue. This can
 be simply read as: the queue is interested in messages from this
@@ -50,10 +50,10 @@ Bindings can take an extra `routing_key` parameter. To avoid the
 confusion with a `$channel::basic_publish` parameter we're going to call it a
 `binding key`. This is how we could create a binding with a key:
 
-<pre class="lang-php">
+```php
 $binding_key = 'black';
 $channel->queue_bind($queue_name, $exchange_name, $binding_key);
-</pre>
+```
 
 The meaning of a binding key depends on the exchange type. The
 `fanout` exchanges, which we used previously, simply ignored its
@@ -183,16 +183,16 @@ first.
 
 As always, we need to create an exchange first:
 
-<pre class="lang-php">
+```php
 $channel->exchange_declare('direct_logs', 'direct', false, false, false);
-</pre>
+```
 
 And we're ready to send a message:
 
-<pre class="lang-php">
+```php
 $channel->exchange_declare('direct_logs', 'direct', false, false, false);
 $channel->basic_publish($msg, 'direct_logs', $severity);
-</pre>
+```
 
 To simplify things we will assume that 'severity' can be one of
 'info', 'warning', 'error'.
@@ -204,11 +204,11 @@ Receiving messages will work just like in the previous tutorial, with
 one exception - we're going to create a new binding for each severity
 we're interested in.
 
-<pre class="lang-php">
+```php
 foreach ($severities as $severity) {
     $channel->queue_bind($queue_name, 'direct_logs', $severity);
 }
-</pre>
+```
 
 Putting it all together
 -----------------------
@@ -255,7 +255,7 @@ Putting it all together
 
 The code for `emit_log_direct.php` class:
 
-<pre class="lang-php">
+```php
 &lt;?php
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -282,12 +282,12 @@ echo ' [x] Sent ', $severity, ':', $data, "\n";
 
 $channel->close();
 $connection->close();
-</pre>
+```
 
 
 The code for `receive_logs_direct.php`:
 
-<pre class="lang-php">
+```php
 &lt;?php
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -324,29 +324,29 @@ while ($channel->is_open()) {
 
 $channel->close();
 $connection->close();
-</pre>
+```
 
 If you want to save only 'warning' and 'error' (and not 'info') log
 messages to a file, just open a console and type:
 
-<pre class="lang-bash">
+```bash
 php receive_logs_direct.php warning error > logs_from_rabbit.log
-</pre>
+```
 
 If you'd like to see all the log messages on your screen, open a new
 terminal and do:
 
-<pre class="lang-bash">
+```bash
 php receive_logs_direct.php info warning error
 # => [*] Waiting for logs. To exit press CTRL+C
-</pre>
+```
 
 And, for example, to emit an `error` log message just type:
 
-<pre class="lang-bash">
+```bash
 php emit_log_direct.php error "Run. Run. Or it will explode."
 # => [x] Sent 'error':'Run. Run. Or it will explode.'
-</pre>
+```
 
 (Full source code for [(emit_log_direct.php source)](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/php/emit_log_direct.php)
 and [(receive_logs_direct.php source)](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/php/receive_logs_direct.php))

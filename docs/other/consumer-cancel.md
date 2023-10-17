@@ -57,7 +57,7 @@ client, the `Consumer` interface has a
 `handleCancel` callback, which can be overridden
 by sub-classing the `DefaultConsumer` class:
 
-<pre class="lang-java">
+```java
 channel.queueDeclare(queue, false, true, false, null);
 Consumer consumer = new DefaultConsumer(channel) {
     @Override
@@ -66,7 +66,7 @@ Consumer consumer = new DefaultConsumer(channel) {
     }
 };
 channel.basicConsume(queue, consumer);
-</pre>
+```
 
 It is not an error for the client to issue a
 `basic.cancel` for a consumer which has been

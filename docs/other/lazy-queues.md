@@ -91,13 +91,15 @@ To specify a queue mode using a policy, add the key `queue-mode` to a policy def
   <tr>
     <th>rabbitmqctl</th>
     <td>
-      <pre>rabbitmqctl set_policy Lazy "^lazy-queue$" '{"queue-mode":"lazy"}' --apply-to queues</pre>
+      ```
+rabbitmqctl set_policy Lazy "^lazy-queue$" '{"queue-mode":"lazy"}' --apply-to queues```
     </td>
   </tr>
   <tr>
     <th>rabbitmqctl (Windows)</th>
     <td>
-      <pre>rabbitmqctl set_policy Lazy "^lazy-queue$" "{""queue-mode"":""lazy""}" --apply-to queues</pre>
+      ```
+rabbitmqctl set_policy Lazy "^lazy-queue$" "{""queue-mode"":""lazy""}" --apply-to queues```
     </td>
   </tr>
 </table>
@@ -117,13 +119,15 @@ to specify a different `queue-mode`:
   <tr>
     <th>rabbitmqctl</th>
     <td>
-      <pre>rabbitmqctl set_policy Lazy "^lazy-queue$" '{"queue-mode":"default"}' --apply-to queues</pre>
+      ```
+rabbitmqctl set_policy Lazy "^lazy-queue$" '{"queue-mode":"default"}' --apply-to queues```
     </td>
   </tr>
   <tr>
     <th>rabbitmqctl (Windows)</th>
     <td>
-      <pre>rabbitmqctl set_policy Lazy "^lazy-queue$" "{""queue-mode"":""default""}" --apply-to queues</pre>
+      ```
+rabbitmqctl set_policy Lazy "^lazy-queue$" "{""queue-mode"":""default""}" --apply-to queues```
     </td>
   </tr>
 </table>
@@ -144,11 +148,11 @@ so there are no breaking changes in this regard.
 
 This example in Java declares a queue with the queue mode set to `"lazy"`:
 
-<pre class="lang-java">
+```java
   Map&lt;String, Object> args = new HashMap&lt;String, Object>();
   args.put("x-queue-mode", "lazy");
   channel.queueDeclare("myqueue", false, false, false, args);
-</pre>
+```
 
 ## <a id="performance" class="anchor" href="#performance">Performance Considerations for Lazy Queues</a>
 
@@ -184,7 +188,7 @@ Both queues persisted 1,000,000 messages and used 1.2 GB of disk space.
 
 Below is a transcript of the test performed with a queue in the regular (default) mode:
 
-<pre class="lang-bash">
+```bash
 # Start a temporary RabbitMQ node:
 #
 #       export RABBITMQ_NODENAME=default-queue-test
@@ -212,11 +216,11 @@ rabbitmq-diagnostics status | grep rss,
 #
 #       rabbitmqctl shutdown
 #       rm -fr /tmp/{log,$RABBITMQ_NODENAME*}
-</pre>
+```
 
 With a lazy queue the transcript is very similar:
 
-<pre class="lang-bash">
+```bash
 # Use a different RABBITMQ_NODENAME
 # All other variables remain the same as the previous example
 #
@@ -225,7 +229,7 @@ With a lazy queue the transcript is very similar:
 # In a https://github.com/rabbitmq/rabbitmq-perf-test clone, run:
 make run ARGS="-y 0 -s 1000 -f persistent -C 1000000 -u lazy -qa x-queue-mode=lazy -ad false"
 # Run gmake on OS X
-</pre>
+```
 
 **Note that this was a very simplistic test.** Please make sure to do benchmarks for your specific
 workload and use this test as a starting point.

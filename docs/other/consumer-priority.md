@@ -74,12 +74,12 @@ can be used.
 
 For example (in Java):
 
-<pre class="lang-java">
+```java
 Channel channel = ...;
 Consumer consumer = ...;
 Map&lt;String, Object> args = new HashMap&lt;String, Object>();
 args.put("x-priority", 10);
 channel.basicConsume("my-queue", false, args, consumer);
-</pre>
+```
 
 This creates a new consumer with priority 10.

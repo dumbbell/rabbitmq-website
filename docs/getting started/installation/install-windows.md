@@ -56,9 +56,9 @@ It does, however, manage the required dependencies.
 
 To install RabbitMQ using Chocolatey, run the following command from the command line or from PowerShell:
 
-<pre class="lang-powershell">
+```powershell
 choco install rabbitmq
-</pre>
+```
 
 For many use cases, Chocolatey is the optimal installation method.
 
@@ -141,7 +141,7 @@ The main [CLI tools guide](./cli.html) covers most topics related to command lin
 
 In order to explore what commands various RabbitMQ CLI tools provide, use the `help` command:
 
-<pre class="lang-powershell">
+```powershell
 # lists commands provided by rabbitmqctl.bat
 rabbitmqctl.bat help
 
@@ -150,13 +150,13 @@ rabbitmq-diagnostics.bat help
 
 # ...you guessed it!
 rabbitmq-plugins.bat help
-</pre>
+```
 
 To learn about a specific command, pass its name as an argument to `help`:
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat help add_user
-</pre>
+```
 
 
 ## <a id="cli-cookie-file-location" class="anchor" href="#cli-cookie-file-location">Cookie File Location</a>
@@ -209,19 +209,19 @@ Note that CLI tools will have to [authenticate to the target RabbitMQ node](#cli
 To stop the broker or check its status, use
 `rabbitmqctl.bat` in `sbin` (as an administrator).
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat stop
-</pre>
+```
 
 ### <a id="status" class="anchor" href="#status">Checking Node Status</a>
 
 The following [CLI command](#cli) runs a basic [health check](./monitoring.html#health-checks)
 and displays some information about the node if it is running.
 
-<pre class="lang-powershell">
+```powershell
 # A basic health check of both the node and CLI tool connectivity/authentication
 rabbitmqctl.bat status
-</pre>
+```
 
 For it to work,
 two conditions must be true:

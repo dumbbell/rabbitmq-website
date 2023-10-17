@@ -175,7 +175,7 @@ All steps covered below are **mandatory** unless otherwise specified.
 Below is shell snippet that performs those steps and assumes that Ubuntu 22.04 is used.
 They are documented in more detail below.
 
-<pre class="lang-bash">
+```bash
 #!/bin/sh
 
 sudo apt-get install curl gnupg apt-transport-https -y
@@ -220,25 +220,25 @@ sudo apt-get install -y erlang-base \
 
 ## Install rabbitmq-server and its dependencies
 sudo apt-get install rabbitmq-server -y --fix-missing
-</pre>
+```
 
 All steps covered below are **mandatory** unless otherwise specified.
 ### Install Essential Dependencies
 
-<pre class="lang-bash">
+```bash
 sudo apt-get update -y
 
 sudo apt-get install curl gnupg -y
-</pre>
+```
 
 ### Enable apt HTTPS Transport
 
 In order for apt to be able to download RabbitMQ and Erlang packages from the Cloudsmith.io mirror or Launchpad,
 the `apt-transport-https` package must be installed:
 
-<pre class="lang-bash">
+```bash
 sudo apt-get install apt-transport-https
-</pre>
+```
 
 ### <a id="cloudsmith-signing-keys" class="anchor" href="#cloudsmith-signing-keys">Add Repository Signing Keys</a>
 
@@ -247,7 +247,7 @@ Cloudsmith signs distributed packages using their own GPG keys, one per reposito
 In order to use the repositories, their signing keys must be added to the system.
 This will enable apt to trust packages signed by that key.
 
-<pre class="lang-bash">
+```bash
 sudo apt-get install curl gnupg apt-transport-https -y
 
 ## Team RabbitMQ's main signing key
@@ -256,7 +256,7 @@ curl -1sLf "https://keys.openpgp.org/vks/v1/by-fingerprint/0A9AF2115F4687BD29803
 curl -1sLf https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-erlang.E495BB49CC4BBE5B.key | sudo gpg --dearmor | sudo tee /usr/share/keyrings/rabbitmq.E495BB49CC4BBE5B.gpg > /dev/null
 ## Community mirror of Cloudsmith: RabbitMQ repository
 curl -1sLf https://github.com/rabbitmq/signing-keys/releases/download/3.0/cloudsmith.rabbitmq-server.9F4587F226208342.key | sudo gpg --dearmor | sudo tee /usr/share/keyrings/rabbitmq.9F4587F226208342.gpg > /dev/null
-</pre>
+```
 
 See the [guide on signatures](signatures.html) to learn more.
 
@@ -269,7 +269,7 @@ must be placed under the `/etc/apt/sources.list.d/` directory.
 The file should have a source (repository) definition line that uses the following
 pattern:
 
-<pre class="lang-ini">
+```ini
 ## Provides modern Erlang/OTP releases from a Cloudsmith mirror
 ##
 deb [signed-by=/usr/share/keyrings/rabbitmq.E495BB49CC4BBE5B.gpg] https://ppa1.novemberain.com/rabbitmq/rabbitmq-erlang/deb/ubuntu $distribution main
@@ -287,7 +287,7 @@ deb-src [signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://pp
 # another mirror for redundancy
 deb [signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://ppa2.novemberain.com/rabbitmq/rabbitmq-server/deb/ubuntu $distribution main
 deb-src [signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://ppa2.novemberain.com/rabbitmq/rabbitmq-server/deb/ubuntu $distribution main
-</pre>
+```
 
 The next couple of sections discusses what distribution and component values
 are supported.
@@ -326,7 +326,7 @@ with the RabbitMQ apt repositories.
 
 To add the apt repository to the source list directory (under `/etc/apt/sources.list.d`), use:
 
-<pre class="lang-bash">
+```bash
 sudo tee /etc/apt/sources.list.d/rabbitmq.list &lt;&lt;EOF
 ## Provides modern Erlang/OTP releases from a Cloudsmith mirror
 ##
@@ -346,13 +346,13 @@ deb-src [signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://pp
 deb [signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://ppa2.novemberain.com/rabbitmq/rabbitmq-server/deb/ubuntu $distribution main
 deb-src [signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://ppa2.novemberain.com/rabbitmq/rabbitmq-server/deb/ubuntu $distribution main
 EOF
-</pre>
+```
 
 where `$distribution` is the name of the Debian or Ubuntu distribution used (see the table above).
 
 For example, on Debian Bullseye and Bookworm it would be
 
-<pre class="lang-bash">
+```bash
 sudo tee /etc/apt/sources.list.d/rabbitmq.list &lt;&lt;EOF
 ## Provides modern Erlang/OTP releases from a Cloudsmith mirror
 ##
@@ -371,19 +371,19 @@ deb-src [signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://pp
 deb [signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://ppa2.novemberain.com/rabbitmq/rabbitmq-server/deb/debian bullseye main
 deb-src [signed-by=/usr/share/keyrings/rabbitmq.9F4587F226208342.gpg] https://ppa2.novemberain.com/rabbitmq/rabbitmq-server/deb/debian bullseye main
 EOF
-</pre>
+```
 
 #### Install Packages
 
 After updating the list of `apt` sources it is necessary to run `apt-get update`:
 
-<pre class="lang-bash">
+```bash
 sudo apt-get update -y
-</pre>
+```
 
 Then install the package with
 
-<pre class="lang-bash">
+```bash
 ## Install Erlang packages
 sudo apt-get install -y erlang-base \
                         erlang-asn1 erlang-crypto erlang-eldap erlang-ftp erlang-inets \
@@ -393,7 +393,7 @@ sudo apt-get install -y erlang-base \
 
 ## Install rabbitmq-server and its dependencies
 sudo apt-get install rabbitmq-server -y --fix-missing
-</pre>
+```
 
 
 
@@ -409,62 +409,62 @@ to have a way to indicate what repository should be preferred. It may also be de
 Package pinning is configured with a file placed under the `/etc/apt/preferences.d/` directory, e.g. `/etc/apt/preferences.d/erlang`.
 After updating apt preferences it is necessary to run `apt-get update`:
 
-<pre class="lang-bash">
+```bash
 sudo apt-get update -y
-</pre>
+```
 
 The following preference file example will configure `apt` to install `erlang-*` packages from the Cloudsmith
 mirror used in the examples above:
 
-<pre class="lang-ini">
+```ini
 # /etc/apt/preferences.d/erlang
 Package: erlang*
 Pin: origin ppa1.novemberain.com
 # Note: priority of 1001 (greater than 1000) allows for downgrading.
 # To make package downgrading impossible, use a value of 999
 Pin-Priority: 1001
-</pre>
+```
 
 The following is similar to the example above but prefers Launchpad:
 
-<pre class="lang-ini">
+```ini
 # /etc/apt/preferences.d/erlang
 Package: erlang*
 Pin: origin ppa.launchpad.net
 # Note: priority of 1001 (greater than 1000) allows for downgrading.
 # To make package downgrading impossible, use a value of 999
 Pin-Priority: 1001
-</pre>
+```
 
 Effective package pinning policy can be verified with
 
-<pre class="lang-bash">
+```bash
 sudo apt-cache policy
-</pre>
+```
 
 The following preference file example will pin all `erlang-*` packages to `25.3`
 (assuming [package epoch](https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version) for the package is 1):
 
-<pre class="lang-ini">
+```ini
 # /etc/apt/preferences.d/erlang
 Package: erlang*
 Pin: version 1:25.3.2.5-1
 # Note: priority of 1001 (greater than 1000) allows for downgrading.
 # To make package downgrading impossible, use a value of 999
 Pin-Priority: 1001
-</pre>
+```
 
 The following preference file example will pin `rabbitmq-server` package to `&version-server;`
 (assuming [package epoch](https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version) for the package is 1):
 
-<pre class="lang-ini">
+```ini
 # /etc/apt/preferences.d/rabbitmq
 Package: rabbitmq-server
 Pin: version 1:&version-server;-&serverDebMinorVersion;
 # Note: priority of 1001 (greater than 1000) allows for downgrading.
 # To make package downgrading impossible, use a value of 999
 Pin-Priority: 1001
-</pre>
+```
 
 
 ## <a id="manual-installation" class="anchor" href="#manual-installation">Manual Installation with Dpkg</a>
@@ -497,7 +497,7 @@ When installing manually with `dpkg`, it is necessary to install package depende
 
 Here's an example that does that, installs `wget`, downloads the RabbitMQ package and installs it:
 
-<pre class="lang-bash">
+```bash
 # sync package metadata
 sudo apt-get update
 # install dependencies manually
@@ -511,7 +511,7 @@ wget https://github.com/rabbitmq/rabbitmq-server/releases/download/&version-serv
 sudo dpkg -i rabbitmq-server_&version-server;-&serverDebMinorVersion;_all.deb
 
 rm rabbitmq-server_&version-server;-&serverDebMinorVersion;_all.deb
-</pre>
+```
 
 Installation via [apt repositories](#apt) is recommended
 over downloading the package directly and installing via `dpkg -i`. When the RabbitMQ
@@ -535,9 +535,9 @@ RabbitMQ server package is installed. It will run as a non-privileged user `rabb
 As an administrator, start and stop the
 server as usual for Debian-based systems:
 
-<pre class="lang-bash">
+```bash
 systemctl start rabbitmq-server
-</pre>
+```
 
 
 ## <a id="configuration" class="anchor" href="#configuration">Configuring RabbitMQ</a>
@@ -594,10 +594,10 @@ On distributions that use systemd, the OS limits are controlled via
 a configuration file at `/etc/systemd/system/rabbitmq-server.service.d/limits.conf`.
 For example, to set the max open file handle limit (`nofile`) to `64000`:
 
-<pre class="lang-ini">
+```ini
 [Service]
 LimitNOFILE=64000
-</pre>
+```
 
 See [systemd documentation](https://www.freedesktop.org/software/systemd/man/systemd.exec.html) to learn about
 the supported limits and other directives.
@@ -607,7 +607,7 @@ the supported limits and other directives.
 To configure kernel limits for Docker contains, use the `"default-ulimits"` key in [Docker daemon configuration file](https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file).
 The file has to be installed on Docker hosts at `/etc/docker/daemon.json`:
 
-<pre class="lang-json">
+```json
 {
   "default-ulimits": {
     "nofile": {
@@ -617,22 +617,23 @@ The file has to be installed on Docker hosts at `/etc/docker/daemon.json`:
     }
   }
 }
-</pre>
+```
 
 ### <a id="verifying-limits" class="anchor" href="#verifying-limits">Verifying the Limit</a>
 
 [RabbitMQ management UI](management.html) displays the number of file descriptors available
 for it to use on the Overview tab.
 
-<pre class="lang-bash">rabbitmq-diagnostics status</pre>
+```bash
+rabbitmq-diagnostics status```
 
 includes the same value.
 
 The following command
 
-<pre  class="lang-bash">
+```bash
 cat /proc/$RABBITMQ_BEAM_PROCESS_PID/limits
-</pre>
+```
 
 can be used to display effective limits of a running process. `$RABBITMQ_BEAM_PROCESS_PID`
 is the OS PID of the Erlang VM running RabbitMQ, as returned by `rabbitmq-diagnostics status`.
@@ -643,25 +644,25 @@ is the OS PID of the Erlang VM running RabbitMQ, as returned by `rabbitmq-diagno
 To start and stop the server, use the `systemctl` tool.
 The service name is `rabbitmq-server`:
 
-<pre class="lang-bash">
+```bash
 # stop the local node
 sudo systemctl stop rabbitmq-server
 
 # start it back
 sudo systemctl start rabbitmq-server
-</pre>
+```
 
 `systemctl status rabbitmq-server` will report service status
 as observed by systemd (or similar service manager):
 
-<pre class="lang-bash">
+```bash
 # check on service status as observed by service manager
 sudo systemctl status rabbitmq-server
-</pre>
+```
 
 It will produce output similar to this:
 
-<pre class="lang-ini">
+```ini
 Redirecting to /bin/systemctl status rabbitmq-server.service
 ● rabbitmq-server.service - RabbitMQ broker
    Loaded: loaded (/usr/lib/systemd/system/rabbitmq-server.service; enabled; vendor preset: disabled)
@@ -687,12 +688,12 @@ Dec 26 10:21:30 localhost.localdomain rabbitmq-server[957]: Starting broker...
 Dec 26 10:21:32 localhost.localdomain rabbitmq-server[957]: systemd unit for activation check: "rabbitmq-server.service"
 Dec 26 10:21:32 localhost.localdomain systemd[1]: Started RabbitMQ broker.
 Dec 26 10:21:32 localhost.localdomain rabbitmq-server[957]: completed with 6 plugins.
-</pre>
+```
 
 `rabbitmqctl`, `rabbitmq-diagnostics`,
 and other [CLI tools](cli.html) will be available in `PATH` and can be invoked by a `sudo`-enabled user:
 
-<pre class="lang-bash">
+```bash
 # checks if the local node is running and CLI tools can successfully authenticate with it
 sudo rabbitmq-diagnostics ping
 
@@ -705,7 +706,7 @@ sudo rabbitmq-diagnostics cluster_status
 
 # prints effective node configuration
 sudo rabbitmq-diagnostics environment
-</pre>
+```
 
 All `rabbitmqctl` commands will report an error if no node is running.
 See the [CLI tools](cli.html) and [Monitoring](monitoring.html) guides to learn more.
@@ -721,20 +722,20 @@ defaults to `/var/log/rabbitmq` when RabbitMQ is installed via a Linux package m
 Assuming a `systemd`-based distribution, system service logs can be
 inspected using
 
-<pre class="lang-bash">
+```bash
 journalctl --system
-</pre>
+```
 
 which requires superuser privileges.
 Its output can be filtered to narrow it down to RabbitMQ-specific entries:
 
-<pre class="lang-bash">
+```bash
 sudo journalctl --system | grep rabbitmq
-</pre>
+```
 
 The output will look similar to this:
 
-<pre class="lang-ini">
+```ini
 Dec 26 11:03:04 localhost rabbitmq-server[968]: ##  ##
 Dec 26 11:03:04 localhost rabbitmq-server[968]: ##  ##      RabbitMQ 3.12.0. Copyright (c) 2007-2023 VMware, Inc. or its affiliates.
 Dec 26 11:03:04 localhost rabbitmq-server[968]: ##########  Licensed under the MPL 2.0. Website: https://www.rabbitmq.com/
@@ -744,7 +745,7 @@ Dec 26 11:03:04 localhost rabbitmq-server[968]: /var/log/rabbitmq/rabbit@localho
 Dec 26 11:03:04 localhost rabbitmq-server[968]: Starting broker...
 Dec 26 11:03:05 localhost rabbitmq-server[968]: systemd unit for activation check: "rabbitmq-server.service"
 Dec 26 11:03:06 localhost rabbitmq-server[968]: completed with 6 plugins.
-</pre>
+```
 
 ### Log Rotation
 
@@ -791,24 +792,24 @@ In order to use the repository, it is necessary to
 
 ### Install Essential Dependencies
 
-<pre class="lang-bash">
+```bash
 sudo apt-get update -y
 
 sudo apt-get install curl gnupg -y
-</pre>
+```
 
 ### <a id="erlang-apt-repo-signing-key" class="anchor" href="#erlang-apt-repo-signing-key">Add Repository Signing Key</a>
 
 In order to use the repository, add [RabbitMQ signing key](signatures.html) to the system.
 This will enable apt to trust packages signed by that key.
 
-<pre class="lang-bash">
+```bash
 # primary RabbitMQ signing key
 curl -1sLf "https://github.com/rabbitmq/signing-keys/releases/download/3.0/rabbitmq-release-signing-key.asc" | sudo gpg --dearmor | sudo tee /usr/share/keyrings/com.github.rabbitmq.signing.gpg > /dev/null
 
 # Launchpad PPA signing key for apt
 curl -1sLf "https://keyserver.ubuntu.com/pks/lookup?op=get&amp;search=0xf77f1eda57ebb1cc" | sudo gpg --dearmor | sudo tee /usr/share/keyrings/net.launchpad.ppa.rabbitmq.erlang.gpg > /dev/null
-</pre>
+```
 
 See the [guide on signatures](signatures.html) to learn more.
 
@@ -817,9 +818,9 @@ See the [guide on signatures](signatures.html) to learn more.
 In order for apt to be able to download RabbitMQ and Erlang packages from the Cloudsmith.io mirror or Launchpad,
 the `apt-transport-https` package must be installed:
 
-<pre class="lang-bash">
+```bash
 sudo apt-get install apt-transport-https
-</pre>
+```
 
 ### <a id="erlang-source-list-file" class="anchor" href="#erlang-source-list-file">Add a Source List File</a>
 
@@ -830,14 +831,14 @@ must be placed under the `/etc/apt/sources.list.d/` directory.
 The file should have a source (repository) definition line that uses the following
 pattern:
 
-<pre class="lang-bash">
+```bash
 # This Launchpad PPA repository provides Erlang packages produced by the RabbitMQ team
 #
 # Replace $distribution with the name of the Ubuntu release used. On Debian,
 # use "bionic"
 deb [signed-by=/usr/share/keyrings/net.launchpad.ppa.rabbitmq.erlang.gpg] http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu $distribution main
 deb-src [signed-by=/usr/share/keyrings/net.launchpad.ppa.rabbitmq.erlang.gpg] http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu $distribution main
-</pre>
+```
 
 The next section discusses what distribution values are supported by the Launchpad PPA.
 #### Distribution
@@ -875,13 +876,13 @@ with the Launchpad repository.
 
 After updating the list of `apt` sources it is necessary to run `apt-get update`:
 
-<pre class="lang-bash">
+```bash
 sudo apt-get update -y
-</pre>
+```
 
 Then packages can be installed just like with the standard Debian repositories:
 
-<pre class="lang-bash">
+```bash
 # This is recommended. Metapackages such as erlang and erlang-nox must only be used
 # with apt version pinning. They do not pin their dependency versions.
 sudo apt-get install -y erlang-base \
@@ -889,4 +890,4 @@ sudo apt-get install -y erlang-base \
                         erlang-mnesia erlang-os-mon erlang-parsetools erlang-public-key \
                         erlang-runtime-tools erlang-snmp erlang-ssl \
                         erlang-syntax-tools erlang-tftp erlang-tools erlang-xmerl
-</pre>
+```

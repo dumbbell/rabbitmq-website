@@ -76,7 +76,7 @@ to allow arbitrary messages to be sent from the command line. This
 program will schedule tasks to our work queue, so let's name it
 `new_task.go`:
 
-<pre class="lang-go">
+```go
 ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 defer cancel()
 
@@ -93,11 +93,11 @@ err = ch.PublishWithContext(ctx,
   })
 failOnError(err, "Failed to publish a message")
 log.Printf(" [x] Sent %s", body)
-</pre>
+```
 
 Here is the `bodyFrom` function:
 
-<pre class="lang-go">
+```go
 func bodyFrom(args []string) string {
 	var s string
 	if (len(args) &lt; 2) || os.Args[1] == "" {
@@ -107,13 +107,13 @@ func bodyFrom(args []string) string {
 	}
 	return s
 }
-</pre>
+```
 
 Our old _receive.go_ script also requires some changes: it needs to
 fake a second of work for every dot in the message body. It will pop
 messages from the queue and perform the task, so let's call it `worker.go`:
 
-<pre class="lang-go">
+```go
 msgs, err := ch.Consume(
   q.Name, // queue
   "",     // consumer
@@ -139,20 +139,20 @@ go func() {
 
 log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
 &lt;-forever
-</pre>
+```
 
 Note that our fake task simulates execution time.
 
 Run them as in tutorial one:
 
-<pre class="lang-bash">
+```bash
 # shell 1
 go run worker.go
-</pre>
-<pre class="lang-bash">
+```
+```bash
 # shell 2
 go run new_task.go
-</pre>
+```
 
 Round-robin dispatching
 -----------------------
@@ -167,48 +167,48 @@ will both get messages from the queue, but how exactly? Let's see.
 You need three consoles open. Two will run the `worker.go`
 script. These consoles will be our two consumers - C1 and C2.
 
-<pre class="lang-bash">
+```bash
 # shell 1
 go run worker.go
 # => [*] Waiting for messages. To exit press CTRL+C
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 # shell 2
 go run worker.go
 # => [*] Waiting for messages. To exit press CTRL+C
-</pre>
+```
 
 In the third one we'll publish new tasks. Once you've started
 the consumers you can publish a few messages:
 
-<pre class="lang-bash">
+```bash
 # shell 3
 go run new_task.go First message.
 go run new_task.go Second message..
 go run new_task.go Third message...
 go run new_task.go Fourth message....
 go run new_task.go Fifth message.....
-</pre>
+```
 
 Let's see what is delivered to our workers:
 
-<pre class="lang-bash">
+```bash
 # shell 1
 go run worker.go
 # => [*] Waiting for messages. To exit press CTRL+C
 # => [x] Received 'First message.'
 # => [x] Received 'Third message...'
 # => [x] Received 'Fifth message.....'
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 # shell 2
 go run worker.go
 # => [*] Waiting for messages. To exit press CTRL+C
 # => [x] Received 'Second message..'
 # => [x] Received 'Fourth message....'
-</pre>
+```
 
 By default, RabbitMQ will send each message to the next consumer,
 in sequence. On average every consumer will get the same number of
@@ -251,7 +251,7 @@ a `false` for the "auto-ack" argument and then send a proper acknowledgment
 from the worker with `d.Ack(false)` (this acknowledges a single delivery),
 once we're done with a task.
 
-<pre class="lang-go">
+```go
 msgs, err := ch.Consume(
   q.Name, // queue
   "",     // consumer
@@ -278,7 +278,7 @@ go func() {
 
 log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
 &lt;-forever
-</pre>
+```
 
 Using this code, you can ensure that even if you terminate a worker using
 CTRL+C while it was processing a message, nothing is lost. Soon
@@ -300,14 +300,14 @@ to learn more.
 > In order to debug this kind of mistake you can use `rabbitmqctl`
 > to print the `messages_unacknowledged` field:
 >
-> <pre class="lang-bash">
+> ```bash
 > sudo rabbitmqctl list_queues name messages_ready messages_unacknowledged
-> </pre>
+> ```
 >
 > On Windows, drop the sudo:
-> <pre class="lang-bash">
+> ```bash
 > rabbitmqctl.bat list_queues name messages_ready messages_unacknowledged
-> </pre>
+> ```
 
 
 Message durability
@@ -324,7 +324,7 @@ durable.
 First, we need to make sure that the queue will survive a RabbitMQ node restart.
 In order to do so, we need to declare it as _durable_:
 
-<pre class="lang-go">
+```go
 q, err := ch.QueueDeclare(
   "hello",      // name
   true,         // durable
@@ -334,7 +334,7 @@ q, err := ch.QueueDeclare(
   nil,          // arguments
 )
 failOnError(err, "Failed to declare a queue")
-</pre>
+```
 
 Although this command is correct by itself, it won't work in our present
 setup. That's because we've already defined a queue called `hello`
@@ -343,7 +343,7 @@ with different parameters and will return an error to any program
 that tries to do that. But there is a quick workaround - let's declare
 a queue with different name, for example `task_queue`:
 
-<pre class="lang-go">
+```go
 q, err := ch.QueueDeclare(
   "task_queue", // name
   true,         // durable
@@ -353,7 +353,7 @@ q, err := ch.QueueDeclare(
   nil,          // arguments
 )
 failOnError(err, "Failed to declare a queue")
-</pre>
+```
 
 This `durable` option change needs to be applied to both the producer
 and consumer code.
@@ -362,7 +362,7 @@ At this point we're sure that the `task_queue` queue won't be lost
 even if RabbitMQ restarts. Now we need to mark our messages as persistent
 - by using the `amqp.Persistent` option `amqp.Publishing` takes.
 
-<pre class="lang-go">
+```go
 err = ch.PublishWithContext(ctx,
   "",           // exchange
   q.Name,       // routing key
@@ -373,7 +373,7 @@ err = ch.PublishWithContext(ctx,
     ContentType:  "text/plain",
     Body:         []byte(body),
 })
-</pre>
+```
 
 > #### Note on message persistence
 >
@@ -433,14 +433,14 @@ one message to a worker at a time. Or, in other words, don't dispatch
 a new message to a worker until it has processed and acknowledged the
 previous one. Instead, it will dispatch it to the next worker that is not still busy.
 
-<pre class="lang-go">
+```go
 err = ch.Qos(
   1,     // prefetch count
   0,     // prefetch size
   false, // global
 )
 failOnError(err, "Failed to set QoS")
-</pre>
+```
 
 > #### Note about queue size
 >
@@ -452,7 +452,7 @@ Putting it all together
 
 Final code of our `new_task.go` class:
 
-<pre class="lang-go">
+```go
 package main
 
 import (
@@ -517,13 +517,13 @@ func bodyFrom(args []string) string {
         }
         return s
 }
-</pre>
+```
 
 [(new_task.go source)](http://github.com/rabbitmq/rabbitmq-tutorials/blob/main/go/new_task.go)
 
 And our `worker.go`:
 
-<pre class="lang-go">
+```go
 package main
 
 import (
@@ -593,7 +593,7 @@ func main() {
         log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
         &lt;-forever
 }
-</pre>
+```
 
 [(worker.go source)](http://github.com/rabbitmq/rabbitmq-tutorials/blob/main/go/worker.go)
 

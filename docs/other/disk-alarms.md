@@ -53,17 +53,17 @@ alarm should be raised or cleared.
 
 Monitoring will begin on node start. It will leave a [log entry](./logging.html) like this:
 
-<pre class="lang-ini">
+```ini
 2019-04-01 12:02:11.564 [info] &lt;0.329.0&gt; Enabling free disk space monitoring
 2019-04-01 12:02:11.564 [info] &lt;0.329.0&gt; Disk free limit set to 950MB
-</pre>
+```
 
 Free disk space monitoring will be deactivated on unrecognised platforms, causing an
 entry such as the one below:
 
-<pre class="lang-ini">
+```ini
 2019-04-01 11:04:54.002 [info] &lt;0.329.0&gt; Disabling disk free space monitoring
-</pre>
+```
 
 When running RabbitMQ in a cluster, the disk alarm is cluster-wide; if
 one node goes under the limit then all nodes will block incoming messages.
@@ -96,23 +96,23 @@ required to be free on the database partition (see the description of
 [file locations](./relocate.html) for the default database location).
 This configuration file sets the disk free space limit to 1GB:
 
-<pre class="lang-ini">
+```ini
 disk_free_limit.absolute = 1000000000
-</pre>
+```
 
 Or you can use memory units (KB, MB GB etc.) like this:
 
-<pre class="lang-ini">
+```ini
 disk_free_limit.absolute = 1GB
-</pre>
+```
 
 It is also possible to set a free space limit relative to the RAM in the machine.
 This configuration file sets the disk free space limit to the same
 as the amount of RAM on the machine:
 
-<pre class="lang-ini">
+```ini
 disk_free_limit.relative = 1.0
-</pre>
+```
 
 The limit can be changed while the broker is running
 using the `rabbitmqctl set_disk_free_limit` command

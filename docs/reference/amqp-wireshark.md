@@ -101,7 +101,7 @@ by RabbitMQ and restrict the list to RSA only.
 
 In classic configuration format this would look something like this:
 
-<pre class="lang-erlang">
+```erlang
 [
  {rabbit, [
            {ssl_options, [{ciphers, [{rsa,aes_256_cbc,sha256},
@@ -113,7 +113,7 @@ In classic configuration format this would look something like this:
                          ]}
           ]}
 ].
-</pre>
+```
 
 Also, you must supply Wireshark with the private key used to
 encrypt the data. If a mutual authentication is used, you need to

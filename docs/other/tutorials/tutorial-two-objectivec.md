@@ -59,7 +59,7 @@ to allow an arbitrary string to be sent as a method parameter. This
 method will schedule tasks to our work queue, so let's rename it to `newTask`.
 The implementation remains the same apart from the new parameter:
 
-<pre class="lang-objectivec">
+```objectivec
 - (void)newTask:(NSString *)msg {
     NSLog(@"Attempting to connect to local RabbitMQ broker");
     RMQConnection *conn = [[RMQConnection alloc] initWithDelegate:[RMQConnectionDelegateLogger new]];
@@ -75,14 +75,14 @@ The implementation remains the same apart from the new parameter:
 
     [conn close];
 }
-</pre>
+```
 
 Our old _receive_ method requires some bigger changes: it needs to
 fake a second of work for every dot in the message body. It will help us
 understand what's going on if each worker has a name, and each will need to pop
 messages from the queue and perform the task, so let's call it `workerNamed:`:
 
-<pre class="lang-objectivec">
+```objectivec
 [q subscribe:^(RMQMessage * _Nonnull message) {
     NSString *messageText = [[NSString alloc] initWithData:message.body encoding:NSUTF8StringEncoding];
     NSLog(@"%@: Received %@", name, messageText);
@@ -91,19 +91,19 @@ messages from the queue and perform the task, so let's call it `workerNamed:`:
     NSLog(@"%@: Sleeping for %u seconds", name, sleepTime);
     sleep(sleepTime);
 }];
-</pre>
+```
 
 Note that our fake task simulates execution time.
 
 Run them from `viewDidLoad` as in tutorial one:
 
-<pre class="lang-objectivec">
+```objectivec
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self newTask:@"Hello World..."];
     [self workerNamed:@"Flopsy"];
 }
-</pre>
+```
 
 The log output should indicate that Flopsy is sleeping for three seconds.
 
@@ -119,7 +119,7 @@ will both get messages from the queue, but how exactly? Let's see.
 
 Change viewDidLoad to send more messages and start two workers:
 
-<pre class="lang-objectivec">
+```objectivec
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self workerNamed:@"Jack"];
@@ -130,11 +130,11 @@ Change viewDidLoad to send more messages and start two workers:
     [self newTask:@"None"];
     [self newTask:@"Two..dots"];
 }
-</pre>
+```
 
 Let's see what is delivered to our workers:
 
-<pre class="lang-bash">
+```bash
 # => Jack: Waiting for messages
 # => Jill: Waiting for messages
 # => Sent Hello World...
@@ -152,7 +152,7 @@ Let's see what is delivered to our workers:
 # => Jack: Sleeping for 0 seconds
 # => Jack: Received Two..dots
 # => Jack: Sleeping for 2 seconds
-</pre>
+```
 
 By default, RabbitMQ will send each message to the next consumer,
 in sequence. On average every consumer will get the same number of
@@ -195,7 +195,7 @@ AMQ protocol (the `AMQBasicConsumeNoAck` option is automatically sent by
 explicitly setting `AMQBasicConsumeNoOptions` and sending a proper
 acknowledgment from the worker once we're done with a task.
 
-<pre class="lang-objectivec">
+```objectivec
 RMQBasicConsumeOptions manualAck = RMQBasicConsumeNoOptions;
 [q subscribe:manualAck handler:^(RMQMessage * _Nonnull message) {
     NSString *messageText = [[NSString alloc] initWithData:message.body encoding:NSUTF8StringEncoding];
@@ -207,7 +207,7 @@ RMQBasicConsumeOptions manualAck = RMQBasicConsumeNoOptions;
 
     [ch ack:message.deliveryTag];
 }];
-</pre>
+```
 
 Using this code we can be sure that even if a worker dies while it was
 processing a message, nothing will be lost. Soon after the worker dies all
@@ -229,14 +229,14 @@ to learn more.
 > In order to debug this kind of mistake you can use `rabbitmqctl`
 > to print the `messages_unacknowledged` field:
 >
-> <pre class="lang-bash">
+> ```bash
 > sudo rabbitmqctl list_queues name messages_ready messages_unacknowledged
-> </pre>
+> ```
 >
 > On Windows, drop the sudo:
-> <pre class="lang-bash">
+> ```bash
 > rabbitmqctl.bat list_queues name messages_ready messages_unacknowledged
-> </pre>
+> ```
 
 
 Message durability
@@ -253,9 +253,9 @@ durable.
 First, we need to make sure that the queue will survive a RabbitMQ node restart.
 In order to do so, we need to declare it as _durable_:
 
-<pre class="lang-objectivec">
+```objectivec
 RMQQueue *q = [ch queue:@"hello" options:AMQQueueDeclareDurable];
-</pre>
+```
 
 Although this command is correct by itself, it won't work in our present
 setup. That's because we've already defined a queue called `hello`
@@ -264,9 +264,9 @@ with different parameters and will return an error to any program
 that tries to do that. But there is a quick workaround - let's declare
 a queue with different name, for example `task_queue`:
 
-<pre class="lang-objectivec">
+```objectivec
 RMQQueue *q = [ch queue:@"task_queue" options:AMQQueueDeclareDurable];
-</pre>
+```
 
 This `options:AMQQueueDeclareDurable` change needs to be applied to both the
 producer and consumer code.
@@ -275,9 +275,9 @@ At this point we're sure that the `task_queue` queue won't be lost
 even if RabbitMQ restarts. Now we need to mark our messages as persistent
 - by using the `persistent` option.
 
-<pre class="lang-objectivec">
+```objectivec
 [ch.defaultExchange publish:msgData routingKey:q.name persistent:YES];
-</pre>
+```
 
 > #### Note on message persistence
 >
@@ -337,9 +337,9 @@ one message to a worker at a time. Or, in other words, don't dispatch
 a new message to a worker until it has processed and acknowledged the
 previous one. Instead, it will dispatch it to the next worker that is not still busy.
 
-<pre class="lang-objectivec">
+```objectivec
 [ch basicQos:@1 global:NO];
-</pre>
+```
 
 > #### Note about queue size
 >
@@ -351,7 +351,7 @@ Putting it all together
 
 Final code of our `newTask:` method:
 
-<pre class="lang-objectivec">
+```objectivec
 - (void)newTask:(NSString *)msg {
     RMQConnection *conn = [[RMQConnection alloc] initWithDelegate:[RMQConnectionDelegateLogger new]];
     [conn start];
@@ -366,11 +366,11 @@ Final code of our `newTask:` method:
 
     [conn close];
 }
-</pre>
+```
 
 And our `workerNamed:`:
 
-<pre class="lang-objectivec">
+```objectivec
 - (void)workerNamed:(NSString *)name {
     RMQConnection *conn = [[RMQConnection alloc] initWithDelegate:[RMQConnectionDelegateLogger new]];
     [conn start];
@@ -394,7 +394,7 @@ And our `workerNamed:`:
         [ch ack:message.deliveryTag];
     }];
 }
-</pre>
+```
 
 [(source)](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/objective-c/tutorial2/tutorial2/ViewController.m)
 

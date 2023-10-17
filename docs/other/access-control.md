@@ -142,14 +142,14 @@ from a remote host by setting the
 A minimalistic [RabbitMQ config file](configure.html)
 which allows remote connections for <code>guest</code> looks like so:
 
-<pre class="lang-ini">
+```ini
 # DANGER ZONE!
 #
 # allowing remote connections for default user is highly discouraged
 # as it dramatically decreases the security of the system. Delete the user
 # instead and create a new one with generated secure credentials.
 loopback_users = none
-</pre>
+```
 
 
 ## <a id="user-management" class="anchor" href="#user-management">Managing Users and Permissions</a>
@@ -183,108 +183,108 @@ depending on the programming language used.
 
 To add a user, use `rabbitmqctl add_user`. It has multiple ways of specifying a [password](./passwords.html):
 
-<pre class="lang-bash">
+```bash
 # will prompt for password, only use this option interactively
 rabbitmqctl add_user "username"
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 # Password is provided via standard input.
 # Note that certain characters such as &#36;, &amp;, &#38;, &#35;, and so on must be escaped to avoid
 # special interpretation by the shell.
 echo '2a55f70a841f18b97c3a7db939b7adc9e34a0f1b' | rabbitmqctl add_user 'username'
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 # Password is provided as a command line argument.
 # Note that certain characters such as &#36;, &amp;, &#38;, &#35;, and so on must be escaped to avoid
 # special interpretation by the shell.
 rabbitmqctl add_user 'username' '2a55f70a841f18b97c3a7db939b7adc9e34a0f1b'
-</pre>
+```
 
 On Windows, `rabbitmqctl` becomes `rabbitmqctl.bat` and shell escaping would be different:
 
-<pre class="lang-powershell">
+```powershell
 # password is provided as a command line argument
 rabbitmqctl.bat add_user 'username' '9a55f70a841f18b97c3a7db939b7adc9e34a0f1d'
-</pre>
+```
 
 ### Listing Users
 
 To list users in a cluster, use `rabbitmqctl list_users`:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_users
-</pre>
+```
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat list_users
-</pre>
+```
 
 The output can be changed to be JSON:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_users --formatter=json
-</pre>
+```
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat list_users --formatter=json
-</pre>
+```
 
 ### Deleting a User
 
 To delete a user, use `rabbitmqctl delete_user`:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl delete_user 'username'
-</pre>
+```
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat delete_user 'username'
-</pre>
+```
 
 ### Granting Permissions to a User
 
 To grant [permissions](#authorisation) to a user in a [virtual host](./vhosts.html), use `rabbitmqctl set_permissions`:
 
-<pre class="lang-bash">
+```bash
 # First ".*" for configure permission on every entity
 # Second ".*" for write permission on every entity
 # Third ".*" for read permission on every entity
 rabbitmqctl set_permissions -p "custom-vhost" "username" ".*" ".*" ".*"
-</pre>
+```
 
-<pre class="lang-powershell">
+```powershell
 # First ".*" for configure permission on every entity
 # Second ".*" for write permission on every entity
 # Third ".*" for read permission on every entity
 rabbitmqctl.bat set_permissions -p 'custom-vhost' 'username' '.*' '.*' '.*'
-</pre>
+```
 
 ### Clearing Permissions of a User in a Virtual Host
 
 To revoke [permissions](#authorisation) from a user in a [virtual host](./vhosts.html), use `rabbitmqctl clear_permissions`:
 
-<pre class="lang-bash">
+```bash
 # Revokes permissions in a virtual host
 rabbitmqctl clear_permissions -p "custom-vhost" "username"
-</pre>
+```
 
-<pre class="lang-powershell">
+```powershell
 # Revokes permissions in a virtual host
 rabbitmqctl.bat clear_permissions -p 'custom-vhost' 'username'
-</pre>
+```
 
 ### Operations on Multiple Virtual Hosts
 
 Every `rabbitmqctl` permission management operation is scoped to a single virtual host.
 Bulk operations have to be scripted, with the list of virtual hosts coming from `rabbitmqctl list_vhosts --silent`:
 
-<pre class="lang-bash">
+```bash
 # Assumes a Linux shell.
 # Grants a user permissions to all virtual hosts.
 for v in $(rabbitmqctl list_vhosts --silent); do rabbitmqctl set_permissions -p $v "a-user" ".*" ".*" ".*"; done
-</pre>
+```
 
 
 ## <a id="seeding" class="anchor" href="#seeding">Seeding (Pre-creating) Users and Permissions</a>
@@ -325,13 +325,13 @@ first boot.
 
 The settings are:
 
-<pre class="lang-ini">
+```ini
 # default is "guest", and its access is limited to localhost only.
 # See https://www.rabbitmq.com/access-control.html#default-state
 default_user = a-user
 # default is "guest"
 default_pass = 768a852ed69ce916fa7faa278c962de3e4275e5f
-</pre>
+```
 
 As with all values in [`rabbitmq.conf`](./configure.html#config-file), the `#` character
 starts a comment so this character must be avoided in generated credentials.
@@ -575,7 +575,7 @@ backend for authorisation).
 The following example configures RabbitMQ to use the internal backend
 only (and is the default):
 
-<pre class="lang-ini">
+```ini
 # rabbitmq.conf
 #
 # 1 here is a backend name. It can be anything.
@@ -584,7 +584,7 @@ only (and is the default):
 #
 # "internal" is an alias for rabbit_auth_backend_internal
 auth_backends.1 = internal
-</pre>
+```
 
 The example above uses an alias, <code>internal</code> for <code>rabbit_auth_backend_internal</code>.
 The following aliases are available:
@@ -598,33 +598,33 @@ The following aliases are available:
 Some plugins do not currently have a shortcut. In this case, a full module (not the name of the plugin!) must
 be used:
 
-<pre class="lang-ini">
+```ini
 # note that the module name begins with a "rabbit_", not "rabbitmq_", like in the name
 # of the plugin
 auth_backends.1 = rabbit_auth_backend_oauth2
-</pre>
+```
 
 When using third party plugins, providing a full module name is necessary.
 
 The following example configures RabbitMQ to use the [LDAP backend](./ldap.html)
 for both authentication and authorisation. Internal database will not be consulted:
 
-<pre class="lang-ini">
+```ini
 auth_backends.1 = ldap
-</pre>
+```
 
 This will check LDAP first, and then fall back to the internal
 database if the user cannot be authenticated through LDAP:
 
-<pre class="lang-ini">
+```ini
 auth_backends.1 = ldap
 auth_backends.2 = internal
-</pre>
+```
 
 Same as above but will fall back to the [HTTP backend](https://github.com/rabbitmq/rabbitmq-auth-backend-http)
 instead:
 
-<pre class="lang-ini">
+```ini
 # rabbitmq.conf
 #
 auth_backends.1 = ldap
@@ -636,28 +636,28 @@ auth_http.user_path = http://my-authenticator-app/auth/user
 auth_http.vhost_path = http://my-authenticator-app/auth/vhost
 auth_http.resource_path = http://my-authenticator-app/auth/resource
 auth_http.topic_path = http://my-authenticator-app/auth/topic
-</pre>
+```
 
 The following example configures RabbitMQ to use the internal
 database for authentication and the [source IP range backend](https://github.com/gotthardp/rabbitmq-auth-backend-ip-range) for authorisation:
 
-<pre class="lang-ini">
+```ini
 # rabbitmq.conf
 #
 auth_backends.1.authn = internal
 # uses module name because this backend is from a 3rd party
 auth_backends.1.authz = rabbit_auth_backend_ip_range
-</pre>
+```
 
 The following example configures RabbitMQ to use the [LDAP backend](./ldap.html)
 for authentication and the internal backend for authorisation:
 
-<pre class="lang-ini">
+```ini
 # rabbitmq.conf
 #
 auth_backends.1.authn = ldap
 auth_backends.1.authz = internal
-</pre>
+```
 
 The example below is fairly advanced. It will check LDAP
 first. If the user is found in LDAP then the password will be
@@ -667,13 +667,13 @@ LDAP must exist in the internal database as well, but do not
 need a password there). If the user is not found in LDAP then
 a second attempt is made using only the internal database:
 
-<pre class="lang-ini">
+```ini
 # rabbitmq.conf
 #
 auth_backends.1.authn = ldap
 auth_backends.1.authz = internal
 auth_backends.2       = internal
-</pre>
+```
 
 
 ## <a id="mechanisms" class="anchor" href="#mechanisms">Authentication Mechanisms</a>
@@ -791,12 +791,12 @@ preference order for network connections.
 [Server logs](./logging.html) will contain entries about failed authentication
 attempts:
 
-<pre class="lang-ini">
+```ini
 2019-03-25 12:28:19.047 [info] &lt;0.1613.0&gt; accepting AMQP connection &lt;0.1613.0&gt; (127.0.0.1:63839 -&gt; 127.0.0.1:5672)
 2019-03-25 12:28:19.056 [error] &lt;0.1613.0&gt; Error on AMQP connection &lt;0.1613.0&gt; (127.0.0.1:63839 -&gt; 127.0.0.1:5672, state: starting):
 PLAIN login refused: user 'user2' - invalid credentials
 2019-03-25 12:28:22.057 [info] &lt;0.1613.0&gt; closing AMQP connection &lt;0.1613.0&gt; (127.0.0.1:63839 -&gt; 127.0.0.1:5672)
-</pre>
+```
 
 Authentication failures on connections that [authenticate using X.509 certificates](#authentication)
 will be logged differently. See [TLS Troubleshooting guide](./troubleshooting-ssl.html) for details.
@@ -804,9 +804,9 @@ will be logged differently. See [TLS Troubleshooting guide](./troubleshooting-ss
 [rabbitmqctl authenticate_user](./cli.html) can be used to test authentication
 for a username and password pair:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl authenticate_user "a-username" "a/password"
-</pre>
+```
 
 If authentication succeeds, it will exit with
 the code of zero. In case of a failure, a non-zero exit code will be used and a failure error message will be printed.
@@ -830,7 +830,7 @@ a problem used in a particular programming language or environment.
 [rabbitmqctl list_permissions](./cli.html) can be used to inspect a user's
 permission in a given virtual host:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_permissions --vhost /
 # =&gt; Listing permissions for vhost "/" ...
 # =&gt; user	configure	write	read
@@ -843,21 +843,21 @@ rabbitmqctl list_permissions --vhost gw1
 # =&gt; user	configure	write	read
 # =&gt; guest	.*	.*	.*
 # =&gt; user2	^user2	^user2	^user2
-</pre>
+```
 
 [Server logs](./logging.html) will contain entries about operation authorisation
 failures. For example, if a user does not have any permissions configured for a virtual host:
 
-<pre class="lang-ini">
+```ini
 2019-03-25 12:26:16.301 [info] &lt;0.1594.0&gt; accepting AMQP connection &lt;0.1594.0&gt; (127.0.0.1:63793 -&gt; 127.0.0.1:5672)
 2019-03-25 12:26:16.309 [error] &lt;0.1594.0&gt; Error on AMQP connection &lt;0.1594.0&gt; (127.0.0.1:63793 -&gt; 127.0.0.1:5672, user: 'user2', state: opening):
 access to vhost '/' refused for user 'user2'
 2019-03-25 12:26:16.310 [info] &lt;0.1594.0&gt; closing AMQP connection &lt;0.1594.0&gt; (127.0.0.1:63793 -&gt; 127.0.0.1:5672, vhost: 'none', user: 'user2')
-</pre>
+```
 
 authorisation failures (permission violations) are also logged:
 
-<pre class="lang-ini">
+```ini
 2019-03-25 12:30:05.209 [error] &lt;0.1627.0&gt; Channel error on connection &lt;0.1618.0&gt; (127.0.0.1:63881 -&gt; 127.0.0.1:5672, vhost: 'gw1', user: 'user2'), channel 1:
 operation queue.declare caused a channel exception access_refused: access to queue 'user3.q1' in vhost 'gw1' refused for user 'user2'
-</pre>
+```

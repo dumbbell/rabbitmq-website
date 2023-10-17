@@ -66,27 +66,27 @@ and start adding code.
 
 First, we import the client framework as a module:
 
-<pre class="lang-objectivec">
+```objectivec
 @import RMQClient;
-</pre>
+```
 
 Now we call some send and receive methods from `viewDidLoad`:
 
-<pre class="lang-objectivec">
+```objectivec
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self send];
     [self receive];
-</pre>
+```
 
 The send method begins with a connection to a RabbitMQ node:
 
-<pre class="lang-objectivec">
+```objectivec
 - (void)send {
     RMQConnection *conn = [[RMQConnection alloc] initWithUri:@"amqp://localhost:5672"
                                                  delegate:[RMQConnectionDelegateLogger new]];
 }
-</pre>
+```
 
 The connection abstracts the socket connection, and takes care of
 protocol version negotiation and authentication and so on for us.
@@ -94,34 +94,34 @@ protocol version negotiation and authentication and so on for us.
 We have to specify its name or IP address using the `initWithUri:delegate:`
 convenience initializer:
 
-<pre class="lang-objectivec">
+```objectivec
 RMQConnection *conn = [[RMQConnection alloc] initWithUri:@"amqp://localhost:5672"
                                              delegate:[RMQConnectionDelegateLogger new]];
-</pre>
+```
 
 Next we create a channel, which is where most of the API for getting
 things done resides:
 
-<pre class="lang-objectivec">
+```objectivec
 id&lt;RMQChannel&gt; ch = [conn createChannel];
-</pre>
+```
 
 To send, we must declare a queue for us to send to; then we can publish a message
 to the queue:
 
-<pre class="lang-objectivec">
+```objectivec
 RMQQueue *q = [ch queue:@"hello"];
 [ch.defaultExchange publish:[@"Hello World!" dataUsingEncoding:NSUTF8StringEncoding] routingKey:q.name];
-</pre>
+```
 
 Declaring a queue is idempotent - it will only be created if it doesn't
 exist already.
 
 Lastly, we close the connection:
 
-<pre class="lang-objectivec">
+```objectivec
 [conn close];
-</pre>
+```
 
 [Here's the whole controller (including receive)][controller].
 
@@ -151,7 +151,7 @@ Setting up is the same as `send`; we open a connection and a
 channel, and declare the queue from which we're going to consume.
 Note this matches up with the queue that `send` publishes to.
 
-<pre class="lang-objectivec">
+```objectivec
 - (void)receive {
     NSLog(@"Attempting to connect to local RabbitMQ broker");
     RMQConnection *conn = [[RMQConnection alloc] initWithDelegate:[RMQConnectionDelegateLogger new]];
@@ -160,7 +160,7 @@ Note this matches up with the queue that `send` publishes to.
     id&lt;RMQChannel&gt; ch = [conn createChannel];
 
     RMQQueue *q = [ch queue:@"hello"];
-</pre>
+```
 
 Note that we declare the queue here, as well. Because we might start
 the receiver before the sender, we want to make sure the queue exists
@@ -171,12 +171,12 @@ queue. Since it will push messages to us asynchronously, we provide a
 callback that will be executed when RabbitMQ pushes messages to
 our consumer. This is what `RMQQueue subscribe:` does.
 
-<pre class="lang-objectivec">
+```objectivec
 NSLog(@"Waiting for messages.");
 [q subscribe:^(RMQMessage * _Nonnull message) {
     NSLog(@"Received %@", [[NSString alloc] initWithData:message.body encoding:NSUTF8StringEncoding]);
 }];
-</pre>
+```
 
 [Here's the whole controller again (including send)][controller].
 

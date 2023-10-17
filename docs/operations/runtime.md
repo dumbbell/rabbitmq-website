@@ -97,9 +97,9 @@ containerized environments such as Docker and Kubernetes.
 The number of schedulers can be explicitly set using the `+S` flag. The following example configures
 the node to start 4 schedulers even if it detects more cores to be available to it:
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="+S 4:4"
-</pre>
+```
 
 Most of the time the default behaviour works well. In shared or CPU constrained environments (including
 containerised ones), explicitly configuring scheduler count may be necessary.
@@ -126,9 +126,9 @@ By default, RabbitMQ nodes configure runtime schedulers to speculatively wait fo
 of time before going to sleep. Workloads where there can be prolonged periods of inactivity
 can choose to turn off this speculative busy waiting using the [`+sbwt` and related runtime flags](https://erlang.org/doc/man/erl.html):
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="+sbwt none +sbwtdcpu none +sbwtdio none"
-</pre>
+```
 
 This can also reduce CPU usage on systems with limited or burstable CPU resources.
 
@@ -146,13 +146,13 @@ There are several binding strategies available. Desired strategy can be specifie
 `RABBITMQ_SCHEDULER_BIND_TYPE` environment variable or using the [`+stbt` runtime flag](http://erlang.org/doc/man/erl.html)
 value.
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="+stbt nnts"
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_SCHEDULER_BIND_TYPE="nnts"
-</pre>
+```
 
 Note that the strategy will only be effective if the runtime can detect CPU topology in the given environment.
 
@@ -192,9 +192,9 @@ is spent. This is a critically important step for making informed decisions.
 
 Turn off speculative [scheduler busy waiting](#busy-waiting) using the [`+sbwt` and related runtime flags](https://erlang.org/doc/man/erl.html):
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="+sbwt none +sbwtdcpu none +sbwtdio none"
-</pre>
+```
 
 Speculative busy waiting usually not productive on moderately loaded systems.
 
@@ -211,9 +211,9 @@ would be sufficient or even optimal.
 RabbitMQ CLI tools provide a number of [metrics](./monitoring.html) that make it easier to reason
 about runtime thread activity.
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics runtime_thread_stats
-</pre>
+```
 
 is the command that produces a breakdown of how various threads spend their time.
 
@@ -248,36 +248,36 @@ and error. Note that some degree of fragmentation is inevitable.
 
 Here are the allocator arguments used by default:
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_DEFAULT_ALLOC_ARGS="+MBas ageffcbf +MHas ageffcbf +MBlmbcs 512 +MHlmbcs 512 +MMmcs 30"
-</pre>
+```
 
 Instead of overriding `RABBITMQ_DEFAULT_ALLOC_ARGS`, add flags that should be overridden to `RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS`. They
 will take precedence over the default ones. So a node started with the following `RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS` value
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="+MHlmbcs 8192"
-</pre>
+```
 
 will use in the following effective allocator settings:
 
-<pre class="lang-bash">
+```bash
 "+MBas ageffcbf +MHas ageffcbf +MBlmbcs 512 +MHlmbcs 8192 +MMmcs 30"
-</pre>
+```
 
 For some workloads a larger preallocated area reduce allocation rate and memory fragmentation.
 To configure the node to use a preallocated area of 1 GB, add `+MMscs 1024` to VM startup arguments
 using `RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS`:
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="+MMscs 1024"
-</pre>
+```
 
 The value is in MB. The following example will preallocate a larger, 4 GB area:
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="+MMscs 4096"
-</pre>
+```
 
 To learn about other available settings, see [runtime documentation on allocators](http://erlang.org/doc/man/erts_alloc.html).
 
@@ -304,20 +304,20 @@ In this case the value can be increased using the `RABBITMQ_DISTRIBUTION_BUFFER_
 or the [`+zdbbl` VM flag](http://erlang.org/doc/man/erl.html).
 The value is in kilobytes:
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_DISTRIBUTION_BUFFER_SIZE=192000
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="+zdbbl 192000"
-</pre>
+```
 
 When the buffer is hovering around full capacity, nodes will [log](./logging.html) a warning
 mentioning a busy distribution port (`busy_dist_port`):
 
-<pre class="lang-ini">
+```ini
 2019-04-06 22:48:19.031 [warning] &lt;0.242.0&gt; rabbit_sysmon_handler busy_dist_port &lt;0.1401.0&gt;
-</pre>
+```
 
 Increasing buffer size may help increase throughput and/or reduce latency.
 
@@ -331,16 +331,16 @@ of queues (say, hundreds of thousands) this limit might need adjusting. This is 
 `RABBITMQ_MAX_NUMBER_OF_PROCESSES` environment variable, which is a convenient way of
 setting the `+P` Erlang VM flag:
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_MAX_NUMBER_OF_PROCESSES=2000000
-</pre>
+```
 
 To set the flag directly, use the `RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS` environment
 variable:
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="+P 2000000"
-</pre>
+```
 
 ## <a id="crash-dumps" class="anchor" href="#crash-dumps">Erlang Crash Dumps</a>
 

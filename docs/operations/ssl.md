@@ -198,7 +198,7 @@ algorithms for key generation.
 Below is an example that generates a CA and uses it to produce two certificate/key pairs, one
 for the server and another for clients. This is the setup that is expected by the rest of this guide.
 
-<pre class="lang-bash">
+```bash
 git clone https://github.com/rabbitmq/tls-gen tls-gen
 cd tls-gen/basic
 # private key password
@@ -206,7 +206,7 @@ make PASSWORD=bunnies
 make verify
 make info
 ls -l ./result
-</pre>
+```
 
 The certificate chain produced by this basic tls-gen profile looks like this:
 
@@ -265,7 +265,7 @@ file</a>. An example of the config file is below, which
 will start one TLS listener on port 5671 on all interfaces
 on this hostname:
 
-<pre class="lang-ini">
+```ini
 listeners.ssl.default = 5671
 
 ssl_options.cacertfile = /path/to/ca_certificate.pem
@@ -273,7 +273,7 @@ ssl_options.certfile   = /path/to/server_certificate.pem
 ssl_options.keyfile    = /path/to/server_key.pem
 ssl_options.verify     = verify_peer
 ssl_options.fail_if_no_peer_cert = true
-</pre>
+```
 
 This configuration will also perform [peer certificate chain verification](#peer-verification)
 so clients without any certificates will be rejected.
@@ -281,7 +281,7 @@ so clients without any certificates will be rejected.
 It is possible to completely disable regular (non-TLS) listeners. Only TLS-enabled
 clients would be able to connect to such a node, and only if they use the correct port:
 
-<pre class="lang-ini">
+```ini
 # disables non-TLS listeners, only TLS-enabled clients will be able to connect
 listeners.tcp = none
 
@@ -292,11 +292,11 @@ ssl_options.certfile   = /path/to/server_certificate.pem
 ssl_options.keyfile    = /path/to/server_key.pem
 ssl_options.verify     = verify_peer
 ssl_options.fail_if_no_peer_cert = true
-</pre>
+```
 
 TLS settings can also be configured using the [classic config format](./configure.html#erlang-term-config-file):
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbit, [
      {ssl_listeners, [5671]},
@@ -307,7 +307,7 @@ TLS settings can also be configured using the [classic config format](./configur
                     {fail_if_no_peer_cert, true}]}
    ]}
 ].
-</pre>
+```
 
 ### <a id="enabling-tls-paths" class="anchor" href="#enabling-tls-paths">Certificate and Private Key File Paths</a>
 
@@ -326,38 +326,38 @@ would need to use `"c:\\ca_certificate.pem"` or `"c:/ca_certificate.pem"`.
 To verify that TLS has been enabled on the node, restart it and inspect its [log file](./logging.html).
 It should contain an entry about a TLS listener being enabled, looking like this:
 
-<pre class="lang-plaintext">
+```plaintext
 2020-07-13 21:13:01.015 [info] &lt;0.573.0&gt; started TCP listener on [::]:5672
 2020-07-13 21:13:01.055 [info] &lt;0.589.0&gt; started TLS (SSL) listener on [::]:5671
-</pre>
+```
 
 Another way is by using `rabbitmq-diagnostics listeners` which should contain
 lines for TLS-enabled listeners:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics listeners
 #
 # ... (some output omitted for brevity)
 # => Interface: [::], port: 5671, protocol: amqp/ssl, purpose: AMQP 0-9-1 and AMQP 1.0 over TLS
 # ...
-</pre>
+```
 
 ### <a id="private-key-passwords" class="anchor" href="#private-key-passwords">Providing Private Key Password</a>
 
 Private keys can be optional protected by a password.
 To provide the password, use the `password` option:
 
-<pre class="lang-ini">
+```ini
 listeners.ssl.1 = 5671
 ssl_options.cacertfile = /path/to/ca_certificate.pem
 ssl_options.certfile   = /path/to/server_certificate.pem
 ssl_options.keyfile    = /path/to/server_key.pem
 ssl_options.password   = t0p$3kRe7
-</pre>
+```
 
 The same example using the [classic config format](./configure.html#erlang-term-config-file):
 
-<pre class="lang-erlang">
+```erlang
 [
  {rabbit, [
            {ssl_listeners, [5671]},
@@ -368,7 +368,7 @@ The same example using the [classic config format](./configure.html#erlang-term-
                          ]}
           ]}
 ].
-</pre>
+```
 
 Classic config file format allows for [config value encryption](https://www.rabbitmq.com/configure.html#configuration-encryption),
 which is recommended for passwords.
@@ -435,17 +435,17 @@ If no trusted and otherwise valid certificate is found, peer verification fails 
 closed with a fatal error ("alert" in OpenSSL parlance) that says "Unknown CA" or similar. The alert
 will be logged by the server with a message similar to this:
 
-<pre class="lang-ini">
+```ini
 2018-09-10 18:10:46.502 [info] &lt;0.902.0&gt; TLS server generated SERVER ALERT: Fatal - Unknown CA
-</pre>
+```
 
 Certificate validity is also checked at every step. Certificates that are expired
 or aren't yet valid will be rejected. The TLS alert in that case will look something
 like this:
 
-<pre class="lang-ini">
+```ini
 2018-09-10 18:11:05.168 [info] &lt;0.923.0&gt; TLS server generated SERVER ALERT: Fatal - Certificate Expired
-</pre>
+```
 
 The examples above demonstrate TLS alert messages logged by a RabbitMQ node.
 Clients that perform peer verification will also raise alerts but may use different
@@ -497,9 +497,9 @@ The most common way of appending several certificates to one
 another and use in a single Certificate Authority bundle file
 is to simply concatenate them:
 
-<pre class="lang-bash">
+```bash
 cat rootca/ca_certificate.pem otherca/ca_certificate.pem &gt; all_cacerts.pem
-</pre>
+```
 
 ### <a id="peer-verification-configuration" class="anchor" href="#peer-verification-configuration">Enabling Peer Verification</a>
 
@@ -518,7 +518,7 @@ For example, the following
 config will perform peer verification and reject clients that do not provide
 a certificate:
 
-<pre class="lang-ini">
+```ini
 listeners.ssl.default = 5671
 
 ssl_options.cacertfile = /path/to/ca_certificate.pem
@@ -526,11 +526,11 @@ ssl_options.certfile = /path/to/server_certificate.pem
 ssl_options.keyfile = /path/to/server_key.pem
 ssl_options.verify = verify_peer
 ssl_options.fail_if_no_peer_cert = true
-</pre>
+```
 
 The same example in the [classic config format](./configure.html#config-file):
 
-<pre class="lang-erlang">
+```erlang
 [
 {rabbit, [
    {ssl_listeners, [5671]},
@@ -541,7 +541,7 @@ The same example in the [classic config format](./configure.html#config-file):
                   {fail_if_no_peer_cert, true}]}
  ]}
 ].
-</pre>
+```
 
 How exactly peer verification is configured in client libraries varies from library to library.
 [Java](#java-client) and [.NET](#dotnet-client) client sections cover peer
@@ -586,7 +586,7 @@ The default depth is 1.
 The following example demonstrates how to configure certificate validation depth for
 RabbitMQ server:
 
-<pre class="lang-ini">
+```ini
 listeners.ssl.default = 5671
 
 ssl_options.cacertfile = /path/to/ca_certificate.pem
@@ -595,11 +595,11 @@ ssl_options.keyfile = /path/to/server_key.pem
 ssl_options.verify = verify_peer
 ssl_options.depth  = 2
 ssl_options.fail_if_no_peer_cert = false
-</pre>
+```
 
 The same example in the [classic config format](./configure.html#config-file):
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbit, [
      {ssl_listeners, [5671]},
@@ -611,7 +611,7 @@ The same example in the [classic config format](./configure.html#config-file):
                     {fail_if_no_peer_cert,false}]}
    ]}
 ].
-</pre>
+```
 
 When using RabbitMQ plugins such as [Federation](federation.html) or [Shovel](shovel.html) with TLS,
 it may be necessary to configure verification depth for the Erlang client that those plugins use under the hood,
@@ -655,7 +655,7 @@ This very basic example will show a simple client connecting to a RabbitMQ
 server over TLS without validating the server certificate, and
 without presenting any client certificate to the server.
 
-<pre class="lang-java">
+```java
 import java.io.*;
 import java.security.*;
 
@@ -690,7 +690,7 @@ public class Example1 {
         channel.close();
         conn.close();
     }
-}</pre>
+}```
 
 This simple example is an echo client and server. It creates a channel
 and publishes to the default direct exchange, then
@@ -705,9 +705,9 @@ to a trust store which will be used to instantiate a [Trust Manager](https://doc
 The JDK ships with a tool called `keytool` that manages certificate stores. To import a certificate to
 a store use `keytool -import`:
 
-<pre class="lang-bash">
+```bash
 keytool -import -alias server1 -file /path/to/server_certificate.pem -keystore /path/to/rabbitstore
-</pre>
+```
 
 The above command will import `server/certificate.pem` into the `rabbitstore` file
 using the JKS format. The certificate will be referred to as `server1` in the trust store.
@@ -723,7 +723,7 @@ The below example demonstrates how the key store and the trust store are used wi
 [Key Manager](https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/KeyManager.html)
 and [Trust Manager](https://docs.oracle.com/javase/8/docs/api/javax/net/ssl/TrustManager.html), respectively.
 
-<pre class="lang-java">
+```java
 import java.io.*;
 import java.security.*;
 import javax.net.ssl.*;
@@ -773,7 +773,7 @@ public class Example2 {
       channel.close();
       conn.close();
   }
-}</pre>
+}```
 
 To ensure that the above code works as expected with untrusted certificates, set up
 a RabbitMQ node with a certificate that has not been imported
@@ -785,7 +785,7 @@ Hostname verification must be enabled separately using the
 `ConnectionFactory#enableHostnameVerification()` method. This is done in the example
 above, for instance:
 
-<pre class="lang-java">
+```java
 import java.io.*;
 import java.security.*;
 import javax.net.ssl.*;
@@ -824,7 +824,7 @@ public class Example2 {
 
       // snip ...
   }
-}</pre>
+}```
 
 This will verify
 that the server certificate has been issued for the hostname the
@@ -834,21 +834,21 @@ is client-specific (not usually performed by the server).
 With JDK 6, it is necessary to add a dependency on
 [Apache Commons HttpClient](https://hc.apache.org/) for hostname verification to work, e.g. with Maven:
 
-<pre class="lang-xml">
+```xml
 &lt;!-- Maven dependency to add for hostname verification on JDK 6 --&gt;
 &lt;dependency&gt;
     &lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
     &lt;artifactId&gt;httpclient&lt;/artifactId&gt;
     &lt;version&gt;4.5.6&lt;/version&gt;
 &lt;/dependency&gt;
-</pre>
+```
 
 With Gradle:
 
-<pre class="lang-groovy">
+```groovy
 // Gradle dependency to add for hostname verification on JDK 6
 compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.6'
-</pre>
+```
 
 Alternatively with JDK 6
 `ConnectionFactory#enableHostnameVerification(HostnameVerifier)`
@@ -861,13 +861,13 @@ it may be necessary to configure preferred TLS version in the Java client. This 
 the `ConnectionFactory#useSslProtocol` overloads that accept a protocol version name
 or a `SSLContext`:
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 factory.setHost(&quot;localhost&quot;);
 factory.setPort(5671);
 
 factory.useSslProtocol("TLSv1.2");
-</pre>
+```
 
 Modern releases of the library will attempt to use the latest TLS version
 supported by the runtime.
@@ -914,31 +914,32 @@ system-wide. Only administrative users can have write access to the system-wide 
 
 The following example adds a certificate to the store of user `Root` (also known as `Trust` in some .NET implementation)
 
-<pre class="lang-powershell">
+```powershell
 # Windows
 certmgr -add -all \path\to\cacert.cer -s Root
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 # Linux with Mono
 certmgr -add -c Trust /path/to/cacert.cer
-</pre>
+```
 
 To add a certificate to the system-wide (machine) certificate store instead, run
 
-<pre class="lang-powershell">
+```powershell
 # Windows
 certmgr -add -all \path\to\cacert.cer -s -r localMachine Root
-</pre>
+```
 
-<pre class="lang-bash">=
+```bash
+=
 # Linux with Mono
 certmgr -add -c -m Trust /path/to/cacert.cer
-</pre>
+```
 
 After adding to a store, we can view the contents of that store with the `-all` (`-list` with Mono) switch:
 
-<pre class="lang-bash">
+```bash
 certmgr -all -s Root
 
 # … snip …
@@ -950,9 +951,9 @@ Self-signed X.509 v3 Certificate
   valid From:    25/08/2018 14:03:01
   valid Until:   24/09/2018 14:03:01
   Unique Hash:   1F04D1D2C20B97BDD5DB70B9EB2013550697A05E
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 certmgr -list -c Trust
 
 # … snip …
@@ -964,30 +965,30 @@ Self-signed X.509 v3 Certificate
   valid From:    25/08/2018 14:03:01
   valid Until:   24/09/2018 14:03:01
   Unique Hash:   1F04D1D2C20B97BDD5DB70B9EB2013550697A05E
-</pre>
+```
 
 
 According to the above output there is one Self-signed X.509 v3 Certificate in the
 trust store. The Unique Hash uniquely identifies this certificate in
 this store. To delete this certificate, use the unique hash:
 
-<pre class="lang-bash">
+```bash
 # Windows
 certmgr -del -c -sha1 1F04D1D2C20B97BDD5DB70B9EB2013550697A05E -s Root
 
 # … snip …
 
 Certificate removed from store.
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 # Linux with Mono
 certmgr -del -c Trust 1F04D1D2C20B97BDD5DB70B9EB2013550697A05E
 
 # … snip …
 
 Certificate removed from store.
-</pre>
+```
 
 ### <a id="dotnet-connection-params" class="anchor" href="#dotnet-connection-params">Connection TLS Settings</a>
 
@@ -1040,7 +1041,7 @@ the TLS options accessible via `ConnectionFactory#Ssl`.
 
 Supported TLS version values are those of the [System.Security.Authentication.SslProtocols enum](https://docs.microsoft.com/en-us/dotnet/api/system.security.authentication.sslprotocols?view=netframework-4.8):
 
-<pre class="lang-csharp">
+```csharp
 using System.Security.Authentication;
 
 // ...
@@ -1054,7 +1055,7 @@ cf.Ssl.CertPassphrase = "MySecretPassword";
 
 // Use TLSv1.2 for this connection
 cf.Ssl.Version = SslProtocols.Tls12;
-</pre>
+```
 
 RabbitMQ .NET client 5.x series uses TLSv1.0 by default.
 
@@ -1080,7 +1081,7 @@ published and echoes it out. Note that we use an
 [exclusive, non-durable, auto-delete queue](queues.html) so we don't have
 to worry about manually cleaning up after ourselves
 
-<pre class="lang-csharp">
+```csharp
 using System;
 using System.IO;
 using System.Text;
@@ -1111,7 +1112,7 @@ namespace RabbitMQ.client.Examples {
     }
   }
 }
-</pre>
+```
 
 ### <a id="tls-verification-in-dotnet" class="anchor" href="#tls-verification-in-dotnet">TLS Peer Verification in .NET Client</a>
 
@@ -1219,7 +1220,7 @@ and requires the node to be running on Erlang 23 compiled against a very recent 
 Clients that use older runtimes (e.g. JDK, .NET, Python) without TLSv1.3 support
 **will not be able to connect** with this setup.
 
-<pre class="lang-ini">
+```ini
 listeners.ssl.1 = 5671
 
 ssl_options.cacertfile = /path/to/ca_certificate.pem
@@ -1235,50 +1236,50 @@ ssl_options.ciphers.2  = TLS_AES_128_GCM_SHA256
 ssl_options.ciphers.3  = TLS_CHACHA20_POLY1305_SHA256
 ssl_options.ciphers.4  = TLS_AES_128_CCM_SHA256
 ssl_options.ciphers.5  = TLS_AES_128_CCM_8_SHA256
-</pre>
+```
 
 The example below disables versions older than TLSv1.2:
 
-<pre class="lang-ini">
+```ini
 listeners.ssl.1 = 5671
 ssl_options.cacertfile = /path/to/ca_certificate.pem
 ssl_options.certfile   = /path/to/server_certificate.pem
 ssl_options.keyfile    = /path/to/server_key.pem
 
 ssl_options.versions.1 = tlsv1.2
-</pre>
+```
 
 ### <a id="verifying-tls-versions" class="anchor" href="#verifying-tls-versions">Verifying Enabled TLS Versions</a>
 
 To verify provided TLS versions, [use `openssl s_client`](https://www.feistyduck.com/library/openssl-cookbook/online/ch-testing-with-openssl.html)
 with an [appropriate TLS version flag](https://www.openssl.org/docs/man1.1.1/man1/openssl-s_client.html):
 
-<pre class="lang-bash">
+```bash
 # connect using TLSv1.3
 openssl s_client -connect 127.0.0.1:5671 -tls1_3
-</pre>
+```
 
 and look for the following in the output:
 
-<pre class="lang-plaintext">
+```plaintext
 New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384
-</pre>
+```
 
 In the example below, TLSv1.2 is used:
 
-<pre class="lang-bash">
+```bash
 # connect using TLSv1.2
 openssl s_client -connect 127.0.0.1:5671 -tls1_2
-</pre>
+```
 
 The protocol and negotiated cipher suite in the output would
 look like so:
 
-<pre class="lang-plaintext">
+```plaintext
 SSL-Session:
     Protocol  : TLSv1.2
     Cipher    : ECDHE-RSA-AES256-GCM-SHA384
-</pre>
+```
 
 
 ### <a id="tls1.3" class="anchor" href="#tls1.3">TLSv1.3</a>
@@ -1296,7 +1297,7 @@ Clients that use older runtimes (e.g. JDK, .NET, Python) without TLSv1.3 support
 Because TLSv1.3 shares no cipher suites with earlier TLS versions, when enabling TLSv1.3,
 list a set of TLSv1.3-specific cipher suites:
 
-<pre class="lang-ini">
+```ini
 listeners.ssl.1 = 5671
 
 ssl_options.cacertfile = /path/to/ca_certificate.pem
@@ -1312,7 +1313,7 @@ ssl_options.ciphers.2  = TLS_AES_128_GCM_SHA256
 ssl_options.ciphers.3  = TLS_CHACHA20_POLY1305_SHA256
 ssl_options.ciphers.4  = TLS_AES_128_CCM_SHA256
 ssl_options.ciphers.5  = TLS_AES_128_CCM_8_SHA256
-</pre>
+```
 
 Explicit cipher suite configuration may also be necessary on the client side.
 
@@ -1401,13 +1402,13 @@ will leave out an entire class of cipher suites from consideration, potentially 
 
 To see what constraints and extensions are set for a public key, use the `openssl x509` command:
 
-<pre class="lang-bash">
+```bash
 openssl x509 -in /path/to/certificate.pem -text -noout
-</pre>
+```
 
 Its output will include a nested list of extensions and constraints that looks similar to this:
 
-<pre class="lang-ini">
+```ini
 X509v3 extensions:
     X509v3 Basic Constraints:
         CA:FALSE
@@ -1415,7 +1416,7 @@ X509v3 extensions:
         Digital Signature, Key Encipherment
     X509v3 Extended Key Usage:
         TLS Web Client Authentication
-</pre>
+```
 
 The above set of extensions says that this is a public key that can be used to authenticate
 a client (provide a client identity to a RabbitMQ node), cannot be used as a Certificate Authority
@@ -1426,7 +1427,7 @@ For the purpose of this guide, this is a suitable certificate (public key) to be
 Below is an example of a public key suitable certificate for server authentication (provides a RabbitMQ node identity)
 as well as client authentication (perhaps for the sake of usability):
 
-<pre class="lang-ini">
+```ini
 X509v3 extensions:
     X509v3 Basic Constraints:
         CA:FALSE
@@ -1434,7 +1435,7 @@ X509v3 extensions:
         Digital Signature, Key Encipherment
     X509v3 Extended Key Usage:
         TLS Web Server Authentication, TLS Web Client Authentication
-</pre>
+```
 
 
 ## <a id="cipher-suites" class="anchor" href="#cipher-suites">Cipher Suites</a>
@@ -1451,17 +1452,17 @@ with cipher suite configuration.
 
 To list cipher suites supported by the Erlang runtime of a running node, use `rabbitmq-diagnostics cipher_suites --format openssl`:
 
-<pre class="lang-ini">
+```ini
 rabbitmq-diagnostics cipher_suites --format openssl -q
-</pre>
+```
 
 This will produce a list of cipher suites in the OpenSSL format.
 
 Note that if you use `--format erlang`:
 
-<pre class="lang-ini">
+```ini
 rabbitmq-diagnostics cipher_suites --format erlang -q
-</pre>
+```
 
 then `rabbitmq-diagnostics cipher_suites` will list cipher suites in the format
 that's only accepted in the [classic config format](./configure.html#erlang-term-config-file). The OpenSSL format is accepted
@@ -1481,7 +1482,7 @@ in the classic config format).
 
 The below example demonstrates how the option is used.
 
-<pre class="lang-ini">
+```ini
 listeners.ssl.1 = 5671
 
 ssl_options.cacertfile = /path/to/ca_certificate.pem
@@ -1508,11 +1509,11 @@ ssl_options.ciphers.12 = DHE-DSS-AES128-GCM-SHA256
 # these MUST be disabled if TLSv1.3 is used
 ssl_options.honor_cipher_order = true
 ssl_options.honor_ecc_order    = true
-</pre>
+```
 
 In the [classic config format](./configure.html#erlang-term-config-file):
 
-<pre class="lang-erlang">
+```erlang
 %% list allowed ciphers
 [
  {ssl, [{versions, ['tlsv1.2', 'tlsv1.1']}]},
@@ -1544,7 +1545,7 @@ In the [classic config format](./configure.html#erlang-term-config-file):
                          ]}
           ]}
 ].
-</pre>
+```
 
 ### <a id="cipher-suite-order" class="anchor" href="#cipher-suite-order">Cipher Suite Order</a>
 
@@ -1556,7 +1557,7 @@ preparation for running an attack on them.
 To do so, configure `honor_cipher_order`
 and `honor_ecc_order` to `true`:
 
-<pre class="lang-ini">
+```ini
 listeners.ssl.1        = 5671
 ssl_options.cacertfile = /path/to/ca_certificate.pem
 ssl_options.certfile   = /path/to/server_certificate.pem
@@ -1565,11 +1566,11 @@ ssl_options.versions.1 = tlsv1.2
 
 ssl_options.honor_cipher_order = true
 ssl_options.honor_ecc_order    = true
-</pre>
+```
 
 Or, in the classic config format:
 
-<pre class="lang-erlang">
+```erlang
 %% Enforce server-provided cipher suite order (preference)
 [
  {ssl, [{versions, ['tlsv1.2', 'tlsv1.1']}]},
@@ -1588,7 +1589,7 @@ Or, in the classic config format:
                          ]}
           ]}
 ].
-</pre>
+```
 
 
 ## <a id="major-vulnerabilities" class="anchor" href="#major-vulnerabilities">Known TLS Vulnerabilities and Their Mitigation</a>
@@ -1638,14 +1639,14 @@ the most optimal set of cipher suites enabled; and so on.
 
 To run `testssl.sh`, provide an endpoint to test in the form of `{hostname}:5671`:
 
-<pre class="lang-bash">
+```bash
 ./testssl.sh localhost:5671
-</pre>
+```
 
 The following example configuration that accepts TLSv1.3 connections passes key
 `testssl.sh` tests on Erlang 23:
 
-<pre class="lang-ini">
+```ini
 listeners.ssl.1 = 5671
 
 ssl_options.cacertfile = /path/to/ca_certificate.pem
@@ -1665,11 +1666,11 @@ ssl_options.ciphers.5  = TLS_AES_128_CCM_8_SHA256
 
 ssl_options.honor_cipher_order   = true
 ssl_options.honor_ecc_order      = true
-</pre>
+```
 
 This TLSv1.3-exclusive setup is reported as not vulnerable:
 
-<pre class="lang-ini">
+```ini
  Service detected:       Couldn't determine what's running on port 5671, assuming no HTTP service => skipping all HTTP checks
 
 
@@ -1803,12 +1804,12 @@ Could not determine the protocol, only simulating generic clients.
  OpenSSL 1.0.2e               No connection
  OpenSSL 1.1.0l (Debian)      No connection
  OpenSSL 1.1.1d (Debian)      TLSv1.3   TLS_AES_256_GCM_SHA384            253 bit ECDH (X25519)
-</pre>
+```
 
 The following example configuration that accepts TLSv1.2 connections passes key
 `testssl.sh` tests on Erlang 23:
 
-<pre class="lang-ini">
+```ini
 listeners.ssl.default  = 5671
 ssl_options.cacertfile = /path/to/ca_certificate.pem
 ssl_options.certfile   = /path/to/server_certificate.pem
@@ -1838,12 +1839,12 @@ ssl_options.ciphers.9  = ECDH-ECDSA-AES128-GCM-SHA256
 ssl_options.ciphers.10 = ECDH-RSA-AES128-GCM-SHA256
 ssl_options.ciphers.11 = DHE-RSA-AES128-GCM-SHA256
 ssl_options.ciphers.12 = DHE-DSS-AES128-GCM-SHA256
-</pre>
+```
 
 This TLSv1.2-enabled setup is reported as not vulnerable to a set of known
 high profile vulnerabilities:
 
-<pre class="lang-ini">
+```ini
 Testing robust (perfect) forward secrecy, (P)FS -- omitting Null Authentication/Encryption, 3DES, RC4
 
 PFS is offered (OK)          ECDHE-RSA-AES256-GCM-SHA384 DHE-RSA-AES256-GCM-SHA384 ECDHE-RSA-AES128-GCM-SHA256 DHE-RSA-AES128-GCM-SHA256
@@ -1872,7 +1873,7 @@ LOGJAM (CVE-2015-4000), experimental      Common prime with 2048 bits detected: 
 BEAST (CVE-2011-3389)                     no SSL3 or TLS1 (OK)
 LUCKY13 (CVE-2013-0169), experimental     not vulnerable (OK)
 RC4 (CVE-2013-2566, CVE-2015-2808)        no RC4 ciphers detected (OK)
-</pre>
+```
 
 
 ## <a id="erlang-client" class="anchor" href="#erlang-client">Using TLS in the Erlang Client</a>
@@ -1907,7 +1908,7 @@ will change in a future RabbitMQ Erlang client release.
 
 ### <a id="erlang-code-example" class="anchor" href="#erlang-code-example">Code Example</a>
 
-<pre class="lang-erlang">
+```erlang
 SslOpts = [{cacertfile, &quot;/path/to/ca_certificate.pem&quot;},
            {certfile, &quot;/path/to/client/certificate.pem&quot;},
            {keyfile, &quot;/path/to/client/private_key.pem&quot;},
@@ -1938,7 +1939,7 @@ Params = #amqp_params_network{host = "my.rmq-server.net",
                               ssl_options = SslOpts}
 
 {ok, Conn} = amqp_connection:start(Params),
-</pre>
+```
 
 You can now go ahead and use Conn as a normal connection.
 
@@ -1956,19 +1957,19 @@ and a recent version of OpenSSL available in `PATH`.
 
 First let's create a directory for our test Certificate Authority:
 
-<pre class="lang-bash">
+```bash
 mkdir testca
 cd testca
 mkdir certs private
 chmod 700 private
 echo 01 &gt; serial
 touch index.txt
-</pre>
+```
 
 Now add the following OpenSSL configuration file, `openssl.cnf`, within the newly created `testca`
 directory:
 
-<pre class="lang-ini">
+```ini
 [ ca ]
 default_ca = testca
 
@@ -2023,17 +2024,17 @@ extendedKeyUsage = 1.3.6.1.5.5.7.3.2
 basicConstraints = CA:false
 keyUsage = digitalSignature,keyEncipherment
 extendedKeyUsage = 1.3.6.1.5.5.7.3.1
-</pre>
+```
 
 Next we need to generate the key and certificates that our test
 Certificate Authority will use. Still within the `testca`
 directory:
 
-<pre class="lang-bash">
+```bash
 openssl req -x509 -config openssl.cnf -newkey rsa:2048 -days 365 \
     -out ca_certificate.pem -outform PEM -subj /CN=MyTestCA/ -nodes
 openssl x509 -in ca_certificate.pem -out ca_certificate.cer -outform DER
-</pre>
+```
 
 This is all that is needed to generate a test Certificate
 Authority. The root certificate is in `ca_certificate.pem`
@@ -2054,7 +2055,7 @@ a password must be provided.
 The process for creating server and client certificates is very
 similar. First the server:
 
-<pre class="lang-bash">
+```bash
 cd ..
 ls
 # => testca
@@ -2069,11 +2070,11 @@ openssl ca -config openssl.cnf -in ../server/req.pem -out \
 cd ../server
 openssl pkcs12 -export -out server_certificate.p12 -in server_certificate.pem -inkey private_key.pem \
     -passout pass:MySecretPassword
-</pre>
+```
 
 And now the client:
 
-<pre class="lang-bash">
+```bash
 cd ..
 ls
 # => server testca
@@ -2088,22 +2089,22 @@ openssl ca -config openssl.cnf -in ../client/req.pem -out \
 cd ../client
 openssl pkcs12 -export -out client_certificate.p12 -in client_certificate.pem -inkey private_key.pem \
     -passout pass:MySecretPassword
-</pre>
+```
 
 The two examples above generate private keys that are 2048 bits in size.
 It is possible to use longer (and thus more secure but also slower to generate)
 keys by providing a different value to `openssl genrsa`, e.g.:
 
-<pre class="lang-bash">
+```bash
 openssl genrsa -out private_key.pem 4096
-</pre>
+```
 
 Another option would be to generate a key using [Elliptic Curve Cryptography](https://blog.cloudflare.com/a-relatively-easy-to-understand-primer-on-Elliptic-curve-cryptography/). Instead of `openssl genrsa` use
 `openssl ecparam` like so:
 
-<pre class="lang-bash">
+```bash
 openssl ecparam -out private_key.pem -genkey -name prime256v1
-</pre>
+```
 
 `prime256v1` in the example above is an Elliptic curve name.
 Different versions of OpenSSL will have a different set of curves available,

@@ -54,17 +54,17 @@ to a policy definition. For example:
   <tr>
     <th>rabbitmqctl</th>
     <td>
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_policy DLX ".*" '{"dead-letter-exchange":"my-dlx"}' --apply-to queues
-</pre>
+```
     </td>
   </tr>
   <tr>
     <th>rabbitmqctl (Windows)</th>
     <td>
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl set_policy DLX ".*" "{""dead-letter-exchange"":""my-dlx""}" --apply-to queues
-</pre>
+```
     </td>
   </tr>
 </table>
@@ -84,13 +84,13 @@ the optional `x-dead-letter-exchange` argument when
 declaring the queue. The value must be an exchange name in
 the same virtual host:
 
-<pre class="lang-java">
+```java
 channel.exchangeDeclare("some.exchange.name", "direct");
 
 Map&lt;String, Object&gt; args = new HashMap&lt;String, Object&gt;();
 args.put("x-dead-letter-exchange", "some.exchange.name");
 channel.queueDeclare("myqueue", false, false, false, args);
-</pre>
+```
 
 The previoud code declares a new exchange called
 `some.exchange.name` and sets this new exchange
@@ -104,9 +104,9 @@ You may also specify a routing key to use when the messages are being
 dead-lettered.  If the routing key is not set, the
 message's own routing keys are used.
 
-<pre class="lang-java">
+```java
 args.put("x-dead-letter-routing-key", "some-routing-key");
-</pre>
+```
 
 When a dead letter exchange is specified, in addition to
 the usual configure permissions on the declared queue, the user

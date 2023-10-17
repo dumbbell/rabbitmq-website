@@ -90,9 +90,9 @@ An [API reference](https://rabbitmq.github.io/rabbitmq-dotnet-client/) is availa
 
 The core API interfaces and classes are defined in the `RabbitMQ.Client` namespace:
 
-<pre class="lang-csharp">
+```csharp
 using RabbitMQ.Client;
-</pre>
+```
 
 The core API interfaces and classes are
 
@@ -149,7 +149,7 @@ Successful and unsuccessful client connection events can be [observed in server 
 The following two code snippets connect to a RabbitMQ node using a hostname configured
 using the `hostName` property:
 
-<pre class="lang-csharp">
+```csharp
 ConnectionFactory factory = new ConnectionFactory();
 // "guest"/"guest" by default, limited to localhost connections
 factory.UserName = user;
@@ -158,14 +158,14 @@ factory.VirtualHost = vhost;
 factory.HostName = hostName;
 
 IConnection conn = factory.CreateConnection();
-</pre>
+```
 
-<pre class="lang-csharp">
+```csharp
 ConnectionFactory factory = new ConnectionFactory();
 factory.Uri = new Uri("amqp://user:pass@hostName:port/vhost");
 
 IConnection conn = factory.CreateConnection();
-</pre>
+```
 
 
 ### <a id="endpoints-list" class="anchor" href="#endpoints-list">Using Lists of Endpoints</a>
@@ -178,7 +178,7 @@ node if the original one is down.
 To use multiple endpoints, provide a list of `AmqpTcpEndpoint`s to `ConnectionFactory#CreateConnection`.
 An `AmqpTcpEndpoint` represents a hostname and port pair.
 
-<pre class="lang-csharp">
+```csharp
 ConnectionFactory factory = new ConnectionFactory();
 factory.UserName = "username";
 factory.Password = "s3Kre7";
@@ -188,7 +188,7 @@ var endpoints = new System.Collections.Generic.List&lt;AmqpTcpEndpoint&gt; {
   new AmqpTcpEndpoint("localhost")
 };
 IConnection conn = factory.CreateConnection(endpoints);
-</pre>
+```
 
 
 ### <a id="connecting-uri" class="anchor" href="#connecting-uri"></a>
@@ -244,9 +244,9 @@ This is to limit well-known credential use in production systems.
 
 The `IConnection` interface can then be used to open a [channel](channels.html):
 
-<pre class="lang-csharp">
+```csharp
 IModel channel = conn.CreateModel();
-</pre>
+```
 
 The channel can now be used to send and receive messages,
 as described in subsequent sections.
@@ -265,10 +265,10 @@ guides such as [Consumer Acknowledgements](./confirms.html).
 
 To disconnect, simply close the channel and the connection:
 
-<pre class="lang-csharp">
+```csharp
 channel.Close();
 conn.Close();
-</pre>
+```
 
 Disposing channel and connection objects is not enough, they must be explicitly closed
 with the API methods from the example above.
@@ -322,7 +322,7 @@ by this factory.
 
 Here's a modified connection example used above which provides such a name:
 
-<pre class="lang-csharp">
+```csharp
 ConnectionFactory factory = new ConnectionFactory();
 // "guest"/"guest" by default, limited to localhost connections
 factory.UserName = user;
@@ -335,7 +335,7 @@ factory.HostName = hostName;
 factory.ClientProvidedName = "app:audit component:event-consumer";
 
 IConnection conn = factory.CreateConnection();
-</pre>
+```
 
 
 ## <a id="exchanges-and-queues" class="anchor" href="#exchanges-and-queues">Using Exchanges and Queues</a>
@@ -349,11 +349,11 @@ name exists, creating it if necessary.
 Continuing the previous example, the following code declares an
 exchange and a queue, then binds them together.
 
-<pre class="lang-csharp">
+```csharp
 channel.ExchangeDeclare(exchangeName, ExchangeType.Direct);
 channel.QueueDeclare(queueName, false, false, false, null);
 channel.QueueBind(queueName, exchangeName, routingKey, null);
-</pre>
+```
 
 This will actively declare the following objects:
 
@@ -386,13 +386,13 @@ channels for passive declarations.
 `IModel#QueueDeclarePassive` and `IModel#ExchangeDeclarePassive` are the
 methods used for passive declaration. The following example demonstrates `IModel#QueueDeclarePassive`:
 
-<pre class="lang-csharp">
+```csharp
 var response = channel.QueueDeclarePassive("queue-name");
 // returns the number of messages in Ready state in the queue
 response.MessageCount;
 // returns the number of consumers the queue has
 response.ConsumerCount;
-</pre>
+```
 
 `IModel#ExchangeDeclarePassive`'s return value contains no useful information. Therefore
 if the method returns and no channel exceptions occurs, it means that the exchange does exist.
@@ -404,7 +404,8 @@ Some common operations also have a "no wait" version which won't wait for server
 response. For example, to declare a queue and instruct the server to not send any
 response, use
 
-<pre class="lang-csharp">channel.QueueDeclareNoWait(queueName, true, false, false, null);</pre>
+```csharp
+channel.QueueDeclareNoWait(queueName, true, false, false, null);```
 
 The "no wait" versions are more efficient but offer lower safety guarantees, e.g. they
 are more dependent on the [heartbeat mechanism](./heartbeats.html) for detection of failed operations.
@@ -416,27 +417,27 @@ with high topology (queue, binding) churn.
 
 A queue or exchange can be explicitly deleted:
 
-<pre class="lang-csharp">
+```csharp
 channel.QueueDelete("queue-name", false, false);
-</pre>
+```
 
 It is possible to delete a queue only if it is empty:
 
-<pre class="lang-csharp">
+```csharp
 channel.QueueDelete("queue-name", false, true);
-</pre>
+```
 
 or if it is not used (does not have any consumers):
 
-<pre class="lang-csharp">
+```csharp
 channel.QueueDelete("queue-name", true, false);
-</pre>
+```
 
 A queue can be purged (all of its messages deleted):
 
-<pre class="lang-csharp">
+```csharp
 channel.QueuePurge("queue-name");
-</pre>
+```
 
 
 ## <a id="publishing" class="anchor" href="#publishing">Publishing Messages</a>
@@ -444,21 +445,21 @@ channel.QueuePurge("queue-name");
 To publish a message to an exchange, use <code>IModel.BasicPublish</code> as
 follows:
 
-<pre class="lang-csharp">
+```csharp
 byte[] messageBodyBytes = System.Text.Encoding.UTF8.GetBytes("Hello, world!");
 channel.BasicPublish(exchangeName, routingKey, null, messageBodyBytes);
-</pre>
+```
 
 For fine control, you can use overloaded variants to specify the
 mandatory flag, or specify messages properties:
 
-<pre class="lang-csharp">
+```csharp
 byte[] messageBodyBytes = System.Text.Encoding.UTF8.GetBytes("Hello, world!");
 IBasicProperties props = channel.CreateBasicProperties();
 props.ContentType = "text/plain";
 props.DeliveryMode = 2;
 channel.BasicPublish(exchangeName, routingKey, props, messageBodyBytes);
-</pre>
+```
 
 This sends a message with delivery mode 2 (persistent) and
 content-type "text/plain". See the definition of the `IBasicProperties`
@@ -466,7 +467,7 @@ interface for more information about the available message properties.
 
 In the following example, we publish a message with custom headers:
 
-<pre class="lang-csharp">
+```csharp
 byte[] messageBodyBytes = System.Text.Encoding.UTF8.GetBytes("Hello, world!");
 
 IBasicProperties props = channel.CreateBasicProperties();
@@ -477,11 +478,11 @@ props.Headers.Add("latitude",  51.5252949);
 props.Headers.Add("longitude", -0.0905493);
 
 channel.BasicPublish(exchangeName, routingKey, props, messageBodyBytes);
-</pre>
+```
 
 Code sample below sets a message expiration:
 
-<pre class="lang-csharp">
+```csharp
 byte[] messageBodyBytes = System.Text.Encoding.UTF8.GetBytes("Hello, world!");
 
 IBasicProperties props = channel.CreateBasicProperties();
@@ -490,7 +491,7 @@ props.DeliveryMode = 2;
 props.Expiration = "36000000";
 
 channel.BasicPublish(exchangeName, routingKey, props, messageBodyBytes);
-</pre>
+```
 
 
 ## <a id="consuming" class="anchor" href="#consuming">Retrieving Messages By Subscription ("push API")</a>
@@ -504,7 +505,7 @@ One way to implement a consumer is to use the
 convenience class `EventingBasicConsumer`, which dispatches
 deliveries and other consumer lifecycle events as C# events:
 
-<pre class="lang-csharp">
+```csharp
 var consumer = new EventingBasicConsumer(channel);
 consumer.Received += (ch, ea) =>
                 {
@@ -517,7 +518,7 @@ consumer.Received += (ch, ea) =>
 // this consumer tag identifies the subscription
 // when it has to be cancelled
 string consumerTag = channel.BasicConsume(queueName, false, consumer);
-</pre>
+```
 
 Another option is to subclass `DefaultBasicConsumer`,
 overriding methods as necessary, or implement `IBasicConsumer`
@@ -534,9 +535,9 @@ none was supplied to the original <code>IModel.BasicConsume</code> call.
 
 You can cancel an active consumer with <code>IModel.BasicCancel</code>:
 
-<pre class="lang-csharp">
+```csharp
 channel.BasicCancel(consumerTag);
-</pre>
+```
 
 When calling the API methods, you always refer to consumers by their
 consumer tags, which can be either client- or server-generated as
@@ -564,16 +565,16 @@ be used with async consumers, that is, `IAsyncBasicConsumer` implementations.
 
 In order to use this dispatcher, set the `ConnectionFactory.DispatchConsumersAsync` property to `true`:
 
-<pre class="lang-csharp">
+```csharp
 ConnectionFactory factory = new ConnectionFactory();
 // ...
 // use async-oriented consumer dispatcher. Only compatible with IAsyncBasicConsumer implementations
 factory.DispatchConsumersAsync = true;
-</pre>
+```
 
 then register a consumer that implements `IAsyncBasicConsumer`, such as `AsyncEventingBasicConsumer` or `AsyncDefaultBasicConsumer`:
 
-<pre class="lang-csharp">
+```csharp
 var consumer = new AsyncEventingBasicConsumer(channel);
 consumer.Received += async (ch, ea) =>
     {
@@ -591,7 +592,7 @@ consumer.Received += async (ch, ea) =>
 string consumerTag = channel.BasicConsume(queueName, false, consumer);
 // ensure we get a delivery
 bool waitRes = latch.WaitOne(2000);
-</pre>
+```
 
 
 ## <a id="basic-get" class="anchor" href="#basic-get">Fetching Individual Messages (Polling or "pull API")</a>
@@ -605,7 +606,7 @@ To "pull" a message, use the `IModel.BasicGet` method.
 The returned value is an instance of `BasicGetResult`, from which the header
 information (properties) and message body can be extracted:
 
-<pre class="lang-csharp">
+```csharp
 bool autoAck = false;
 BasicGetResult result = channel.BasicGet(queueName, autoAck);
 if (result == null) {
@@ -614,17 +615,17 @@ if (result == null) {
     IBasicProperties props = result.BasicProperties;
     ReadOnlyMemory&lt;byte&gt; body = result.Body;
     ...
-</pre>
+```
 
 The above example uses [manual acknowledgements](./confirms.html) (`autoAck = false`), so the application must also call
 `IModel.BasicAck` to acknowledge the delivery after processing:
 
-<pre class="lang-csharp">
+```csharp
     ...
     // acknowledge receipt of the message
     channel.BasicAck(result.DeliveryTag, false);
 }
-</pre>
+```
 
   Note that fetching messages using this API is relatively inefficient. If you'd prefer
   RabbitMQ to push messages to the client, see the next section.
@@ -650,12 +651,12 @@ instances, the application should enforce mutual exclusion. One
 way of achieving this is for all users of an `IModel` to
 `lock` the instance itself:
 
-<pre class="lang-csharp">
+```csharp
 IModel ch = RetrieveSomeSharedIModelInstance();
 lock (ch) {
   ch.BasicPublish(...);
 }
-</pre>
+```
 
 Symptoms of incorrect serialisation of `IModel` operations
 include, but are not limited to,
@@ -726,11 +727,11 @@ To be notified of such returns, clients can subscribe to the
 <code>IModel.BasicReturn</code> event. If there are no listeners attached to the
 event, then returned messages will be silently dropped.
 
-<pre class="lang-csharp">
+```csharp
 channel.BasicReturn += (sender, ea) => {
     ...
 };
-</pre>
+```
 
 The `BasicReturn` event will fire, for example, if the client
 publishes a message with the "mandatory" flag set to an exchange of
@@ -766,22 +767,22 @@ performed for every channel known to being open at the time of connection failur
 To enable automatic connection recovery, set
 <code>ConnectionFactory.AutomaticRecoveryEnabled</code> to true:
 
-<pre class="lang-csharp">
+```csharp
 ConnectionFactory factory = new ConnectionFactory();
 factory.AutomaticRecoveryEnabled = true;
 // connection that will recover automatically
 IConnection conn = factory.CreateConnection();
-</pre>
+```
 
 If recovery fails due to an exception (e.g. RabbitMQ node is
 still not reachable), it will be retried after a fixed time interval (default
 is 5 seconds). The interval can be configured:
 
-<pre class="lang-csharp">
+```csharp
 ConnectionFactory factory = new ConnectionFactory();
 // attempt recovery every 10 seconds
 factory.NetworkRecoveryInterval = TimeSpan.FromSeconds(10);
-</pre>
+```
 
 
 ### <a id="recovery-triggers" class="anchor" href="#recovery-triggers">When Will Connection Recovery Be Triggered?</a>
@@ -800,7 +801,7 @@ recovery won't kick in. Applications developers are responsible for retrying
 such connections, logging failed attempts, implementing a limit to the number
 of retries and so on. Here's a very basic example:
 
-<pre class="lang-csharp">
+```csharp
 ConnectionFactory factory = new ConnectionFactory();
 // configure various connection settings
 
@@ -810,7 +811,7 @@ try {
   Thread.Sleep(5000);
   // apply retry logic
 }
-</pre>
+```
 
 When a connection is closed by the application via the <code>Connection.Close</code> method,
 connection recovery will not be initiated.
@@ -833,13 +834,13 @@ and account for connection failures.
 Topology recovery involves recovery of exchanges, queues, bindings
 and consumers. It is enabled by default but can be disabled:
 
-<pre class="lang-csharp">
+```csharp
 ConnectionFactory factory = new ConnectionFactory();
 
 IConnection conn = factory.CreateConnection();
 factory.AutomaticRecoveryEnabled = true;
 factory.TopologyRecoveryEnabled  = false;
-</pre>
+```
 
 
 ### <a id="automatic-recovery-limitations" class="anchor" href="#automatic-recovery-limitations">Failure Detection and Recovery Limitations</a>
@@ -920,7 +921,7 @@ connection. The broker then verifies the access token signature, validity, and
 permissions before authorising the connection and granting access to the
 requested virtual host.
 
-<pre class="lang-csharp">
+```csharp
 using RabbitMQ.Client.OAuth2;
 
 var tokenEndpointUri = new Uri("http://somedomain.com/token");
@@ -931,12 +932,12 @@ var connectionFactory = new ConnectionFactory {
         CredentialsProvider = credentialsProvider
 };            
 var connection = connectionFactory.CreateConnection();
-</pre>
+```
 
 In production, ensure you use HTTPS for the token endpoint URI and configure
 a `HttpClientHandler` appropriately for the `HttpClient` :
 
-<pre class="lang-csharp">
+```csharp
 HttpClientHandler httpClientHandler = buildHttpClientHandlerWithTLSEnabled();
 
 var tokenEndpointUri = new Uri("https://somedomain.com/token");
@@ -951,7 +952,7 @@ var connectionFactory = new ConnectionFactory {
         CredentialsProvider = credentialsProvider
 };            
 var connection = connectionFactory.CreateConnection();
-</pre>
+```
 
 Note: In case your Authorization server requires extra request parameters
 beyond what the specification requires, you can add `<key, value>` pairs to a
@@ -971,7 +972,7 @@ raises an event in which the connection calls `ICredentialsProvider#Refresh()`.
 The following snippet shows how to create a `TimerBasedCredentialRefresher`
 instance and set it up on the `ConnectionFactory`:
 
-<pre class="lang-csharp">
+```csharp
 using RabbitMQ.Client.OAuth2;
 ...
 
@@ -982,7 +983,7 @@ var connectionFactory = new ConnectionFactory {
         CredentialsRefresher = credentialsRefresher
 };            
 var connection = connectionFactory.CreateConnection();
-</pre>
+```
 
 The `TimerBasedCredentialRefresher` schedules a refresh after 2/3 of the token
 validity time. For example, if the token expires in 60 minutes, it is refreshed

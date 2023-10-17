@@ -73,19 +73,19 @@ Applications open a channel right after successfully opening a [connection](conn
 Here's a Java client example that opens a new channel with an automatically allocated channel ID
 after opening a new connection:
 
-<pre class="lang-java">
+```java
 ConnectionFactory cf = new ConnectionFactory();
 Connection conn = cf.createConnection();
 
 Channel ch = conn.createChannel();
 
 // ... use the channel to declare topology, publish, consume
-</pre>
+```
 
 In .NET client channels are represented using the `IModel` interface, so the names in the API
 are different:
 
-<pre class="lang-csharp">
+```csharp
 var cf = new ConnectionFactory();
 var conn = cf.newConnection();
 
@@ -93,7 +93,7 @@ var conn = cf.newConnection();
 var ch = conn.CreateModel();
 
 // ... use the channel to declare topology, publish, consume
-</pre>
+```
 
 Much like connections, channels are meant to be long lived. That is, there is no need to open
 a channel per operation and doing so would be very inefficient, since opening a channel is a
@@ -104,7 +104,7 @@ network roundtrip.
 When a channel is no longer needed, it should be closed. Closing a channel will render it
 unusable and schedule its resources to be reclaimed:
 
-<pre class="lang-java">
+```java
 Channel ch = conn.createChannel();
 
 // do some work
@@ -112,11 +112,11 @@ Channel ch = conn.createChannel();
 // close the channel when it is no longer needed
 
 ch.close();
-</pre>
+```
 
 The same example using the .NET client:
 
-<pre class="lang-csharp">
+```csharp
 // the .NET client calls channels "models"
 var ch = conn.CreateModel();
 
@@ -125,7 +125,7 @@ var ch = conn.CreateModel();
 // close the channel when it is no longer needed
 
 ch.Close();
-</pre>
+```
 
 As mentioned above, a closed channel cannot be used. An attempt to perform an operation
 on a closed channel will result in an exception that says that the channel has already been
@@ -198,47 +198,47 @@ both RabbitMQ and client libraries.
 
 On the server side, the limit is controlled using the `channel_max`:
 
-<pre class="lang-ini">
+```ini
 # no more 100 channels can be opened on a connection at the same time
 channel_max = 100
-</pre>
+```
 
 Should the configured limit be exceeded, the connection will be closed with a fatal
 error:
 
-<pre class="lang-ini">
+```ini
 2019-02-11 16:04:06.296 [error] &lt;0.887.0&gt; Error on AMQP connection &lt;0.887.0&gt; (127.0.0.1:49956 -&gt; 127.0.0.1:5672, vhost: '/', user: 'guest', state: running), channel 23:
  operation none caused a connection exception not_allowed: "number of channels opened (22) has reached the negotiated channel_max (22)"
-</pre>
+```
 
 Clients can be configured to allow fewer channels per connection. With [RabbitMQ Java client](./api-guide.html),
 `ConnectionFactory#setRequestedChannelMax` is the method that controls the limit:
 
-<pre class="lang-java">
+```java
 ConnectionFactory cf = new ConnectionFactory();
 // Ask for up to 32 channels per connection. Will have an effect as long as the server is configured
 // to use a higher limit, otherwise the server's limit will be used.
 cf.setRequestedChannelMax(32);
-</pre>
+```
 
 With [RabbitMQ .NET client](./dotnet-api-guide.html), use the `ConnectionFactory#RequestedChannelMax`
 property:
 
-<pre class="lang-csharp">
+```csharp
 var cf = new ConnectionFactory();
 // Ask for up to 32 channels per connection. Will have an effect as long as the server is configured
 // to use a higher limit, otherwise the server's limit will be used.
 cf.RequestedChannelMax = 32;
-</pre>
+```
 
 The lower value of the two is used: the client cannot
 be configured to allow for more channels than the server configured maximum.
 Clients that attempt that will run into an error that looks like this in the logs:
 
-<pre class="lang-ini">
+```ini
 2019-02-11 16:03:16.543 [error] &lt;0.882.0&gt; closing AMQP connection &lt;0.882.0&gt; (127.0.0.1:49911 -&gt; 127.0.0.1:5672):
 failed to negotiate connection parameters: negotiated channel_max = 2047 is higher than the maximum allowed value (32)
-</pre>
+```
 
 
 ## <a id="monitoring" class="anchor" href="#monitoring">Monitoring, Metrics and Diagnostics</a>
@@ -270,14 +270,14 @@ the operator can determine an average number of channels per connection.
 
 To find out how much memory on a node is used by channels, use [`rabbitmq-diagnostics memory_breakdown`](./rabbitmq-diagnostics.8.html):
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics memory_breakdown -q --unit mb
 # => [elided for brevity]
 # ...
 # => connection_channels: 3.596 mb (2.27%)
 # ...
 # => [elided for brevity]
-</pre>
+```
 
 See the [RabbitMQ Memory Use Analysis guide](./memory-use.html) for details.
 
@@ -346,26 +346,26 @@ as needed:
 primary commands for inspecting per-connection channel count and channel details such as the number of
 consumers, [unacknowledged messages](./confirms.html#acknowledgement-modes), [prefetch](./confirms.html#channel-qos-prefetch) and so on.
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_connections name channels -q
 # =&gt; name	channels
 # =&gt; 127.0.0.1:52956 -&gt; 127.0.0.1:5672	10
 # =&gt; 127.0.0.1:52964 -&gt; 127.0.0.1:5672	33
-</pre>
+```
 
 The rightmost column contains channel count on the connection.
 
 Table headers can be suppressed:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_connections name channels -q --no-table-headers
 # =&gt; 127.0.0.1:52956 -&gt; 127.0.0.1:5672	10
 # =&gt; 127.0.0.1:52964 -&gt; 127.0.0.1:5672	33
-</pre>
+```
 
 To inspect individual channels, use [`rabbitmqctl list_channels`](./rabbitmqctl.8.html):
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_channels -q
 # =&gt; pid	user	consumer_count	messages_unacknowledged
 # =&gt; &lt;rabbit@mercurio.3.815.0&gt;	guest	0	0
@@ -375,11 +375,11 @@ rabbitmqctl list_channels -q
 # =&gt; &lt;rabbit@mercurio.3.832.0&gt;	guest	0	0
 # =&gt; &lt;rabbit@mercurio.3.839.0&gt;	guest	0	0
 # =&gt; &lt;rabbit@mercurio.3.840.0&gt;	guest	0	0
-</pre>
+```
 
 Table headers can be suppressed:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_channels -q --no-table-headers
 # =&gt; &lt;rabbit@mercurio.3.815.0&gt;	guest	0	0
 # =&gt; &lt;rabbit@mercurio.3.820.0&gt;	guest	0	0
@@ -388,11 +388,11 @@ rabbitmqctl list_channels -q --no-table-headers
 # =&gt; &lt;rabbit@mercurio.3.832.0&gt;	guest	0	0
 # =&gt; &lt;rabbit@mercurio.3.839.0&gt;	guest	0	0
 # =&gt; &lt;rabbit@mercurio.3.840.0&gt;	guest	0	0
-</pre>
+```
 
 It is possible to display a different set of columns:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_channels -q --no-table-headers vhost connection number  prefetch_count messages_unconfirmed
 # =&gt; /	&lt;rabbit@mercurio.3.799.0&gt;	1	0	0
 # =&gt; /	&lt;rabbit@mercurio.3.802.0&gt;	1	0	0
@@ -404,9 +404,9 @@ rabbitmqctl list_channels -q --no-table-headers vhost connection number  prefetc
 # =&gt; /	&lt;rabbit@mercurio.3.802.0&gt;	4	0	0
 # =&gt; /	&lt;rabbit@mercurio.3.799.0&gt;	5	0	0
 # =&gt; /	&lt;rabbit@mercurio.3.799.0&gt;	6	0	0
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_channels -s vhost connection number confirm
 # =&gt; /	&lt;rabbit@mercurio.3.799.0&gt;	1	false
 # =&gt; /	&lt;rabbit@mercurio.3.802.0&gt;	1	false
@@ -417,7 +417,7 @@ rabbitmqctl list_channels -s vhost connection number confirm
 # =&gt; /	&lt;rabbit@mercurio.3.799.0&gt;	4	false
 # =&gt; /	&lt;rabbit@mercurio.3.802.0&gt;	4	false
 # =&gt; /	&lt;rabbit@mercurio.3.799.0&gt;	5	false
-</pre>
+```
 
 
 ## <a id="flow-control" class="anchor" href="#flow-control">Publisher Flow Control</a>

@@ -95,7 +95,7 @@ queue type cannot. It must be specified at the time of declaration.
 
 The following snippet shows how to create a stream with the [AMQP 0.9.1 Java client](./api-guide.html):
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 Connection connection = factory.newConnection();
 Channel channel = connection.createChannel();
@@ -105,7 +105,7 @@ channel.queueDeclare(
   false, false, // not exclusive, not auto-delete
   Collections.singletonMap("x-queue-type", "stream")
 );
-</pre>
+```
 
 Declaring a queue with an `x-queue-type` argument set to `stream` will create a stream
 with a replica on each configured RabbitMQ node. Streams are quorum systems
@@ -137,7 +137,7 @@ Default: (500000000 bytes).
 The following snippet shows how to set the maximum size of a stream to 20 GB, with
 segment files of 100 MB:
 
-<pre class="lang-java">
+```java
 Map&lt;String, Object&gt; arguments = new HashMap&lt;&gt;();
 arguments.put("x-queue-type", "stream");
 arguments.put("x-max-length-bytes", 20_000_000_000); // maximum stream size: 20 GB
@@ -148,7 +148,7 @@ channel.queueDeclare(
   false, false, // not exclusive, not auto-delete
   arguments
 );
-</pre>
+```
 
 
 ### Client Operations
@@ -175,7 +175,7 @@ to the log after the consumer starts. The following values are supported:
 
 The following snippet shows how to use the `first` offset specification:
 
-<pre class="lang-java">
+```java
 channel.basicQos(100); // QoS must be specified
 channel.basicConsume(
   "my-stream",
@@ -187,11 +187,11 @@ channel.basicConsume(
    channel.basicAck(message.getEnvelope().getDeliveryTag(), false); // ack is required
   },
   consumerTag -> { });
-</pre>
+```
 
 The following snippet shows how to specify a specific offset to consume from:
 
-<pre class="lang-java">
+```java
 channel.basicQos(100); // QoS must be specified
 channel.basicConsume(
   "my-stream",
@@ -203,11 +203,11 @@ channel.basicConsume(
    channel.basicAck(message.getEnvelope().getDeliveryTag(), false); // ack is required
   },
   consumerTag -> { });
-</pre>
+```
 
 The following snippet shows how to specify a specific timestamp to consume from:
 
-<pre class="lang-java">
+```java
 // an hour ago
 Date timestamp = new Date(System.currentTimeMillis() - 60 * 60 * 1_000)
 channel.basicQos(100); // QoS must be specified
@@ -221,7 +221,7 @@ channel.basicConsume(
    channel.basicAck(message.getEnvelope().getDeliveryTag(), false); // ack is required
   },
   consumerTag -> { });
-</pre>
+```
 
 
 #### Other Stream Operations
@@ -269,9 +269,9 @@ It is possible to create the topology of a super stream with any AMQP 0.9.1 libr
 It may be easier to use the `rabbitmq-streams add_super_stream` command though.
 Here is how to use it to create an `invoices` super stream with 3 partitions:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-streams add_super_stream invoices --partitions 3
-</pre>
+```
 
 Use `rabbitmq-streams add_super_stream --help` to learn more about the command.
 
@@ -396,13 +396,13 @@ removed from the replica list of all streams it currently hosts replicas for.
 Two [CLI commands](./cli.html) are provided to perform the above operations,
 `rabbitmq-streams add_replica` and `rabbitmq-streams delete_replica`:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-streams add_replica [-p &lt;vhost&gt;] &lt;stream-name&gt; &lt;node&gt;
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 rabbitmq-streams delete_replica [-p &lt;vhost&gt;] &lt;stream-name&gt; &lt;node&gt;
-</pre>
+```
 
 To successfully add and remove replicas the stream coordinator must be
 available in the cluster.
@@ -419,9 +419,9 @@ to become in-sync and then de-comission the node it replaces.
 
 The replication status of a stream can be queried using the following command:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-streams stream_status [-p &lt;vhost&gt;] &lt;stream-name&gt;
-</pre>
+```
 
 ## <a id="behaviour" class="anchor" href="#behaviour">Stream Behaviour</a>
 

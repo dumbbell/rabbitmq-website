@@ -37,15 +37,15 @@ as a dependency.
 
 Before installing make sure the taps are up-to-date:
 
-<pre class="lang-bash">
+```bash
 brew update
-</pre>
+```
 
 Then, install RabbitMQ server with:
 
-<pre class="lang-bash">
+```bash
 brew install rabbitmq
-</pre>
+```
 
 Installing the RabbitMQ formula will install key dependencies such as a [supported Erlang/OTP version](./which-erlang.html).
 
@@ -59,9 +59,9 @@ Links to binaries have been created under `/usr/local/sbin` for Intel Macs or `/
 
 To find out locations for your installation, use:
 
-<pre class="lang-bash">
+```bash
 brew info rabbitmq
-</pre>
+```
 
 With Homebrew, the node and CLI tools will use the logged in user account by default.
 
@@ -75,29 +75,29 @@ Homebrew formula uses [generic UNIX binary builds](./install-generic-unix.html) 
 
 To start a node in the foreground, run:
 
-<pre class="lang-bash">
+```bash
 CONF_ENV_FILE="/opt/homebrew/etc/rabbitmq/rabbitmq-env.conf" /opt/homebrew/opt/rabbitmq/sbin/rabbitmq-server
-</pre>
+```
 
 To start a node in the background, use `brew services start`:
 
-<pre class="lang-bash">
+```bash
 brew services start rabbitmq
-</pre>
+```
 
 #### Stopping the Server
 
 To stop a running node, use:
 
-<pre class="lang-bash">
+```bash
 brew services stop rabbitmq
-</pre>
+```
 
 or CLI tools directly:
 
-<pre class="lang-bash">
+```bash
 /opt/homebrew/opt/rabbitmq/sbin/rabbitmqctl shutdown
-</pre>
+```
 
 The command will wait for the node process to stop. If the target node is not running,
 it will exit with a warning.
@@ -107,9 +107,9 @@ it will exit with a warning.
 File and directory locations used by Homebrew differ from Intel Macs to Apple Silicon ones.
 To find out locations for your installation, use:
 
-<pre class="lang-bash">
+```bash
 brew info rabbitmq
-</pre>
+```
 
 On Apple Silicon Macs, [RabbitMQ configuration file](configure.html#configuration-files) located at `/opt/homebrew/etc/rabbitmq/rabbitmq.conf`.
 The file does not exist by default and can be created.
@@ -125,12 +125,12 @@ The formula sets up links to CLI tools under `/usr/local/sbin` for Intel Macs or
 
 In case that directory is not in `PATH`, it is recommended to append it:
 
-<pre class="lang-bash">
+```bash
 # for macOS Intel
 export PATH=$PATH:/usr/local/sbin
 # for Apple Silicon
 export PATH=$PATH:/opt/homebrew/sbin
-</pre>
+```
 
 Add the above export to the shell profile (such as `~/.bashrc` for bash or `~/.zshrc` for zsh)
 to have `PATH` updated for every new shell, including OS restarts.

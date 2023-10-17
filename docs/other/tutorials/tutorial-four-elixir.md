@@ -38,9 +38,9 @@ Bindings
 In previous examples we were already creating bindings. You may recall
 code like:
 
-<pre class="lang-elixir">
+```elixir
 AMQP.Queue.bind(channel, queue_name, exchange_name)
-</pre>
+```
 
 A binding is a relationship between an exchange and a queue. This can
 be simply read as: the queue is interested in messages from this
@@ -50,9 +50,9 @@ Bindings can take an extra `routing_key` parameter. To avoid the
 confusion with a `basic_publish` parameter we're going to call it a
 `binding key`. This is how we could create a binding with a key:
 
-<pre class="lang-elixir">
+```elixir
 AMQP.Queue.bind(channel, queue_name, exchange_name, routing_key: "black")
-</pre>
+```
 
 The meaning of a binding key depends on the exchange type. The
 `fanout` exchanges, which we used previously, simply ignored its
@@ -182,15 +182,15 @@ first.
 
 Like always we need to create an exchange first:
 
-<pre class="lang-elixir">
+```elixir
 AMQP.Exchange.declare(channel, "direct_logs", :direct)
-</pre>
+```
 
 And we're ready to send a message:
 
-<pre class="lang-elixir">
+```elixir
 AMQP.Basic.publish(channel, "direct_logs", severity, message)
-</pre>
+```
 
 To simplify things we will assume that 'severity' can be one of
 'info', 'warning', 'error'.
@@ -203,14 +203,14 @@ Receiving messages will work just like in the previous tutorial, with
 one exception - we're going to create a new binding for each severity
 we're interested in.
 
-<pre class="lang-elixir">
+```elixir
 {:ok, %{queue: queue_name}} = AMQP.Queue.declare(channel, "", exclusive: true)
 
 for {severity, true} &lt;- severities do
   binding_key = severity |> to_string
   AMQP.Queue.bind(channel, queue_name, "direct_logs", routing_key: binding_key)
 end
-</pre>
+```
 
 
 Putting it all together
@@ -257,7 +257,7 @@ Putting it all together
 
 The code for `emit_log_direct.exs`:
 
-<pre class="lang-elixir">
+```elixir
 {:ok, connection} = AMQP.Connection.open
 {:ok, channel} = AMQP.Channel.open(connection)
 
@@ -286,12 +286,12 @@ for {severity, true} &lt;- severities do
 end
 
 AMQP.Connection.close(connection)
-</pre>
+```
 
 
 The code for `receive_logs_direct.exs`:
 
-<pre class="lang-elixir">
+```elixir
 defmodule ReceiveLogsDirect do
   def wait_for_messages(channel) do
     receive do
@@ -326,29 +326,29 @@ AMQP.Basic.consume(channel, queue_name, nil, no_ack: true)
 IO.puts " [*] Waiting for messages. To exit press CTRL+C, CTRL+C"
 
 ReceiveLogsDirect.wait_for_messages(channel)
-</pre>
+```
 
 If you want to save only 'warning' and 'error' (and not 'info') log
 messages to a file, just open a console and type:
 
-<pre class="lang-bash">
+```bash
 # => mix run receive_logs_direct.exs --warning --error > logs_from_rabbit.log
-</pre>
+```
 
 If you'd like to see all the log messages on your screen, open a new
 terminal and do:
 
-<pre class="lang-bash">
+```bash
 mix run receive_logs_direct.exs --info --warning --error
 # => [*] Waiting for logs. To exit press CTRL+C, CTRL+C
-</pre>
+```
 
 And, for example, to emit an `error` log message just type:
 
-<pre class="lang-bash">
+```bash
 mix run emit_log_direct.exs --error "Run. Run. Or it will explode."
 # => [x] Sent '[error] Run. Run. Or it will explode.'
-</pre>
+```
 
 (Full source code for [emit_log_direct.exs](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/elixir/emit_log_direct.exs) and [receive_logs_direct.exs](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/elixir/receive_logs_direct.exs))
 

@@ -79,10 +79,10 @@ can be adjusted by editing the [configuration
 file](configure.html#configuration-files).
 
 The example below sets the threshold to the default value of 0.4:
-<pre class="lang-ini">
+```ini
 \# new style config format, recommended
 vm_memory_high_watermark.relative = 0.4
-</pre>
+```
 
 The default value of 0.4 stands for 40% of available (detected) RAM or
 40% of available virtual address space, whichever is
@@ -95,15 +95,15 @@ Alternatively, the memory threshold can be adjusted by setting
 an absolute limit of RAM used by the node. The example below sets
 the threshold to 1073741824 bytes (1024 MiB):
 
-<pre class="lang-ini">
+```ini
 vm_memory_high_watermark.absolute = 1073741824
-</pre>
+```
 
 Same example, but using memory units:
 
-<pre class="lang-ini">
+```ini
 vm_memory_high_watermark.absolute = 1024MiB
-</pre>
+```
 
 If the absolute limit is larger than the installed RAM or available virtual
 address space, the threshold is set to whichever limit is smaller.
@@ -111,9 +111,9 @@ address space, the threshold is set to whichever limit is smaller.
 The memory limit is appended to the [log file](./logging.html) when the RabbitMQ node
 starts:
 
-<pre class="lang-ini">
+```ini
 2019-06-10 23:17:05.976 [info] &lt;0.308.0&gt; Memory high watermark set to 1024 MiB (1073741824 bytes) of 8192 MiB (8589934592 bytes) total
-</pre>
+```
 
 The memory limit may also be queried using the
 `rabbitmq-diagnostics memory_breakdown` and `rabbitmq-diagnostics status` commands.
@@ -121,27 +121,27 @@ The memory limit may also be queried using the
 The threshold can be changed while the broker is running
 using the
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_vm_memory_high_watermark <em>&lt;fraction&gt;</em>
-</pre>
+```
 
 command or
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_vm_memory_high_watermark absolute <em>&lt;memory_limit&gt;</em>
-</pre>
+```
 
 For example:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_vm_memory_high_watermark 0.6
-</pre>
+```
 
 and
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_vm_memory_high_watermark absolute "4G"
-</pre>
+```
 
 When using the absolute mode, it is possible to use one of the following memory units:
 
@@ -163,9 +163,9 @@ When the threshold or absolute limit is set to `0`, it makes the memory alarm go
 immediately and thus eventually blocks all publishing connections. This may be
 useful if you wish to deactivate publishing globally:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_vm_memory_high_watermark 0
-</pre>
+```
 
 ## <a id="address-space" class="anchor" href="#address-space">Limited Address Space</a>
 
@@ -173,9 +173,9 @@ When running RabbitMQ inside a 32 bit Erlang VM in a 64 bit
 OS (or a 32 bit OS with PAE), the addressable memory is
 limited. The server will detect this and log a message like:
 
-<pre class="lang-plaintext">
+```plaintext
 2018-11-22 10:44:33.654 [warning] Only 2048MB of 12037MB memory usable due to limited address space.
-</pre>
+```
 
 The memory alarm system is not perfect. While stopping publishing
 will usually prevent any further memory from being used, it is quite
@@ -211,10 +211,10 @@ the `vm_memory_high_watermark_paging_ratio`
 configuration from its default value
 of `0.5`. For example:
 
-<pre class="lang-ini">
+```ini
 vm_memory_high_watermark_paging_ratio = 0.75
 vm_memory_high_watermark.relative = 0.4
-</pre>
+```
 
 The above configuration starts paging at 30% of memory used, and
 blocks publishers at 40%.
@@ -226,9 +226,9 @@ If the RabbitMQ server is unable to detect the operating system it is running on
 it will append a warning to the [log file](./logging.html). It then assumes than
 1GB of RAM is installed:
 
-<pre class="lang-ini">
+```ini
 2018-11-22 10:44:33.654 [warning] Unknown total memory size for your OS {unix,magic_homegrown_os}. Assuming memory size is 1024MB.
-</pre>
+```
 
 In this case, the `vm_memory_high_watermark`
 configuration value is used to scale the assumed 1GB

@@ -54,16 +54,16 @@ Additionally, you will need
 
 The repository is hosted on GitHub. Clone the repository with
 
-<pre class="lang-bash">
+```bash
 git clone https://github.com/rabbitmq/rabbitmq-erlang-client.git
-</pre>
+```
 
 to build the client, run `make`:
 
-<pre class="lang-bash">
+```bash
 cd rabbitmq-erlang-client
 make
-</pre>
+```
 
 This will clone and build all dependencies of the client.
 
@@ -122,9 +122,9 @@ There are other useful `Makefile` targets available in the repository. They incl
       file from default location:
       <code>~/.dialyzer_plt</code>. Use
 
-<pre class="lang-bash">
+```bash
 make PLT=/path/to/plt dialyze
-</pre>
+```
 
       to override this. Add broker to PLT beforehand,
       otherwise you will a lot of 'unknown function'

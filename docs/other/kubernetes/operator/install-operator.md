@@ -34,7 +34,7 @@ The Operator requires
 
 To install the Operator, run the following command:
 
-<pre class="lang-bash">
+```bash
 kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
 # namespace/rabbitmq-system created
 # customresourcedefinition.apiextensions.k8s.io/rabbitmqclusters.rabbitmq.com created
@@ -44,7 +44,7 @@ kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/d
 # rolebinding.rbac.authorization.k8s.io/rabbitmq-cluster-leader-election-rolebinding created
 # clusterrolebinding.rbac.authorization.k8s.io/rabbitmq-cluster-operator-rolebinding created
 # deployment.apps/rabbitmq-cluster-operator created
-</pre>
+```
 
 At this point, the RabbitMQ Cluster Kubernetes Operator is successfully installed.
 Once the RabbitMQ Cluster Kubernetes Operator pod is running, head over to [Using Kubernetes RabbitMQ Cluster Kubernetes Operator](./using-operator.html) for instructions on how to deploy RabbitMQ using a Kubernetes Custom Resource.
@@ -61,13 +61,13 @@ has instructions to relocate the Operator image to a private registry.
 The `kubectl rabbitmq` plugin provides commands for managing RabbitMQ clusters.
 The plugin can be installed using [krew](https://github.com/kubernetes-sigs/krew):
 
-<pre class="lang-bash">
+```bash
 kubectl krew install rabbitmq
-</pre>
+```
 
 To get the list of available commands, use:
 
-<pre class="lang-bash">
+```bash
 kubectl rabbitmq help
 # USAGE:
 #   Install RabbitMQ Cluster Operator (optionally provide image to use a relocated image or a specific version)
@@ -82,16 +82,16 @@ kubectl rabbitmq install-cluster-operator
 # rolebinding.rbac.authorization.k8s.io/rabbitmq-cluster-leader-election-rolebinding created
 # clusterrolebinding.rbac.authorization.k8s.io/rabbitmq-cluster-operator-rolebinding created
 # deployment.apps/rabbitmq-cluster-operator created
-</pre>
+```
 
 ### <a id='helm-chart' class='anchor' href='#helm-chart'>Installation using Helm chart</a>
 
 To install the Operator using [Bitnami Helm chart](https://github.com/bitnami/charts/tree/main/bitnami/rabbitmq-cluster-operator), run the following command:
 
-<pre class="lang-bash">
+```bash
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install my-release bitnami/rabbitmq-cluster-operator
-</pre>
+```
 
 The last command deploys the RabbitMQ Cluster Kubernetes Operator on the Kubernetes cluster in the default configuration. The [Parameters](https://github.com/bitnami/charts/tree/main/bitnami/rabbitmq-cluster-operator#parameters) section lists the parameters that can be configured during installation.
 
@@ -107,11 +107,11 @@ The Operator's Helm chart requires
 
 If you can't pull images from Docker Hub directly to your Kubernetes cluster, you need to relocate the images to your private registry first. The exact steps depend on your environment but will likely look like this:
 
-<pre class="lang-bash">
+```bash
 docker pull rabbitmqoperator/cluster-operator:{some-version}
 docker tag rabbitmqoperator/cluster-operator:{some-version} {someregistry}/cluster-operator:{some-version}
 docker push {someregistry}/cluster-operator:{some-version}
-</pre>
+```
 
 The value of `{someregistry}` should be the address of an OCI compatible registry. The value of `{some-version}` is
 a version number of the Cluster Operator.
@@ -121,7 +121,7 @@ If you require authentication to pull images from your private image registry, y
 [Download the manifest](https://github.com/rabbitmq/cluster-operator/releases) from the release you are relocating and edit
 the section in Deployment image. You can locate this section by `grep`'ing the string `image:`
 
-<pre class="lang-bash">
+```bash
 grep -C3 image: releases/cluster-operator.yml
 # [...]
 # --
@@ -132,7 +132,7 @@ grep -C3 image: releases/cluster-operator.yml
 #         name: operator
 #         resources:
 #           limits:
-</pre>
+```
 
 #### <a id='private-images' class='anchor' href='#private-images'>Configure Kubernetes Cluster Access to Private Images</a>
 
@@ -140,23 +140,23 @@ If you relocated the image to a private registry and your registry requires auth
 
 First, create the Service Account that the Operator will use to run and to pull images:
 
-<pre class="lang-yaml">
+```yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: rabbitmq-cluster-operator
   namespace: rabbitmq-system
-</pre>
+```
 
 Second, create a Secret with the credentials to pull from the private registry:
 
-<pre class="lang-bash">
+```bash
 kubectl -n rabbitmq-system create secret \
 docker-registry rabbitmq-cluster-registry-access \
 --docker-server=DOCKER-SERVER \
 --docker-username=DOCKER-USERNAME \
 --docker-password=DOCKER-PASSWORD
-</pre>
+```
 
 Where:
 
@@ -166,20 +166,20 @@ Where:
 
 For example:
 
-<pre class="lang-bash">
+```bash
 kubectl -n rabbitmq-system create secret \
 docker-registry rabbitmq-cluster-registry-access \
 --docker-server=docker.io/my-registry \
 --docker-username=my-username \
 --docker-password=example-password1
-</pre>
+```
 
 Now update the Operator Service Account by running:
 
-<pre class="lang-bash">
+```bash
 kubectl -n rabbitmq-system patch serviceaccount \
 rabbitmq-cluster-operator -p '{"imagePullSecrets": [{"name": "rabbitmq-cluster-registry-access"}]}'
-</pre>
+```
 
 Please note that the name of the Operator Service Account is not configurable and it must be `rabbitmq-cluster-operator`.
 

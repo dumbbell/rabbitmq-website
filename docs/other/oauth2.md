@@ -50,18 +50,18 @@ This guide covers
 The OAuth 2 plugin must be enabled (or [pre-configured](./plugins.html#enabled-plugins-file)) before it can be used,
 like all other plugins:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_auth_backend_oauth2
-</pre>
+```
 
 Then it must be specified as one of the [authN and authZ backends](./access-control.html#backends). It can be
 one of the backends or the only one backend, like in the example below:
 
-<pre class="lang-ini">
+```ini
 # note that the module name begins with a "rabbit_", not "rabbitmq_", like in the name
 # of the plugin
 auth_backends.1 = rabbit_auth_backend_oauth2
-</pre>
+```
 
 Next, let's take a look at the workflows the OAuth 2 plugin supports.
 
@@ -106,7 +106,7 @@ The following fields are required: `kty`, `value`, `alg`, and `kid`.
 
 Assuming UAA reports the following signing key information:
 
-<pre class="lang-erlang">
+```erlang
 uaac signing key
   kty: RSA
   e: AQAB
@@ -124,11 +124,11 @@ VwIDAQAB
 -----END PUBLIC KEY-----
   n: ANnT_r0Z_io_kv6BnePZKuvgijQHbggta2i30x-wd6o5mWJuOcg5fl5oCvQjZh15IaPar5oXZLHcw1bHXg5YSiHXCFmnYag83bZ9YY_9tolMK4R9G3eO-YZSnLImfqMv7HYBoAM75pk0JnTKhF6ldgfavShQZqOAIYf-vneMDNax_ZMZdEbzACi3vnWqCByI6JPIQju
       HCkEBMPxKwXuEhdnK98EMAnxdalbuHgFTVX8X8v7hLxt0O8dNOT903CvkHGICcWr95YnLUouXcli4BkAL5JJ1oraUSvClS8qRI-Vino-ghfJ6t9LrZ9eRUINCZB6Ks8Igqqnnp_BiD7XiO1c
-</pre>
+```
 
 it will translate into the following configuration (in the [advanced RabbitMQ config format](https://www.rabbitmq.com/configure.html)):
 
-<pre class="lang-erlang">
+```erlang
 [
   %% ...
   %% backend configuration
@@ -150,11 +150,11 @@ VwIDAQAB
       ]}
     ]}
 ].
-</pre>
+```
 
 If a symmetric key is used, the configuration will look like this:
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbitmq_auth_backend_oauth2, [
     {resource_server_id, &lt;&lt;"my_rabbit_server">>},
@@ -167,12 +167,12 @@ If a symmetric key is used, the configuration will look like this:
     ]}
   ]},
 ].
-</pre>
+```
 
 The key set can also be retrieved dynamically from a URL serving a [JWK Set](https://tools.ietf.org/html/rfc7517#section-5).
 In that case, the configuration will look like this:
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbitmq_auth_backend_oauth2, [
     {resource_server_id, &lt;&lt;"my_rabbit_server">>},
@@ -181,7 +181,7 @@ In that case, the configuration will look like this:
     ]}
   ]},
 ].
-</pre>
+```
 
 NOTE: `jwks_url` takes precedence over `signing_keys` if both are provided.
 
@@ -208,7 +208,7 @@ NOTE: `jwks_url` takes precedence over `signing_keys` if both are provided.
 For example:
 
 Configure with key files
-<pre class="lang-ini">
+```ini
 auth_oauth2.resource_server_id = new_resource_server_id
 auth_oauth2.additional_scopes_key = my_custom_scope_key
 auth_oauth2.preferred_username_claims.1 = username
@@ -218,9 +218,9 @@ auth_oauth2.signing_keys.id1 = test/config_schema_SUITE_data/certs/key.pem
 auth_oauth2.signing_keys.id2 = test/config_schema_SUITE_data/certs/cert.pem
 auth_oauth2.algorithms.1 = HS256
 auth_oauth2.algorithms.2 = RS256
-</pre>
+```
 Configure with key server
-<pre class="lang-ini">
+```ini
 auth_oauth2.resource_server_id = new_resource_server_id
 auth_oauth2.jwks_url = https://my-jwt-issuer/jwks.json
 auth_oauth2.https.cacertfile = test/config_schema_SUITE_data/certs/cacert.pem
@@ -230,7 +230,7 @@ auth_oauth2.https.fail_if_no_peer_cert = true
 auth_oauth2.https.hostname_verification = wildcard
 auth_oauth2.algorithms.1 = HS256
 auth_oauth2.algorithms.2 = RS256
-</pre>
+```
 
 ### <a id="resource-server-id" class="anchor" href="#resource-server-id">Resource Server ID and scope prefix</a>
 
@@ -241,11 +241,11 @@ By default, `resource_server_id` followed by the dot (`.`) character is the pref
 However, in some environments, it is not possible to use `resource_server_id` as the prefix for all scopes. For these environments, there is a new setting called `scope_prefix` which overrides the default scope prefix. Empty strings are allowed.
 
 Given the below configuration, the scope associated to the permission `read:*/*` is `api://read:*/*`.
-<pre class="lang-ini">
+```ini
 ...
 auth_oauth2.scope_prefix = api://
 ...
-</pre>
+```
 
 
 ### <a id="token-validation" class="anchor" href="#token-validation">Token validation</a>
@@ -337,12 +337,12 @@ It supports JWT claims whose value is a plain string, plus the `vhost` variable.
 For example, a user connected with the token below to the vhost `prod` should have
 a write permission on all exchanges starting with `x-prod-`, and any routing key starting with `u-bob-`:
 
-<pre class="lang-json">
+```json
 {
   "sub" : "bob",
   "scope" : [ "rabbitmq.write:*/q-{vhost}-*/u-{sub}-*" ]
 }
-</pre>
+```
 
 
 ### <a id="use-different-token-field" class="anchor" href="#use-different-token-field">Using a different token field for the Scope</a>
@@ -350,7 +350,7 @@ a write permission on all exchanges starting with `x-prod-`, and any routing key
 By default the plugin will look for the `scope` key in the token, you can configure the plugin to also look in other fields using the `extra_scopes_source` setting. Values format accepted are scope as **string** or **list**
 
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbitmq_auth_backend_oauth2, [
     {resource_server_id, &lt;&lt;"my_rabbit_server">>},
@@ -359,9 +359,9 @@ By default the plugin will look for the `scope` key in the token, you can config
     ]}
   ]},
 ].
-</pre>
+```
 Token sample:
-<pre class="lang-ini">
+```ini
 {
  "exp": 1618592626,
  "iat": 1618578226,
@@ -371,7 +371,7 @@ Token sample:
  "scope_as_list": ["my_id.configure:*/*", "my_id.read:*/*", my_id.write:*/*"],
  ...
  }
-</pre>
+```
 
 ### <a id="use-tokens-with-clients" class="anchor" href="#use-tokens-with-clients">Using Tokens with Clients</a>
 
@@ -398,13 +398,13 @@ Most authorization servers return the user's GUID in the `sub` claim instead of 
 
 Example `advanced.config` configuration:
 
-<pre class="lang-erlang">
+```erlang
   ...
   {rabbitmq_auth_backend_oauth2, [
     {resource_server_id, &lt;&lt;"rabbitmq"&gt;&gt;},
     {preferred_username_claims, [&lt;&lt;"user_name"&gt;&gt;,&lt;&lt;"email"&gt;&gt;]},
   ...
-</pre>
+```
 In the example configuration, RabbitMQ searches for the `user_name` claim first and if it is not found, RabbitMQ searches for the `email`. If these are not found, RabbitMQ uses its default lookup mechanism which first looks for `sub` and then `client_id`.
 
 ### <a id="token-expiration" class="anchor" href="#token-expiration">Token Expiration and Refresh</a>
@@ -423,7 +423,7 @@ defines a more sophisticated permission model.
 
 RabbitMQ supports JWT tokens compliant with the extension. Below is a sample example section of JWT token:
 
-<pre class="lang-javascript">
+```javascript
 {
   "authorization_details": [
     {
@@ -438,7 +438,7 @@ RabbitMQ supports JWT tokens compliant with the extension. Below is a sample exa
     }
   ]
 }
-</pre>
+```
 
 The token above contains two permissions under the attribute `authorization_details`.
 Both permissions are meant for RabbitMQ servers with `resource_server_type` set to `rabbitmq`.
@@ -466,9 +466,9 @@ The `locations` field can be either a string containing a single location or a J
 zero or many locations.
 
 A location consists of a list of key-value pairs separated by forward slash `/` character. Here is the format:
-<pre class="lang-bash">
+```bash
 cluster:&lt;resource_server_id_pattern>[/vhost:&lt;vhost_pattern>][/queue:&lt;queue_name_pattern>|/exchange:&lt;exchange_name_pattern][/routing-key:&lt;routing_key_pattern>]
-</pre>
+```
 
 Any string separated by `/` which does not conform to `&lt;key>:&lt;value>` is ignored. For instance, if your locations start with a prefix, e.g. `vrn/cluster:rabbitmq`, the `vrn` pattern part is ignored.
 
@@ -506,25 +506,26 @@ aforementioned convention using the following algorithm:
 For each location found in the `locations` where the `cluster` attribute matches the current RabbitMQ server's `resource_server_id`:
 
   - For each location found in the `locations` field where the `cluster` attribute matches the current RabbitMQ node's `resource_server_id`, the plugin extracts the `vhost`, `queue` or `exchange` and `routing_key` attributes from the location. If the location does not  have any of those attributes, the default value of `*` is assumed. Out of those values, the following scope suffix will be produced:
-    <pre class="lang-ini">scope_suffix = &lt;vhost>/&lt;queue>|&lt;exchange>/&lt;routing-key></pre>
+    ```ini
+scope_suffix = &lt;vhost>/&lt;queue>|&lt;exchange>/&lt;routing-key>```
 
   - For each action found in the `actions` field:
 
     if the action is not a known user tag, the following scope is produced out of it:
-    <pre class="lang-ini">
+    ```ini
       scope = &lt;resource_server_id>.&lt;action>:&lt;scope_suffix>
-    </pre>
+    ```
 
     For known user tag actions, the following scope is produced:
-    <pre class="lang-ini">
+    ```ini
       scope = &lt;resource_server_id>.&lt;action>
-    </pre>
+    ```
 
 
 The plugin produces permutations of all `actions` by  all `locations` that match the node's configured `resource_server_id`.
 
 In the following RAR example
-<pre class="lang-javascript">
+```javascript
 {
   "authorization_details": [
     { "type" : "rabbitmq",
@@ -537,7 +538,7 @@ In the following RAR example
     }
   ]
 }
-</pre>
+```
 
 if RabbitMQ node's `resource_server_id` is equal to `finance`, the plugin will compute the following sets of scopes:
 

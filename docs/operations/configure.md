@@ -196,43 +196,43 @@ The active configuration file can be verified by inspecting the
 RabbitMQ log file. It will show up in the [log file](logging.html)
 at the top, along with the other broker boot log entries. For example:
 
-<pre class="lang-ini">
+```ini
 node           : rabbit@example
 home dir       : /var/lib/rabbitmq
 config file(s) : /etc/rabbitmq/advanced.config
                : /etc/rabbitmq/rabbitmq.conf
-</pre>
+```
 
 If the configuration file cannot be found or read by RabbitMQ, the log entry
 will say so:
 
-<pre class="lang-ini">
+```ini
 node           : rabbit@example
 home dir       : /var/lib/rabbitmq
 config file(s) : /var/lib/rabbitmq/hare.conf (not found)
-</pre>
+```
 
 Alternatively, the location of configuration files used by a local node, use the [rabbitmq-diagnostics status](./rabbitmq-diagnostics.8.html) command:
 
-<pre class="lang-bash">
+```bash
 # displays key
 rabbitmq-diagnostics status
-</pre>
+```
 
 and look for the `Config files` section that would look like this:
 
-<pre class="lang-plaintext">
+```plaintext
 Config files
 
  * /etc/rabbitmq/advanced.config
  * /etc/rabbitmq/rabbitmq.conf
-</pre>
+```
 
 To inspect the locations of a specific node, including nodes running remotely, use the `-n` (short for `--node`) switch:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics status -n [node name]
-</pre>
+```
 
 Finally, config file location can be found in the [management UI](./management.html),
 together with other details about nodes.
@@ -297,18 +297,18 @@ cannot express. This is covered in more detail in the following sections.
 
 Compare this examplary `rabbitmq.conf` file
 
-<pre class="lang-ini">
+```ini
 # A new style format snippet. This format is used by rabbitmq.conf files.
 ssl_options.cacertfile           = /path/to/ca_certificate.pem
 ssl_options.certfile             = /path/to/server_certificate.pem
 ssl_options.keyfile              = /path/to/server_key.pem
 ssl_options.verify               = verify_peer
 ssl_options.fail_if_no_peer_cert = true
-</pre>
+```
 
 to
 
-<pre class="lang-erlang">
+```erlang
 %% A classic format snippet, now used by advanced.config files.
 [
   {rabbit, [{ssl_options, [{cacertfile,           "/path/to/ca_certificate.pem"},
@@ -317,7 +317,7 @@ to
                            {verify,               verify_peer},
                            {fail_if_no_peer_cert, true}]}]}
 ].
-</pre>
+```
 
 ### <a id="config-file" class="anchor" href="#config-file">The Main Configuration File, rabbitmq.conf</a>
 
@@ -334,14 +334,14 @@ The syntax can be briefly explained in 3 lines:
 
 A minimalistic example configuration file follows:
 
-<pre class="lang-ini">
+```ini
 # this is a comment
 listeners.tcp.default = 5673
-</pre>
+```
 
 The same example in the <a href="#config-file-formats">classic config format</a>:
 
-<pre class="lang-erlang">
+```erlang
 %% this is a comment
 [
   {rabbit, [
@@ -349,7 +349,7 @@ The same example in the <a href="#config-file-formats">classic config format</a>
     ]
   }
 ].
-</pre>
+```
 
 This example will alter the [port RabbitMQ listens on](./networking.html#ports) for
 AMQP 0-9-1 and AMQP 1.0 client connections from 5672 to 5673.
@@ -376,10 +376,10 @@ Use `.conf` as file extension for the new style config format, e.g. `/etc/rabbit
 A `conf.d`-style directory of files can also be used. Use `RABBITMQ_CONFIG_FILES` (note the plural "_FILES")
 to point the node at a directory of such files:
 
-<pre class="lang-ini">
+```ini
 # uses a directory of .conf files loaded in alphabetical order
 RABBITMQ_CONFIG_FILES=/path/to/a/custom/location/rabbitmq/conf.d
-</pre>
+```
 
 Target directory must contain a number of `.conf` files with the same syntax as `rabbitmq.conf`.
 
@@ -387,13 +387,13 @@ They will be **loaded in alphabetical order**. A common naming practice uses num
 in filenames to make it easier to reason about the order, or make sure a "defaults file"
 is always loaded first, regardless of how many extra files are generated at deployment time:
 
-<pre class="lang-bash">
+```bash
 ls -lh /path/to/a/custom/location/rabbitmq/conf.d
 # => -r--r--r--  1 rabbitmq  rabbitmq    87B Mar 21 19:50 00-defaults.conf
 # => -r--r--r--  1 rabbitmq  rabbitmq   4.6K Mar 21 19:52 10-main.conf
 # => -r--r--r--  1 rabbitmq  rabbitmq   1.6K Mar 21 19:52 20-tls.conf
 # => -r--r--r--  1 rabbitmq  rabbitmq   1.6K Mar 21 19:52 30-federation.conf
-</pre>
+```
 
 ### <a id="env-variable-interpolation" class="anchor" href="#env-variable-interpolation">Environment Variable Interpolation in `rabbitmq.conf`</a>
 
@@ -401,18 +401,18 @@ ls -lh /path/to/a/custom/location/rabbitmq/conf.d
 to override default user credentials, one can use [import a definition file](./definitions.html)
 or the following config file in combination with two environment variables:
 
-<pre class="lang-ini">
+```ini
 # environment variable interpolation
 default_user = $(SEED_USERNAME)
 default_pass = $(SEED_USER_PASSWORD)
-</pre>
+```
 
 Environment variables can be used to configure a portion of a value, for example,
 cluster name:
 
-<pre class="lang-ini">
+```ini
 cluster_name = deployment-$(DEPLOYMENT_ID)
-</pre>
+```
 
 Environment variable values are interpolated as strings before the config file is parsed and validated.
 This means that they can be used to override numerical settings (such as ports) or paths (such as TLS certificate and private key paths).
@@ -508,7 +508,7 @@ any configuration files. Users and deployment tool should use the following loca
 
 Environment variables can be used to override the location of the configuration file:
 
-<pre class="lang-ini">
+```ini
 # overrides primary config file location
 RABBITMQ_CONFIG_FILE=/path/to/a/custom/location/rabbitmq.conf
 
@@ -517,7 +517,7 @@ RABBITMQ_ADVANCED_CONFIG_FILE=/path/to/a/custom/location/advanced.config
 
 # overrides environment variable file location
 RABBITMQ_CONF_ENV_FILE=/path/to/a/custom/location/rabbitmq-env.conf
-</pre>
+```
 
 ### <a id="config-changes-effects" class="anchor" href="#config-changes-effects">When Will Configuration File Changes Be Applied</a>
 
@@ -540,16 +540,16 @@ This would help avoid unnecessary confusion and Windows service re-installations
 It is possible to print effective configuration (user provided values from all configuration files merged into defaults) using
 the [rabbitmq-diagnostics environment](./rabbitmq-diagnostics.8.html) command:
 
-<pre class="lang-bash">
+```bash
 # inspect effective configuration on a node
 rabbitmq-diagnostics environment
-</pre>
+```
 
 to check effective configuration of a specific node, including nodes running remotely, use the `-n` (short for `--node`) switch:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics environment -n [node name]
-</pre>
+```
 
 The command above will print applied configuration for every application (RabbitMQ, plugins, libraries) running on the node.
 Effective configuration is computed using the following steps:
@@ -627,9 +627,9 @@ some settings are quite obscure.
 
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 listeners.tcp.default = 5672
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -640,9 +640,9 @@ listeners.tcp.default = 5672
       listeners.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 num_acceptors.tcp = 10
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -653,9 +653,9 @@ num_acceptors.tcp = 10
       in milliseconds.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 handshake_timeout = 10000
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -674,9 +674,9 @@ handshake_timeout = 10000
       Number of Erlang processes that will accept TLS connections from clients.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 num_acceptors.ssl = 10
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -687,9 +687,9 @@ num_acceptors.ssl = 10
       TLS configuration. See the <a href="ssl.html#enabling-ssl">TLS guide</a>.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 ssl_options = none
-</pre>
+```
         </p>
     </td>
   </tr>
@@ -699,9 +699,9 @@ ssl_options = none
       TLS handshake timeout, in milliseconds.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 ssl_handshake_timeout = 5000
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -712,12 +712,12 @@ ssl_handshake_timeout = 5000
       triggered. Can be absolute or relative to the amount of RAM available
       to the OS:
 
-<pre class="lang-ini">
+```ini
 vm_memory_high_watermark.relative = 0.6
-</pre>
-<pre class="lang-ini">
+```
+```ini
 vm_memory_high_watermark.absolute = 2GB
-</pre>
+```
 
       See the <a href="memory.html">memory-based flow
       control</a> and <a href="alarms.html">alarms</a>
@@ -726,9 +726,9 @@ vm_memory_high_watermark.absolute = 2GB
       <p>
         Default:
 
-<pre class="lang-ini">
+```ini
 vm_memory_high_watermark.relative = 0.4
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -744,9 +744,9 @@ vm_memory_high_watermark.relative = 0.4
       </ul>
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 vm_memory_calculation_strategy = allocated
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -758,9 +758,9 @@ vm_memory_calculation_strategy = allocated
       memory. See the <a href="memory.html">memory-based flow control</a> documentation.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 vm_memory_high_watermark_paging_ratio = 0.5
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -792,18 +792,18 @@ vm_memory_high_watermark_paging_ratio = 0.5
       in bytes or, alternatively, in
       information units (e.g `50MB` or `5GB`):
 
-<pre class="lang-ini">
-disk_free_limit.relative = 3.0</pre>
-<pre class="lang-ini">
-disk_free_limit.absolute = 2GB</pre>
+```ini
+disk_free_limit.relative = 3.0```
+```ini
+disk_free_limit.absolute = 2GB```
 
       By default free disk space must exceed 50MB. See the <a
       href="disk-alarms.html">Disk Alarms</a> documentation.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 disk_free_limit.absolute = 50MB
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -824,9 +824,9 @@ disk_free_limit.absolute = 50MB
 
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 log.file.level = info
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -839,9 +839,9 @@ log.file.level = info
       Using more channels increases memory footprint of the broker.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 channel_max = 2047
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -853,9 +853,9 @@ channel_max = 2047
 
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 channel_operation_timeout = 15000
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -878,9 +878,9 @@ channel_operation_timeout = 15000
 
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 heartbeat = 60
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -893,9 +893,9 @@ heartbeat = 60
       this virtual host.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 default_vhost = /
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -906,9 +906,9 @@ default_vhost = /
       from scratch.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 default_user = guest
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -918,9 +918,9 @@ default_user = guest
       Password for the default user.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 default_pass = guest
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -930,9 +930,9 @@ default_pass = guest
       Tags for the default user.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 default_user_tags.administrator = true
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -944,11 +944,11 @@ default_user_tags.administrator = true
       <p>
         Default:
 
-<pre class="lang-ini">
+```ini
 default_permissions.configure = .*
 default_permissions.read = .*
 default_permissions.write = .*
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -963,29 +963,29 @@ default_permissions.write = .*
         user to connect remotely (a security practice <a href="./production-checklist.html">unsuitable for production use</a>),
         set this to `none`:
 
-<pre class="lang-ini">
+```ini
 # awful security practice,
 # consider creating a new
 # user with secure generated credentials!
 loopback_users = none
-</pre>
+```
       </p>
       <p>
         To restrict another user to localhost-only connections,
         do it like so (`monitoring` is the name of the user):
-<pre class="lang-ini">
+```ini
 loopback_users.monitoring = true
-</pre>
+```
       </p>
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 # guest uses well known
 # credentials and can only
 # log in from localhost
 # by default
 loopback_users.guest = true
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -996,10 +996,10 @@ loopback_users.guest = true
 
       For example, to cluster with nodes `rabbit@hostname1` and `rabbit@hostname2` on first boot:
 
-<pre class="lang-ini">
+```ini
 cluster_formation.classic_config.nodes.1 = rabbit@hostname1
 cluster_formation.classic_config.nodes.2 = rabbit@hostname2
-</pre>
+```
       <p>Default: `none` (not set)</p>
     </td>
   </tr>
@@ -1015,9 +1015,9 @@ cluster_formation.classic_config.nodes.2 = rabbit@hostname2
         </ul>
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 collect_statistics = none
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1030,9 +1030,9 @@ collect_statistics = none
       plugin</a>.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 collect_statistics_interval = 5000
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1046,9 +1046,9 @@ collect_statistics_interval = 5000
       this amount of time.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 management_db_cache_multiplier = 5
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1059,10 +1059,10 @@ management_db_cache_multiplier = 5
       mechanisms</a> to offer to clients.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 auth_mechanisms.1 = PLAIN
 auth_mechanisms.2 = AMQPLAIN
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1078,7 +1078,8 @@ auth_mechanisms.2 = AMQPLAIN
         than `rabbit_auth_backend_internal` are
         available through <a href="plugins.html">plugins</a>.
       </p>
-      <p>Default: <pre class="lang-ini">auth_backends.1 = internal</pre></p>
+      <p>Default: ```ini
+auth_backends.1 = internal```</p>
     </td>
   </tr>
   <tr>
@@ -1088,7 +1089,8 @@ auth_mechanisms.2 = AMQPLAIN
       reverse DNS lookup on client connections, and present
       that information through `rabbitmqctl` and
       the management plugin.
-      <p>Default: <pre class="lang-ini">reverse_dns_lookups = false</pre></p>
+      <p>Default: ```ini
+reverse_dns_lookups = false```</p>
     </td>
   </tr>
   <tr>
@@ -1099,7 +1101,8 @@ auth_mechanisms.2 = AMQPLAIN
       number of cores and is also part of a cluster, you may
       wish to increase this value.
 
-      <p>Default: <pre class="lang-ini">delegate_count = 16</pre></p>
+      <p>Default: ```ini
+delegate_count = 16```</p>
     </td>
   </tr>
 
@@ -1110,26 +1113,26 @@ auth_mechanisms.2 = AMQPLAIN
       when you troubleshoot network issues.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 tcp_listen_options.backlog = 128
 tcp_listen_options.nodelay = true
 tcp_listen_options.linger.on = true
 tcp_listen_options.linger.timeout = 0
-</pre>
+```
       </p>
 
 <br/>
-<pre class="lang-ini">
+```ini
 tcp_listen_options.exit_on_close = false
-</pre>
+```
 
 Set `tcp_listen_options.exit_on_close` to `true` to have RabbitMQ try to immediately close TCP socket
 when client disconnects. Note that this cannot guarantee immediate TCP socket resource
 release by the kernel.
 
 <br/>
-<pre class="lang-ini">
-tcp_listen_options.keepalive = false</pre>
+```ini
+tcp_listen_options.keepalive = false```
 <p>
   Set `tcp_listen_options.keepalive` to `true` to enable <a href="networking.html#tcp-keepalives">TCP keepalives</a>.
   <br/>
@@ -1155,7 +1158,8 @@ tcp_listen_options.keepalive = false</pre>
       <a href="partitions.html#automatic-handling">documentation
       on partitions</a> for more information.
 
-      <p>Default: <pre class="lang-ini">cluster_partition_handling = ignore</pre></p>
+      <p>Default: ```ini
+cluster_partition_handling = ignore```</p>
     </td>
   </tr>
   <tr>
@@ -1169,9 +1173,9 @@ tcp_listen_options.keepalive = false</pre>
 
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 cluster_keepalive_interval = 10000
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1184,9 +1188,9 @@ cluster_keepalive_interval = 10000
       tuning</a> documentation before changing this.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 queue_index_embed_msgs_below = 4096
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1198,9 +1202,9 @@ queue_index_embed_msgs_below = 4096
       become available.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 mnesia_table_loading_retry_timeout = 30000
-</pre>
+```
 </p>
     </td>
   </tr>
@@ -1211,9 +1215,9 @@ mnesia_table_loading_retry_timeout = 30000
       Retries when waiting for Mnesia tables in the cluster startup. Note that
       this setting is not applied to Mnesia upgrades or node deletions.
       <p>Default:
-<pre class="lang-ini">
+```ini
 mnesia_table_loading_retry_limit = 10
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1225,9 +1229,9 @@ mnesia_table_loading_retry_limit = 10
       See <a href="./ha.html#batch-sync">documentation on eager batch synchronization</a>.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 mirroring_sync_batch_size = 4096
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1245,9 +1249,9 @@ mirroring_sync_batch_size = 4096
       on queue leader location</a> for more information.
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 queue_leader_locator = balanced
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1273,9 +1277,9 @@ queue_leader_locator = balanced
 
       <p>
         Default:
-<pre class="lang-ini">
+```ini
 proxy_protocol = false
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1315,11 +1319,11 @@ under the `rabbit` section.
       documentation before changing this.
       <p>
         Default: <code>rabbit_msg_store_ets_index</code>
-<pre class="lang-erlang">
+```erlang
 {rabbit, [
 {msg_store_index_module, rabbit_msg_store_ets_index}
 ]}
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1329,11 +1333,11 @@ under the `rabbit` section.
       Implementation module for queue contents.
       <p>
         Default:
-<pre class="lang-erlang">
+```erlang
 {rabbit, [
 {backing_queue_module, rabbit_variable_queue}
 ]}
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1345,14 +1349,14 @@ under the `rabbit` section.
       lead to data loss!
       <p>
         Default: <code>16777216</code>
-<pre class="lang-erlang">
+```erlang
 {rabbit, [
 %% Changing this for a node
 %% with an existing (initialised) database is dangerous can
 %% lead to data loss!
 {msg_store_file_size_limit, 16777216}
 ]}
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1364,11 +1368,11 @@ under the `rabbit` section.
         change this.
         <p>
           Default:
-<pre class="lang-erlang">
+```erlang
 {rabbit, [
 {trace_vhosts, []}
 ]}
-</pre>
+```
         </p>
       </td>
     </tr>
@@ -1391,11 +1395,11 @@ under the `rabbit` section.
       </p>
       <p>
         Default:
-<pre class="lang-erlang">
+```erlang
 {rabbit, [
 {msg_store_credit_disc_bound, {4000, 800}}
 ]}
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1406,11 +1410,11 @@ under the `rabbit` section.
       flushed to disk.
       <p>
         Default:
-<pre class="lang-erlang">
+```erlang
 {rabbit, [
 {queue_index_max_journal_entries, 32768}
 ]}
-</pre>
+```
       </p>
     </td>
   </tr>
@@ -1426,11 +1430,11 @@ under the `rabbit` section.
      You almost certainly should not change this.
     <p>
       Default:
-<pre class="lang-ini">
+```ini
 {rabbit, [
 {lazy_queue_explicit_gc_run_operation_threshold, 1000}
 ]}
-</pre>
+```
     </p>
     </td>
   </tr>
@@ -1445,11 +1449,11 @@ under the `rabbit` section.
      You almost certainly should not change this.
     <p>
       Default:
-<pre class="lang-ini">
+```ini
 {rabbit, [
 {queue_explicit_gc_run_operation_threshold, 1000}
 ]}
-</pre>
+```
     </p>
     </td>
   </tr>
@@ -1485,7 +1489,7 @@ tuple: `{encrypted, ...}`.
 Here is an example of a configuration file with an encrypted password
 for the default user:
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbit, [
       {default_user, &lt;&lt;"guest"&gt;&gt;},
@@ -1499,7 +1503,7 @@ for the default user:
          ]}
     ]}
 ].
-</pre>
+```
 
 Note the `config_entry_decoder` key with the passphrase
 that RabbitMQ will use to decrypt encrypted values.
@@ -1507,7 +1511,7 @@ that RabbitMQ will use to decrypt encrypted values.
 The passphrase doesn't have to be hardcoded in the configuration file,
 it can be in a separate file:
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbit, [
       %% ...
@@ -1516,7 +1520,7 @@ it can be in a separate file:
          ]}
     ]}
 ].
-</pre>
+```
 
 RabbitMQ can also request an operator to enter the passphrase
 when it starts by using `{passphrase, prompt}`.
@@ -1524,39 +1528,39 @@ when it starts by using `{passphrase, prompt}`.
 Use [rabbitmqctl](./cli.html) and the `encode`
 command to encrypt values:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl encode '&lt;&lt;"guest"&gt;&gt;' mypassphrase
 {encrypted,&lt;&lt;"... long encrypted value..."&gt;&gt;}
 rabbitmqctl encode '"amqp://fred:secret@host1.domain/my_vhost"' mypassphrase
 {encrypted,&lt;&lt;"... long encrypted value..."&gt;&gt;}
-</pre>
+```
 
 Or, on Windows:
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl encode "&lt;&lt;""guest""&gt;&gt;" mypassphrase
 {encrypted,&lt;&lt;"... long encrypted value..."&gt;&gt;}
 rabbitmqctl encode '"amqp://fred:secret@host1.domain/my_vhost"' mypassphrase
 {encrypted,&lt;&lt;"... long encrypted value..."&gt;&gt;}
-</pre>
+```
 
 Add the `decode` command if you want to decrypt values:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl decode '{encrypted, &lt;&lt;"..."&gt;&gt;}' mypassphrase
 &lt;&lt;"guest"&gt;&gt;
 rabbitmqctl decode '{encrypted, &lt;&lt;"..."&gt;&gt;}' mypassphrase
 "amqp://fred:secret@host1.domain/my_vhost"
-</pre>
+```
 
 Or, on Windows:
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl decode "{encrypted, &lt;&lt;""...""&gt;&gt;}" mypassphrase
 &lt;&lt;"guest"&gt;&gt;
 rabbitmqctl decode "{encrypted, &lt;&lt;""...""&gt;&gt;}" mypassphrase
 "amqp://fred:secret@host1.domain/my_vhost"
-</pre>
+```
 
 Values of different types can be encoded. The example above encodes
 both binaries (`&lt;&lt;"guest"&gt;&gt;`) and strings
@@ -1569,7 +1573,7 @@ cipher is AES 256 CBC.
 
 These defaults can be changed in the configuration file:
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbit, [
       ...
@@ -1580,21 +1584,21 @@ These defaults can be changed in the configuration file:
              {iterations, 10000}
          ]}
     ]}
-].</pre>
+].```
 
 Or using [CLI tools](./cli.html):
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl encode --cipher blowfish_cfb64 --hash sha256 --iterations 10000 \
                      '&lt;&lt;"guest"&gt;&gt;' mypassphrase
-</pre>
+```
 
 Or, on Windows:
 
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl encode --cipher blowfish_cfb64 --hash sha256 --iterations 10000 \
                      "&lt;&lt;""guest""&gt;&gt;" mypassphrase
-</pre>
+```
 
 
 ## <a id="customise-environment" class="anchor" href="#customise-environment">Configuration Using Environment Variables</a>
@@ -1628,7 +1632,7 @@ but without the `RABBITMQ_` prefix. For example, the
 `RABBITMQ_CONFIG_FILE` variable appears below as `CONFIG_FILE` and
 `RABBITMQ_NODENAME` becomes `NODENAME`:
 
-<pre class="lang-bash">
+```bash
 # Example rabbitmq-env.conf file entries. Note that the variables
 # do not have the RABBITMQ_ prefix.
 #
@@ -1640,7 +1644,7 @@ CONFIG_FILE=/etc/rabbitmq/rabbitmq.conf
 
 # Specifies advanced config file location
 ADVANCED_CONFIG_FILE=/etc/rabbitmq/advanced.config
-</pre>
+```
 
 See the [rabbitmq-env.conf man page](man/rabbitmq-env.conf.5.html) for details.
 
@@ -1667,7 +1671,8 @@ with administrator permissions:
  * cd into the sbin folder under the RabbitMQ server installation directory (such as `C:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-{version}\sbin`)
  * Run `rabbitmq-service.bat stop` to stop the service
  * Run `rabbitmq-service.bat remove` to remove the Windows service (this will *not* remove RabbitMQ or its data directory)
- * Set environment variables via command line, i.e. run commands like the following: <pre class="lang-powershell">set RABBITMQ_BASE=C:\Data\RabbitMQ</pre>
+ * Set environment variables via command line, i.e. run commands like the following: ```powershell
+set RABBITMQ_BASE=C:\Data\RabbitMQ```
  * Run `rabbitmq-service.bat install`
  * Run `rabbitmq-service.bat start`
 
@@ -2266,10 +2271,10 @@ On distributions that use systemd, the OS limits are controlled via
 a configuration file at `/etc/systemd/system/rabbitmq-server.service.d/limits.conf`.
 For example, to set the max open file handle limit (`nofile`) to `64000`:
 
-<pre class="lang-plaintext">
+```plaintext
 [Service]
 LimitNOFILE=64000
-</pre>
+```
 
 See [systemd documentation](https://www.freedesktop.org/software/systemd/man/systemd.exec.html) to learn about
 the supported limits and other directives.
@@ -2280,7 +2285,7 @@ To configure kernel limits for Docker contains, use the `"default-ulimits"` key 
 [Docker daemon configuration file](https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file).
 The file has to be installed on Docker hosts at `/etc/docker/daemon.json`:
 
-<pre class="lang-json">
+```json
 {
   "default-ulimits": {
     "nofile": {
@@ -2290,7 +2295,7 @@ The file has to be installed on Docker hosts at `/etc/docker/daemon.json`:
     }
   }
 }
-</pre>
+```
 
 #### Without systemd (Older Linux Distributions)
 
@@ -2299,9 +2304,9 @@ RabbitMQ on distributions that do not use systemd is to edit the `/etc/default/r
 (provided by the RabbitMQ Debian package) or [rabbitmq-env.conf](#config-file)
 to invoke `ulimit` before the service is started.
 
-<pre class="lang-plaintext">
+```plaintext
 ulimit -S -n 4096
-</pre>
+```
 
 This _soft_ limit cannot go higher than the _hard_ limit (which defaults to 4096 in many distributions).
 [The hard limit can be increased](https://github.com/basho/basho_docs/blob/master/content/riak/kv/2.2.3/using/performance/open-files-limit.md) via

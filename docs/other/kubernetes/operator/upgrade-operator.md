@@ -15,7 +15,7 @@ the following effects:
 To upgrade to the new version of the operator, simply apply the new operator manifest for the desired version. For example,
 for the RabbitMQ Cluster Operator:
 
-<pre class="lang-bash">
+```bash
 kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
 # namespace/rabbitmq-system unchanged
 # customresourcedefinition.apiextensions.k8s.io/rabbitmqclusters.rabbitmq.com configured
@@ -25,7 +25,7 @@ kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/d
 # rolebinding.rbac.authorization.k8s.io/rabbitmq-cluster-leader-election-rolebinding unchanged
 # clusterrolebinding.rbac.authorization.k8s.io/rabbitmq-cluster-operator-rolebinding unchanged
 # deployment.apps/rabbitmq-cluster-operator configured
-</pre>
+```
 
 This will cause the Custom Resource Definitions provided by the operator to be updated, and the Operator Pod to use the updated version
 of the operator container image.

@@ -74,33 +74,33 @@ In
 [`Send.java`](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/java/Send.java),
 we need some classes imported:
 
-<pre class="lang-java">
+```java
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
-</pre>
+```
 
 Set up the class and name the queue:
 
-<pre class="lang-java">
+```java
 public class Send {
   private final static String QUEUE_NAME = "hello";
   public static void main(String[] argv) throws Exception {
       ...
   }
 }
-</pre>
+```
 
 then we can create a connection to the server:
 
-<pre class="lang-java">
+```java
 ConnectionFactory factory = new ConnectionFactory();
 factory.setHost("localhost");
 try (Connection connection = factory.newConnection();
      Channel channel = connection.createChannel()) {
 
 }
-</pre>
+```
 
 The connection abstracts the socket connection, and takes care of
 protocol version negotiation and authentication and so on for us. Here
@@ -116,12 +116,12 @@ This way we don't need to close them explicitly in our code.
 To send, we must declare a queue for us to send to; then we can publish a message
 to the queue, all of this in the try-with-resources statement:
 
-<pre class="lang-java">
+```java
 channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 String message = "Hello World!";
 channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
 System.out.println(" [x] Sent '" + message + "'");
-</pre>
+```
 
 Declaring a queue is idempotent - it will only be created if it doesn't
 exist already. The message content is a byte array, so you can encode
@@ -154,12 +154,12 @@ keep the consumer running to listen for messages and print them out.
 
 The code (in [`Recv.java`](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/java/Recv.java)) has almost the same imports as `Send`:
 
-<pre class="lang-java">
+```java
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
-</pre>
+```
 
 The extra `DeliverCallback` interface we'll use to buffer the messages pushed to us by the server.
 
@@ -167,7 +167,7 @@ Setting up is the same as the publisher; we open a connection and a
 channel, and declare the queue from which we're going to consume.
 Note this matches up with the queue that `send` publishes to.
 
-<pre class="lang-java">
+```java
 public class Recv {
 
   private final static String QUEUE_NAME = "hello";
@@ -184,7 +184,7 @@ public class Recv {
   }
 }
 
-</pre>
+```
 
 Note that we declare the queue here, as well. Because we might start
 the consumer before the publisher, we want to make sure the queue exists
@@ -201,13 +201,13 @@ queue. Since it will push us messages asynchronously, we provide a
 callback in the form of an object that will buffer the messages until
 we're ready to use them. That is what a `DeliverCallback` subclass does.
 
-<pre class="lang-java">
+```java
 DeliverCallback deliverCallback = (consumerTag, delivery) -> {
     String message = new String(delivery.getBody(), "UTF-8");
     System.out.println(" [x] Received '" + message + "'");
 };
 channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> { });
-</pre>
+```
 
 [Here's the whole Recv.java
 class](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/java/Recv.java).
@@ -217,22 +217,22 @@ class](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/java/Recv.java).
 You can compile both of these with just the RabbitMQ java client on
 the classpath:
 
-<pre class="lang-bash">
+```bash
 javac -cp amqp-client-5.16.0.jar Send.java Recv.java
-</pre>
+```
 
 To run them, you'll need `rabbitmq-client.jar` and its dependencies on
 the classpath.  In a terminal, run the consumer (receiver):
 
-<pre class="lang-bash">
+```bash
 java -cp .:amqp-client-5.16.0.jar:slf4j-api-1.7.36.jar:slf4j-simple-1.7.36.jar Recv
-</pre>
+```
 
 then, run the publisher (sender):
 
-<pre class="lang-bash">
+```bash
 java -cp .:amqp-client-5.16.0.jar:slf4j-api-1.7.36.jar:slf4j-simple-1.7.36.jar Send
-</pre>
+```
 
 On Windows, use a semicolon instead of a colon to separate items in the classpath.
 
@@ -245,14 +245,14 @@ the publisher from another terminal.
 > You may wish to see what queues RabbitMQ has and how many
 > messages are in them. You can do it (as a privileged user) using the `rabbitmqctl` tool:
 >
-> <pre class="lang-bash">
+> ```bash
 > sudo rabbitmqctl list_queues
-> </pre>
+> ```
 >
 > On Windows, omit the sudo:
-> <pre class="lang-powershell">
+> ```powershell
 > rabbitmqctl.bat list_queues
-> </pre>
+> ```
 
 
 Time to move on to [part 2](tutorial-two-java.html) and build a simple _work queue_.
@@ -260,14 +260,14 @@ Time to move on to [part 2](tutorial-two-java.html) and build a simple _work que
 > #### Hint
 > To save typing, you can set an environment variable for the classpath e.g.
 >
-> <pre class="lang-bash">
+> ```bash
 > export CP=.:amqp-client-5.16.0.jar:slf4j-api-1.7.36.jar:slf4j-simple-1.7.36.jar
 > java -cp $CP Send
-> </pre>
+> ```
 >
 > or on Windows:
-> <pre class="lang-powershell">
+> ```powershell
 > set CP=.;amqp-client-5.16.0.jar;slf4j-api-1.7.36.jar;slf4j-simple-1.7.36.jar
 > java -cp %CP% Send
-> </pre>
+> ```
 

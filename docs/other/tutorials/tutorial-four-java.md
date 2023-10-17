@@ -38,9 +38,9 @@ Bindings
 In previous examples we were already creating bindings. You may recall
 code like:
 
-<pre class="lang-java">
+```java
 channel.queueBind(queueName, EXCHANGE_NAME, "");
-</pre>
+```
 
 A binding is a relationship between an exchange and a queue. This can
 be simply read as: the queue is interested in messages from this
@@ -50,9 +50,9 @@ Bindings can take an extra `routingKey` parameter. To avoid the
 confusion with a `basic_publish` parameter we're going to call it a
 `binding key`. This is how we could create a binding with a key:
 
-<pre class="lang-java">
+```java
 channel.queueBind(queueName, EXCHANGE_NAME, "black");
-</pre>
+```
 
 The meaning of a binding key depends on the exchange type. The
 `fanout` exchanges, which we used previously, simply ignored its
@@ -182,15 +182,15 @@ first.
 
 As always, we need to create an exchange first:
 
-<pre class="lang-java">
+```java
 channel.exchangeDeclare(EXCHANGE_NAME, "direct");
-</pre>
+```
 
 And we're ready to send a message:
 
-<pre class="lang-java">
+```java
 channel.basicPublish(EXCHANGE_NAME, severity, null, message.getBytes());
-</pre>
+```
 
 To simplify things we will assume that 'severity' can be one of
 'info', 'warning', 'error'.
@@ -203,13 +203,13 @@ Receiving messages will work just like in the previous tutorial, with
 one exception - we're going to create a new binding for each severity
 we're interested in.
 
-<pre class="lang-java">
+```java
 String queueName = channel.queueDeclare().getQueue();
 
 for(String severity : argv){
   channel.queueBind(queueName, EXCHANGE_NAME, severity);
 }
-</pre>
+```
 
 
 Putting it all together
@@ -257,7 +257,7 @@ Putting it all together
 
 The code for `EmitLogDirect.java` class:
 
-<pre class="lang-java">
+```java
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -282,11 +282,11 @@ public class EmitLogDirect {
   }
   //..
 }
-</pre>
+```
 
 The code for `ReceiveLogsDirect.java`:
 
-<pre class="lang-java">
+```java
 import com.rabbitmq.client.*;
 
 public class ReceiveLogsDirect {
@@ -320,36 +320,36 @@ public class ReceiveLogsDirect {
     channel.basicConsume(queueName, true, deliverCallback, consumerTag -> { });
   }
 }
-</pre>
+```
 
 Compile as usual (see [tutorial one](tutorial-one-java.html) for compilation and classpath advice).
 For convenience we'll use an environment variable $CP (that's %CP% on Windows) for the classpath when running examples.
 
-<pre class="lang-bash">
+```bash
 javac -cp $CP ReceiveLogsDirect.java EmitLogDirect.java
-</pre>
+```
 
 If you want to save only 'warning' and 'error' (and not 'info') log
 messages to a file, just open a console and type:
 
-<pre class="lang-bash">
+```bash
 java -cp $CP ReceiveLogsDirect warning error > logs_from_rabbit.log
-</pre>
+```
 
 If you'd like to see all the log messages on your screen, open a new
 terminal and do:
 
-<pre class="lang-bash">
+```bash
 java -cp $CP ReceiveLogsDirect info warning error
 # => [*] Waiting for logs. To exit press CTRL+C
-</pre>
+```
 
 And, for example, to emit an `error` log message just type:
 
-<pre class="lang-bash">
+```bash
 java -cp $CP EmitLogDirect error "Run. Run. Or it will explode."
 # => [x] Sent 'error':'Run. Run. Or it will explode.'
-</pre>
+```
 
 (Full source code for [(EmitLogDirect.java source)](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/java/EmitLogDirect.java)
 and [(ReceiveLogsDirect.java source)](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/java/ReceiveLogsDirect.java))

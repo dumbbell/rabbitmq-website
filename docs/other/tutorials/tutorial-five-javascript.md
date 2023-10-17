@@ -156,7 +156,7 @@ The code is almost the same as in the
 
 The code for `emit_log_topic.js`:
 
-<pre class="lang-javascript">
+```javascript
 #!/usr/bin/env node
 
 var amqp = require('amqplib/callback_api');
@@ -186,11 +186,11 @@ amqp.connect('amqp://localhost', function(error0, connection) {
     process.exit(0)
   }, 500);
 });
-</pre>
+```
 
 The code for `receive_logs_topic.js`:
 
-<pre class="lang-javascript">
+```javascript
 #!/usr/bin/env node
 
 var amqp = require('amqplib/callback_api');
@@ -236,37 +236,37 @@ amqp.connect('amqp://localhost', function(error0, connection) {
     });
   });
 });
-</pre>
+```
 
 To receive all the logs:
 
-<pre class="lang-bash">
+```bash
 ./receive_logs_topic.js "#"
-</pre>
+```
 
 To receive all logs from the facility "`kern`":
 
-<pre class="lang-bash">
+```bash
 ./receive_logs_topic.js "kern.*"
-</pre>
+```
 
 Or if you want to hear only about "`critical`" logs:
 
-<pre class="lang-bash">
+```bash
 ./receive_logs_topic.js "*.critical"
-</pre>
+```
 
 You can create multiple bindings:
 
-<pre class="lang-bash">
+```bash
 ./receive_logs_topic.js "kern.*" "*.critical"
-</pre>
+```
 
 And to emit a log with a routing key "`kern.critical`" type:
 
-<pre class="lang-bash">
+```bash
 ./emit_log_topic.js "kern.critical" "A critical kernel error"
-</pre>
+```
 
 Have fun playing with these programs. Note that the code doesn't make
 any assumption about the routing or binding keys, you may want to play

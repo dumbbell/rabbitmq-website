@@ -78,13 +78,15 @@ policy definition:
     <tr>
         <th>rabbitmqctl</th>
         <td>
-            <pre class="lang-bash">rabbitmqctl set_policy TTL ".*" '{"message-ttl":60000}' --apply-to queues</pre>
+            ```bash
+rabbitmqctl set_policy TTL ".*" '{"message-ttl":60000}' --apply-to queues```
         </td>
     </tr>
     <tr>
         <th>rabbitmqctl (Windows)</th>
         <td>
-            <pre class="lang-powershell">rabbitmqctl set_policy TTL ".*" "{""message-ttl"":60000}" --apply-to queues</pre>
+            ```powershell
+rabbitmqctl set_policy TTL ".*" "{""message-ttl"":60000}" --apply-to queues```
         </td>
     </tr>
 </table>
@@ -97,19 +99,19 @@ This applies a TTL of 60 seconds to all queues.
 This example in Java creates a queue in which messages may
 reside for at most 60 seconds:
 
-<pre class="lang-java">
+```java
 Map&lt;String, Object&gt; args = new HashMap&lt;String, Object&gt;();
 args.put("x-message-ttl", 60000);
 channel.queueDeclare("myqueue", false, false, false, args);
-</pre>
+```
 
 The same example in C#:
 
-<pre class="lang-csharp">
+```csharp
 var args = new Dictionary&lt;string, object&gt;();
 args.Add("x-message-ttl", 60000);
 model.QueueDeclare("myqueue", false, false, false, args);
-</pre>
+```
 
 It is possible to apply a message TTL policy to a queue which already
 has messages in it but this involves [some caveats](#per-message-ttl-caveats).
@@ -144,16 +146,16 @@ lower value between the two will be chosen.
 This example uses [RabbitMQ Java client](./api-guide.html)
 to publish a message which can reside in the queue for at most 60 seconds:
 
-<pre class="lang-java">
+```java
 byte[] messageBodyBytes = "Hello, world!".getBytes();
 AMQP.BasicProperties properties = new AMQP.BasicProperties.Builder()
                                    .expiration("60000")
                                    .build();
-channel.basicPublish("my-exchange", "routing-key", properties, messageBodyBytes);</pre>
+channel.basicPublish("my-exchange", "routing-key", properties, messageBodyBytes);```
 
 The same example in C#:
 
-<pre class="lang-csharp">
+```csharp
 byte[] messageBodyBytes = System.Text.Encoding.UTF8.GetBytes("Hello, world!");
 
 IBasicProperties props = model.CreateBasicProperties();
@@ -163,7 +165,7 @@ props.Expiration = "60000";
 
 model.BasicPublish(exchangeName,
                    routingKey, props,
-                   messageBodyBytes);</pre>
+                   messageBodyBytes);```
 
 ## <a id="per-message-ttl-caveats" class="anchor" href="#per-message-ttl-caveats">Caveats</a>
 
@@ -237,13 +239,15 @@ The following policy makes all queues expire after 30 minutes since last use:
     <tr>
         <th>rabbitmqctl</th>
         <td>
-            <pre class="lang-bash">rabbitmqctl set_policy expiry ".*" '{"expires":1800000}' --apply-to queues</pre>
+            ```bash
+rabbitmqctl set_policy expiry ".*" '{"expires":1800000}' --apply-to queues```
         </td>
     </tr>
     <tr>
         <th>rabbitmqctl (Windows)</th>
         <td>
-            <pre class="lang-powershell">rabbitmqctl.bat set_policy expiry ".*" "{""expires"":1800000}" --apply-to queues</pre>
+            ```powershell
+rabbitmqctl.bat set_policy expiry ".*" "{""expires"":1800000}" --apply-to queues```
         </td>
     </tr>
 </table>
@@ -253,8 +257,8 @@ The following policy makes all queues expire after 30 minutes since last use:
 This example in Java creates a queue which expires after
 it has been unused for 30 minutes.
 
-<pre class="lang-java">
+```java
 Map&lt;String, Object&gt; args = new HashMap&lt;String, Object&gt;();
 args.put("x-expires", 1800000);
 channel.queueDeclare("myqueue", false, false, false, args);
-</pre>
+```

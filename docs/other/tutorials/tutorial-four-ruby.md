@@ -38,9 +38,9 @@ Bindings
 In previous examples we were already creating bindings. You may recall
 code like:
 
-<pre class="lang-ruby">
+```ruby
 queue.bind(exchange_name)
-</pre>
+```
 
 A binding is a relationship between an exchange and a queue. This can
 be simply read as: the queue is interested in messages from this
@@ -50,9 +50,9 @@ Bindings can take an extra `:routing_key` parameter. To avoid the
 confusion with a `Bunny::Exchange#publish` parameter we're going to call it a
 `binding key`. This is how we could create a binding with a key:
 
-<pre class="lang-ruby">
+```ruby
 queue.bind(exchange_name, routing_key: 'black')
-</pre>
+```
 
 The meaning of a binding key depends on the exchange type. The
 `fanout` exchanges, which we used previously, simply ignored its
@@ -182,16 +182,16 @@ first.
 
 As always, we need to create an exchange first:
 
-<pre class="lang-ruby">
+```ruby
 channel.direct('logs');
-</pre>
+```
 
 And we're ready to send a message:
 
-<pre class="lang-ruby">
+```ruby
 exchange = channel.direct('logs')
 exchange.publish(message, routing_key: severity)
-</pre>
+```
 
 To simplify things we will assume that 'severity' can be one of
 'info', 'warning', 'error'.
@@ -205,13 +205,13 @@ one exception - we're going to create a new binding for each severity
 we're interested in.
 
 
-<pre class="lang-ruby">
+```ruby
 queue = channel.queue('')
 
 ARGV.each do |severity|
   queue.bind('logs', routing_key: severity)
 end
-</pre>
+```
 
 Putting it all together
 -----------------------
@@ -260,7 +260,7 @@ Putting it all together
 
 The code for `emit_log_direct.rb` script:
 
-<pre class="lang-ruby">
+```ruby
 #!/usr/bin/env ruby
 require 'bunny'
 
@@ -276,11 +276,11 @@ exchange.publish(message, routing_key: severity)
 puts " [x] Sent '#{message}'"
 
 connection.close
-</pre>
+```
 
 The code for `receive_logs_direct.rb`:
 
-<pre class="lang-ruby">
+```ruby
 #!/usr/bin/env ruby
 require 'bunny'
 
@@ -309,29 +309,29 @@ rescue Interrupt => _
 
   exit(0)
 end
-</pre>
+```
 
 If you want to save only 'warning' and 'error' (and not 'info') log
 messages to a file, just open a console and type:
 
-<pre class="lang-bash">
+```bash
 ruby receive_logs_direct.rb warning error > logs_from_rabbit.log
-</pre>
+```
 
 If you'd like to see all the log messages on your screen, open a new
 terminal and do:
 
-<pre class="lang-bash">
+```bash
 ruby receive_logs_direct.rb info warning error
 # => [*] Waiting for logs. To exit press CTRL+C
-</pre>
+```
 
 And, for example, to emit an `error` log message just type:
 
-<pre class="lang-bash">
+```bash
 ruby emit_log_direct.rb error "Run. Run. Or it will explode."
 # => [x] Sent 'error':'Run. Run. Or it will explode.'
-</pre>
+```
 
 (Full source code for [(emit_log_direct.rb source)](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/ruby/emit_log_direct.rb)
 and [(receive_logs_direct.rb source)](https://github.com/rabbitmq/rabbitmq-tutorials/blob/main/ruby/receive_logs_direct.rb))

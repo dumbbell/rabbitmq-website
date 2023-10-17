@@ -77,21 +77,21 @@ to a policy definition. For example:
   <tr>
     <th>rabbitmqctl</th>
     <td>
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_policy my-pol "^one-meg$" \
   '{"max-length-bytes":1048576}' \
   --apply-to queues
-</pre>
+```
     </td>
   </tr>
   <tr>
     <th>rabbitmqctl on Windows</th>
     <td>
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat set_policy my-pol "^one-meg$" ^
   "{""max-length-bytes"":1048576}" ^
   --apply-to queues
-</pre>
+```
     </td>
   </tr>
 </table>
@@ -109,21 +109,21 @@ policy definition. For example:
   <tr>
     <th>rabbitmqctl</th>
     <td>
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_policy my-pol "^two-messages$" \
   '{"max-length":2,"overflow":"reject-publish"}' \
   --apply-to queues
-</pre>
+```
     </td>
   </tr>
   <tr>
     <th>rabbitmqctl on Windows</th>
     <td>
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat set_policy my-pol "^two-messages$" ^
   "{""max-length"":2,""overflow"":""reject-publish""}" ^
   --apply-to queues
-</pre>
+```
     </td>
   </tr>
 </table>
@@ -158,11 +158,11 @@ string value. Possible values are `drop-head` (default),
 This example in Java declares a queue with a maximum length
 of 10 messages:
 
-<pre class="lang-java">
+```java
 Map&lt;String, Object> args = new HashMap&lt;String, Object>();
 args.put("x-max-length", 10);
 channel.queueDeclare("myqueue", false, false, false, args);
-</pre>
+```
 
 
 ## <a id="inspecting" class="anchor" href="#inspecting">Inspecting Queue Length Limits</a>
@@ -176,7 +176,7 @@ This can be done using CLI tools or the management UI.
 
 `rabbitmqctl list_queues` can be used to display optional queue arguments and the policy applied to a queue, if any:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_queues name durable arguments policy --formatter=pretty_table --silent
 # => ┌──────────────┬─────────┬──────────────────────────────────────────────────────────────────────┬─────────┐
 # => │ name         │ durable │ arguments                                                            │ policy  │
@@ -189,18 +189,18 @@ rabbitmqctl list_queues name durable arguments policy --formatter=pretty_table -
 # => ├──────────────┼─────────┼──────────────────────────────────────────────────────────────────────┼─────────┤
 # => │ qq.2         │ true    │ {&lt;&lt;"x-queue-type"&gt;&gt;,longstr,&lt;&lt;"quorum"&gt;&gt;}                            │         │
 # => └──────────────┴─────────┴──────────────────────────────────────────────────────────────────────┴─────────┘
-</pre>
+```
 
 To find out what arguments are defined by the policy, use `rabbitmqctl list_policies`:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl list_policies --formatter=pretty_table --silent
 # => ┌───────┬─────────┬────────────┬──────────┬───────────────────┬──────────┐
 # => │ vhost │ name    │ pattern    │ apply-to │ definition        │ priority │
 # => ├───────┼─────────┼────────────┼──────────┼───────────────────┼──────────┤
 # => │ /     │ limited │ ^limited\. │ queues   │ {"max-length":11} │ 0        │
 # => └───────┴─────────┴────────────┴──────────┴───────────────────┴──────────┘
-</pre>
+```
 
 ### Using the Management UI
 

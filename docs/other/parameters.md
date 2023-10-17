@@ -220,35 +220,35 @@ An example of defining a policy looks like:
   <tr>
     <th>rabbitmqctl</th>
     <td>
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_policy federate-me \
     "^federated\." '{"federation-upstream-set":"all"}' \
     --priority 1 \
     --apply-to exchanges
-</pre>
+```
     </td>
   </tr>
   <tr>
     <th>rabbitmqctl (Windows)</th>
     <td>
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat set_policy federate-me ^
     "^federated\." "{""federation-upstream-set"":""all""}" ^
     --priority 1 ^
     --apply-to exchanges
-</pre>
+```
     </td>
   </tr>
   <tr>
     <th>HTTP API</th>
     <td>
-<pre class="lang-ini">
+```ini
 PUT /api/policies/%2f/federate-me
     {"pattern": "^federated\.",
      "definition": {"federation-upstream-set":"all"},
      "priority": 1,
     "apply-to": "exchanges"}
-</pre>
+```
     </td>
   </tr>
   <tr>
@@ -337,35 +337,35 @@ Here's an example:
   <tr>
     <th>rabbitmqctl</th>
     <td>
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_policy ttl-fed \
     "^tf\." '{"federation-upstream-set":"all", "message-ttl":60000}' \
     --priority 1 \
     --apply-to queues
-</pre>
+```
     </td>
   </tr>
   <tr>
     <th>rabbitmqctl (Windows)</th>
     <td>
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl set_policy ttl-fed ^
     "^tf\." "{""federation-upstream-set"":""all"", ""message-ttl"":60000}" ^
     --priority 1 ^
     --apply-to queues
-</pre>
+```
     </td>
   </tr>
   <tr>
     <th>HTTP API</th>
     <td>
-<pre class="lang-powershell">
+```powershell
 PUT /api/policies/%2f/ttl-fed
     {"pattern": "^tf\.",
     "definition": {"federation-upstream-set":"all", "message-ttl":60000},
     "priority": 1,
     "apply-to": "queues"}
-</pre>
+```
     </td>
   </tr>
   <tr>
@@ -671,35 +671,35 @@ becomes `/api/operator-policies/`:
     <tr>
         <th>rabbitmqctl</th>
         <td>
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_operator_policy transient-queue-ttl \
     "^amq\." '{"expires":1800000}' \
     --priority 1 \
     --apply-to queues
-</pre>
+```
         </td>
     </tr>
     <tr>
         <th>rabbitmqctl (Windows)</th>
         <td>
-<pre class="lang-powershell">
+```powershell
 rabbitmqctl.bat set_operator_policy transient-queue-ttl ^
     "^amq\." "{""expires"": 1800000}" ^
     --priority 1 ^
     --apply-to queues
-</pre>
+```
         </td>
     </tr>
     <tr>
         <th>HTTP API</th>
         <td>
-<pre class="lang-ini">
+```ini
 PUT /api/operator-policies/%2f/transient-queue-ttl
                 {"pattern": "^amq\.",
                  "definition": {"expires": 1800000},
                  "priority": 1,
                  "apply-to": "queues"}
-</pre>
+```
         </td>
     </tr>
     <tr>
@@ -732,6 +732,6 @@ Modification of operator policies via the HTTP API and Web UI can be disabled
 in configuration. This makes operator policies read-only for all users via the
 HTTP API and Web UI.
 
-<pre class="lang-ini">
+```ini
 management.restrictions.operator_policy_changes.disabled = true
-</pre>
+```

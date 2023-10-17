@@ -129,16 +129,16 @@ conventional system directories for [configuration](configure.html),
 node data directory, [log](./logging.html) files, [plugins](./plugins.html) and so on.
 In order to make the node use operating system defaults, locate the following line
 
-<pre class="lang-bash">
+```bash
 PREFIX=${RABBITMQ_HOME}
-</pre>
+```
 
 in the `sbin/rabbitmq-defaults` script and
 change this line to:
 
-<pre class="lang-bash">
+```bash
 SYS_PREFIX=
-</pre>
+```
 
 but do not modify any other line in this script.
 
@@ -207,13 +207,14 @@ please refer to the excellent [Riak guide on open file limit tuning](https://git
 
 [RabbitMQ management UI](management.html) displays the number of file descriptors available for it to use on the Overview tab.
 
-<pre class="lang-plaintext">rabbitmq-diagnostics status</pre>
+```plaintext
+rabbitmq-diagnostics status```
 
 includes the same value. The following command
 
-<pre  class="lang-bash">
+```bash
 ulimit -a
-</pre>
+```
 
 can be used to display effective limits for the current user. There may be more convenient
 OS-specific ways of doing that for a running process, such as the `/proc` filesystem on Linux.

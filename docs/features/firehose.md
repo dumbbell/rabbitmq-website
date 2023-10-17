@@ -56,18 +56,18 @@ begin consuming.
 
 Finally, to turn on firehose tracing with
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl trace_on -p [virtual host]
-</pre>.
+```.
 
 
 ## <a id="disabling" class="anchor" href="#disabling">Turn off firehose</a>
 
 To turn off Firehose, run
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl trace_off -p [virtual host]
-</pre>
+```
 
 Don't forget to clean up any queues that were used to consume events from the Firehose.
 

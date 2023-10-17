@@ -106,13 +106,13 @@ installed:
 
 Their installation is out of scope of this guide. Use
 
-<pre class="lang-bash">
+```bash
 git version
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 docker info &amp;&amp; docker-compose version
-</pre>
+```
 
 on the command line to verify that the necessary tools are available.
 
@@ -122,26 +122,26 @@ First step is to clone a Git repository, <a href="https://github.com/rabbitmq/ra
 target="_blank" rel="noopener noreferrer">rabbitmq-server</a>, with the manifests and other components required to run
 a RabbitMQ cluster, Prometheus and a set of applications:
 
-<pre class="lang-bash">
+```bash
 git clone https://github.com/rabbitmq/rabbitmq-server.git
 cd rabbitmq-server/deps/rabbitmq_prometheus/docker
-</pre>
+```
 
 ### Run Docker Compose
 
 Next use Docker Compose manifests to run a pre-configured RabbitMQ cluster, a Prometheus instance and a basic
 workload that will produce the metrics displayed in the RabbitMQ overview dashboard:
 
-<pre class="lang-bash">
+```bash
 docker-compose -f docker-compose-metrics.yml up -d
 docker-compose -f docker-compose-overview.yml up -d
-</pre>
+```
 
 The `docker-compose` commands above can also be executed with a `make` target:
 
-<pre class="lang-bash">
+```bash
 make metrics overview
-</pre>
+```
 
 When the above commands succeed, there will be a functional RabbitMQ cluster and a Prometheus
 instance collecting metrics from it running in a set of containers.
@@ -301,9 +301,9 @@ The same command will redeploy the app after the file has been updated.
 
 To delete all workload containers, run `docker-compose -f docker-compose-overview.yml down` or
 
-<pre class="lang-bash">
+```bash
 gmake down
-</pre>
+```
 
 
 ## <a id="other-dashboards" class="anchor" href="#other-dashboards">More Dashboards: Raft and Erlang Runtime</a>
@@ -322,9 +322,9 @@ the [inter-node communication links](./clustering.html). This workload uses a lo
 
 To stop and delete all containers used by the workloads, run `docker-compose -f [file] down` or
 
-<pre class="lang-bash">
+```bash
 make down
-</pre>
+```
 
 
 ## <a id="installation" class="anchor" href="#installation">Installation</a>
@@ -346,29 +346,29 @@ clusters.
 
 To find the current name of the cluster, use
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics -q cluster_status
-</pre>
+```
 
 This command can be executed against any cluster node. If the current cluster name is distinctive and appropriate,
 skip the rest of this paragraph.
 To change the name of the cluster, run the following command (the name used here is just an example):
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl -q set_cluster_name testing-prometheus
-</pre>
+```
 
 ### Enable `rabbitmq_prometheus`
 
 Next, enable the **rabbitmq_prometheus** [plugin](./plugins.html) on all nodes:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-plugins enable rabbitmq_prometheus
-</pre>
+```
 
 The output will look similar to this:
 
-<pre class="lang-ini">
+```ini
 rabbitmq-plugins enable rabbitmq_prometheus
 
 Enabling plugins on node rabbit@ed9618ea17c9:
@@ -384,17 +384,17 @@ The following plugins have been enabled:
   rabbitmq_web_dispatch
 
 started 3 plugins.
-</pre>
+```
 
 To confirm that RabbitMQ now exposes metrics in Prometheus format, get the
 first couple of lines with `curl` or similar:
 
-<pre class="lang-bash">
+```bash
 curl -s localhost:15692/metrics | head -n 3
 # TYPE erlang_mnesia_held_locks gauge
 # HELP erlang_mnesia_held_locks Number of held locks.
 erlang_mnesia_held_locks{node="rabbit@65f1a10aaffa",cluster="rabbit@65f1a10aaffa"} 0
-</pre>
+```
 
 Notice that RabbitMQ exposes the metrics on a dedicated TCP port, `15692` by
 default.
@@ -417,10 +417,10 @@ periodically, too, every 5 seconds by default. Since [this value is
 configurable](./management.html#statistics-interval), check the metrics update
 interval by running the following command on any of the nodes:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics environment | grep collect_statistics_interval
 # => {collect_statistics_interval,5000}
-</pre>
+```
 
 The returned value will be **in milliseconds**.
 
@@ -447,25 +447,25 @@ below:
 
 The port is configured using the `prometheus.tcp.port` key:
 
-<pre class="lang-ini">
+```ini
 prometheus.tcp.port = 15692
-</pre>
+```
 
 It is possible to configure what interface the Prometheus plugin API endpoint will use, similarly
 to [messaging protocol listeners](./networking.html#interfaces), using
 the `prometheus.tcp.ip` key:
 
-<pre class="lang-ini">
+```ini
 prometheus.tcp.ip = 0.0.0.0
-</pre>
+```
 
 To check what interface and port is used by a running node, use
 `rabbitmq-diagnostics`:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics -s listeners
 # => Interface: [::], port: 15692, protocol: http/prometheus, purpose: Prometheus exporter API over HTTP
-</pre>
+```
 
 or [tools such as `lsof`, `ss` or `netstat`](./troubleshooting-networking.html#ports).
 
@@ -496,20 +496,20 @@ RabbitMQ returns aggregated metrics on this endpoint by default.
 
 If you prefer to return per-object (unaggregated) metrics on the `/metrics` endpoint, set `prometheus.return_per_object_metrics` to `true`:
 
-<pre class="lang-ini">
+```ini
 # can result in a really excessive output produced,
 # only suitable for environments with a relatively small
 # number of metrics-emitting objects such as connections and queues
 prometheus.return_per_object_metrics = true
-</pre>
+```
 
 ### <a id="per-object-endpoint" class="anchor" href="#per-object-endpoint">Prometheus endpoints: `/metrics/per-object`</a>
 
 RabbitMQ offers a dedicated endpoint
 
-<pre class="lang-plaintext">
+```plaintext
 GET /metrics/per-object
-</pre>
+```
 
 which always returns per-object metrics,
 regardless of the value of `prometheus.return_per_object_metrics`.
@@ -524,16 +524,16 @@ by most clients (such as monitoring tools).
 
 This is why there is a separate endpoint for per-object metrics that allows the caller to query only the metrics they need:
 
-<pre class="lang-plaintext">
+```plaintext
 GET /metrics/detailed
-</pre>
+```
 
 By default it does not return any metrics. All required metric groups and virtual host filters must be be provided as query
 parameters. For example,
 
-<pre class="lang-plaintext">
+```plaintext
 GET /metrics/detailed?vhost=vhost-1&amp;vhost=vhost-2&amp;family=queue_coarse_metrics&amp;family=queue_consumer_count
-</pre>
+```
 
 will only return requested metrics and leave out, for example, all channel metrics that this client is not
 interested in.
@@ -549,9 +549,9 @@ This means the endpoint can be used together with `GET /metrics` and tools that 
 Since it queries and serves less data in almost all cases, this endpoint puts less load on the system.
 For example,
 
-<pre class="lang-plaintext">
+```plaintext
 GET /metrics/detailed?family=queue_coarse_metrics&amp;family=queue_consumer_count
-</pre>
+```
 
 provides just enough metrics to determine how many messages are enqueued and how many consumers those queues have.
 In some environments this query is **up to 60 times more efficient** than querying `GET /metrics/per-object` to get
@@ -842,11 +842,11 @@ the timeout and inactivity values used by the load balancer.
 
 Here is an example configuration snippet that modifies the timeouts:
 
-<pre class="lang-ini">
+```ini
 prometheus.tcp.idle_timeout = 120000
 prometheus.tcp.inactivity_timeout = 120000
 prometheus.tcp.request_timeout = 120000
-</pre>
+```
 
 
 ### <a id="grafana-configuration" class="anchor" href="#grafana-configuration">Grafana Configuration</a>
@@ -887,7 +887,7 @@ Congratulations! Your RabbitMQ is now monitored with Prometheus & Grafana!
 The Prometheus metrics can be secured with TLS similar to the other listeners.
 For example, in the [configuration file](./configure.html#configuration-files)
 
-<pre class="lang-ini">
+```ini
 prometheus.ssl.port       = 15691
 prometheus.ssl.cacertfile = /full/path/to/ca_certificate.pem
 prometheus.ssl.certfile   = /full/path/to/server_certificate.pem
@@ -895,12 +895,12 @@ prometheus.ssl.keyfile    = /full/path/to/server_key.pem
 prometheus.ssl.password   = password-if-keyfile-is-encrypted
 ## To enforce TLS (disable the non-TLS port):
 # prometheus.tcp.listener = none
-</pre>
+```
 
 
 To enable TLS with [peer verification](./ssl.html#peer-verification), use a config similar to
 
-<pre class="lang-ini">
+```ini
 prometheus.ssl.port       = 15691
 prometheus.ssl.cacertfile = /full/path/to/ca_certificate.pem
 prometheus.ssl.certfile   = /full/path/to/server_certificate.pem
@@ -911,7 +911,7 @@ prometheus.ssl.depth      = 2
 prometheus.ssl.fail_if_no_peer_cert = true
 ## To enforce TLS (disable the non-TLS port):
 # prometheus.tcp.listener = none
-</pre>
+```
 
 
 ## <a id="3rd-party-plugin" class="anchor" href="#3rd-party-plugin">Using Prometheus with RabbitMQ 3.7</a>

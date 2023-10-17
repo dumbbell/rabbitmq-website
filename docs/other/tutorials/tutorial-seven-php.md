@@ -44,10 +44,10 @@ Publisher confirms are a RabbitMQ extension to the AMQP 0.9.1 protocol,
 so they are not enabled by default. Publisher confirms are
 enabled at the channel level with the `confirm_select` method:
 
-<pre class="lang-php">
+```php
 $channel = $connection->channel();
 $channel->confirm_select();
-</pre>
+```
 
 This method must be called on every channel that you expect to use publisher
 confirms. Confirms should be enabled just once, not for every message published.
@@ -57,7 +57,7 @@ confirms. Confirms should be enabled just once, not for every message published.
 Let's start with the simplest approach to publishing with confirms,
 that is, publishing a message and waiting synchronously for its confirmation:
 
-<pre class="lang-php">
+```php
 while (thereAreMessagesToPublish()) {
     $data = "Hello World!";
     $msg = new AMQPMessage($data);
@@ -65,7 +65,7 @@ while (thereAreMessagesToPublish()) {
     // uses a 5 second timeout
     $channel->wait_for_pending_acks(5.000);
 }
-</pre>
+```
 
 In the previous example we publish a message as usual and wait for its
 confirmation with the `$channel::wait_for_pending_acks(int|float)` method.
@@ -100,7 +100,7 @@ To improve upon our previous example, we can publish a batch
 of messages and wait for this whole batch to be confirmed.
 The following example uses a batch of 100:
 
-<pre class="lang-php">
+```php
 $batch_size = 100;
 $outstanding_message_count = 0;
 while (thereAreMessagesToPublish()) {
@@ -116,7 +116,7 @@ while (thereAreMessagesToPublish()) {
 if ($outstanding_message_count > 0) {
     $channel->wait_for_pending_acks(5.000);
 }
-</pre>
+```
 
 Waiting for a batch of messages to be confirmed improves throughput drastically over
 waiting for a confirm for individual message (up to 20-30 times with a remote RabbitMQ node).
@@ -131,7 +131,7 @@ blocks the publishing of messages.
 The broker confirms published messages asynchronously, one just needs
 to register a callback on the client to be notified of these confirms:
 
-<pre class="lang-php">
+```php
 $channel = $connection->channel();
 $channel->confirm_select();
 
@@ -146,7 +146,7 @@ $channel->set_nack_handler(
         // code when message is nack-ed
     }
 );
-</pre>
+```
 
 There are 2 callbacks: one for confirmed messages and one for nack-ed messages
 (messages that can be considered lost by the broker). Each callback has

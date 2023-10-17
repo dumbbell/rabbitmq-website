@@ -65,17 +65,17 @@ to a position closer to queue head.
 This Java client example rejects a single message consumed via polling (`basic.get`),
 asking the broker to requeue it:
 
-<pre class="lang-java">
+```java
 GetResponse gr = channel.basicGet("some.queue", false);
 channel.basicNack(gr.getEnvelope().getDeliveryTag(), false, true);
-</pre>
+```
 
 This example rejects two messages with a single call to
 the broker (the second argument on
 `basicNack` is the `multiple` flag):
 
-<pre class="lang-java">
+```java
 GetResponse gr1 = channel.basicGet("some.queue", false);
 GetResponse gr2 = channel.basicGet("some.queue", false);
 channel.basicNack(gr2.getEnvelope().getDeliveryTag(), true, true);
-</pre>
+```

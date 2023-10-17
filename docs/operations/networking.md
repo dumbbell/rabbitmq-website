@@ -91,9 +91,9 @@ in RabbitMQ parlance. Listeners are configured using the `listeners.tcp.*` confi
 TCP listeners configure both an interface and port. The following example
 demonstrates how to configure AMQP 0-9-1 and AMQP 1.0 listener to use a specific IP and the standard port:
 
-<pre class="lang-ini">
+```ini
 listeners.tcp.1 = 192.168.1.99:5672
-</pre>
+```
 
 By default, RabbitMQ will listen on port 5672 on **all available interfaces**. It is possible to
 limit client connections to a subset of the interfaces or even just one, for example, IPv6-only
@@ -104,34 +104,34 @@ interfaces. The following few sections demonstrate how to do it.
 The following example demonstrates how to configure RabbitMQ
 to listen on localhost only for both IPv4 and IPv6:
 
-<pre class="lang-ini">
+```ini
 listeners.tcp.1 = 127.0.0.1:5672
 listeners.tcp.2 = ::1:5672
-</pre>
+```
 
 With modern Linux kernels and Windows releases,
 when a port is specified and RabbitMQ is configured to
 listen on all IPv6 addresses but IPv4 is not deactivated
 explicitly, IPv4 address will be included, so
 
-<pre class="lang-ini">
+```ini
 listeners.tcp.1 = :::5672
-</pre>
+```
 
 is equivalent to
 
-<pre class="lang-ini">
+```ini
 listeners.tcp.1 = 0.0.0.0:5672
 listeners.tcp.2 = :::5672
-</pre>
+```
 
 ### <a id="single-stack-ipv6" class="anchor" href="#single-stack-ipv6">Listening on IPv6 Interfaces Only</a>
 
 In this example RabbitMQ will listen on an IPv6 interface only:
 
-<pre class="lang-ini">
+```ini
 listeners.tcp.1 = fe80::2acf:e9ff:fe17:f97b:5672
-</pre>
+```
 
 In IPv6-only environments the node must also be configured
 to [use IPv6 for inter-node communication and CLI tool connections](#distribution-ipv6).
@@ -140,14 +140,14 @@ to [use IPv6 for inter-node communication and CLI tool connections](#distributio
 
 In this example RabbitMQ will listen on an IPv4 interface only:
 
-<pre class="lang-ini">
+```ini
 listeners.tcp.1 = 192.168.1.99:5672
-</pre>
+```
 
 It is possible to deactivate non-TLS connections by deactivating all regular TCP listeners.
 Only [TLS-enabled](./ssl.html) clients will be able to connect:
 
-<pre class="lang-ini">
+```ini
 # deactivates non-TLS listeners, only TLS-enabled (activated) clients will be able to connect
 listeners.tcp = none
 
@@ -158,7 +158,7 @@ ssl_options.certfile   = /path/to/server_certificate.pem
 ssl_options.keyfile    = /path/to/server_key.pem
 ssl_options.verify     = verify_peer
 ssl_options.fail_if_no_peer_cert = false
-</pre>
+```
 
 
 ## <a id="ports" class="anchor" href="#ports">Port Access</a>
@@ -205,28 +205,28 @@ when a node is [put into maintenance mode](./upgrade.html#maintenance-mode).
 
 To suspend all listeners on a node and prevent new client connections to it, use `rabbitmqctl suspend_listeners`:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl suspend_listeners
-</pre>
+```
 
 As all other CLI commands, this command can be invoked against an arbitrary node (including remote ones)
 using the `-n` switch:
 
-<pre class="lang-bash">
+```bash
 # suspends listeners on node rabbit@node2.cluster.rabbitmq.svc: it won't accept any new client connections
 rabbitmqctl suspend_listeners -n rabbit@node2.cluster.rabbitmq.svc
-</pre>
+```
 
 To resume all listeners on a node and make it accept new client connections again, use `rabbitmqctl resume_listeners`:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl resume_listeners
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 # resumes listeners on node rabbit@node2.cluster.rabbitmq.svc: it will accept new client connections again
 rabbitmqctl resume_listeners -n rabbit@node2.cluster.rabbitmq.svc
-</pre>
+```
 
 Both operations will leave [log entries](./logging.html) in the node's log.
 
@@ -254,19 +254,19 @@ When a node or CLI tool needs to contact node `rabbit@hostname2` it will do the 
 be limited to a number of interfaces using the `ERL_EPMD_ADDRESS`
 environment variable:
 
-<pre class="lang-bash">
+```bash
 # makes epmd listen on loopback IPv6 and IPv4 interfaces
 export ERL_EPMD_ADDRESS="::1"
-</pre>
+```
 
 When `ERL_EPMD_ADDRESS` is changed, both RabbitMQ node and `epmd` on the host must be stopped.
 For `epmd`, use
 
-<pre class="lang-bash">
+```bash
 # Stops local epmd process.
 # Use after shutting down RabbitMQ.
 epmd -kill
-</pre>
+```
 
 to terminate it. The service will be started by the local RabbitMQ node automatically on boot.
 
@@ -278,21 +278,21 @@ to that list (in other words, `epmd` will always bind to the loopback interface)
 The default epmd port is 4369, but this can be changed using the `ERL_EPMD_PORT` environment
 variable:
 
-<pre class="lang-bash">
+```bash
 # makes epmd bind to port 4369
 export ERL_EPMD_PORT="4369"
-</pre>
+```
 
 All hosts in a [cluster](./clustering.html) must use the same port.
 
 When `ERL_EPMD_PORT` is changed, both RabbitMQ node and `epmd` on the host must be stopped.
 For `epmd`, use
 
-<pre class="lang-bash">
+```bash
 # Stops local epmd process.
 # Use after shutting down RabbitMQ.
 epmd -kill
-</pre>
+```
 
 to terminate it. The service will be started by the local RabbitMQ node automatically on boot.
 
@@ -336,7 +336,7 @@ They define the range's lower and upper bounds, inclusive.
 
 The example below uses a range with a single port but a value different from default:
 
-<pre class="lang-erlang">
+```erlang
 [
   {kernel, [
     {inet_dist_listen_min, 33672},
@@ -346,21 +346,21 @@ The example below uses a range with a single port but a value different from def
     ...
   ]}
 ].
-</pre>
+```
 
 To verify what port is used by a node for inter-node and CLI tool communication,
 run
 
-<pre class="lang-bash">
+```bash
 epmd -names
-</pre>
+```
 
 on that node's host. It will produce output that looks like this:
 
-<pre class="lang-ini">
+```ini
 epmd: up and running on port 4369 with data:
 name rabbit at port 25672
-</pre>
+```
 
 ### <a id="distribution-port-buffer-limit" class="anchor" href="#distribution-port-buffer-limit">Inter-node Communication Buffer Size Limit</a>
 
@@ -395,12 +395,12 @@ so using the same IP version (e.g. IPv6) across the board or a dual stack setup 
 To instruct the runtime to use IPv6 for inter-node communication and related tasks, use
 the `RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS` environment variable to pass a couple of flags:
 
-<pre class="lang-bash">
+```bash
 # these flags will be used by RabbitMQ nodes
 RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="-kernel inetrc '/etc/rabbitmq/erl_inetrc' -proto_dist inet6_tcp"
 # these flags will be used by CLI tools
 RABBITMQ_CTL_ERL_ARGS="-proto_dist inet6_tcp"
-</pre>
+```
 
 `RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS` above uses two closely related flags:
 
@@ -412,20 +412,20 @@ RABBITMQ_CTL_ERL_ARGS="-proto_dist inet6_tcp"
 The `erl_inetrc` file at `/etc/rabbitmq/erl_inetrc` will control hostname resolution settings.
 For IPv6-only environments, it must include the following line:
 
-<pre class="lang-bash">
+```bash
 %% Tells DNS client on RabbitMQ nodes and CLI tools to resolve hostnames to IPv6 addresses.
 %% The trailing dot is not optional.
 {inet6,true}.
-</pre>
+```
 
 ### CLI Tools
 
 With CLI tools, use the same runtime flag as used for RabbitMQ nodes above but provide it
 using a different environment variable, `RABBITMQ_CTL_ERL_ARGS`:
 
-<pre class="lang-bash">
+```bash
 RABBITMQ_CTL_ERL_ARGS="-proto_dist inet6_tcp"
-</pre>
+```
 
 Note that once instructed to use IPv6, CLI tools won't be able to connect to nodes that
 do not use IPv6 for inter-node communication. This involves the `epmd` service running on the same
@@ -447,25 +447,25 @@ will also use IPv6 to connect to `epmd`.
 When `epmd` is configured to use IPv6 exclusively but RabbitMQ nodes are not,
 RabbitMQ will log an error message similar to this:
 
-<pre class="lang-bash">
+```bash
 Protocol 'inet_tcp': register/listen error: econnrefused
-</pre>
+```
 
 #### systemd Unit File
 
 On distributions that use systemd, the `epmd.socket` service controls network settings of `epmd`.
 It is possible to configure `epmd` to only listen on IPv6 interfaces:
 
-<pre class="lang-ini">
+```ini
 ListenStream=[::1]:4369
-</pre>
+```
 
 The service will need reloading after its unit file has been updated:
 
-<pre class="lang-bash">
+```bash
 systemctl daemon-reload
 systemctl restart epmd.socket epmd.service
-</pre>
+```
 
 ## <a id="intermediaries" class="anchor" href="#intermediaries">Intermediaries: Proxies and Load Balancers</a>
 
@@ -512,9 +512,9 @@ The protocol spec dictates that either it must be applied to all connections or 
 security reasons, this feature is turned off by default and needs to be turned on
 for individual protocols supported by RabbitMQ. To turn it on for AMQP 0-9-1 and AMQP 1.0 clients:
 
-<pre class="lang-ini">
+```ini
 proxy_protocol = true
-</pre>
+```
 
 When proxy protocol is turned on, clients won't be able to connect to RabbitMQ directly unless
 they themselves support the protocol.
@@ -574,36 +574,36 @@ for every client connection.
 
 The following example sets TCP buffers for AMQP 0-9-1 connections to 192 KiB:
 
-<pre class="lang-ini">
+```ini
 tcp_listen_options.backlog = 128
 tcp_listen_options.nodelay = true
 tcp_listen_options.linger.on      = true
 tcp_listen_options.linger.timeout = 0
 tcp_listen_options.sndbuf = 196608
 tcp_listen_options.recbuf = 196608
-</pre>
+```
 
 The same example for MQTT:
 
-<pre class="lang-ini">
+```ini
 mqtt.tcp_listen_options.backlog = 128
 mqtt.tcp_listen_options.nodelay = true
 mqtt.tcp_listen_options.linger.on      = true
 mqtt.tcp_listen_options.linger.timeout = 0
 mqtt.tcp_listen_options.sndbuf = 196608
 mqtt.tcp_listen_options.recbuf = 196608
-</pre>
+```
 
 and STOMP:
 
-<pre class="lang-ini">
+```ini
 stomp.tcp_listen_options.backlog = 128
 stomp.tcp_listen_options.nodelay = true
 stomp.tcp_listen_options.linger.on      = true
 stomp.tcp_listen_options.linger.timeout = 0
 stomp.tcp_listen_options.sndbuf = 196608
 stomp.tcp_listen_options.recbuf = 196608
-</pre>
+```
 
 Note that setting send and receive buffer sizes to different values
 can be dangerous and **not recommended**.
@@ -683,36 +683,36 @@ sustained per node is more important than throughput.
 
 The following example sets TCP buffers for AMQP 0-9-1 connections to 32 KiB:
 
-<pre class="lang-ini">
+```ini
 tcp_listen_options.backlog = 128
 tcp_listen_options.nodelay = true
 tcp_listen_options.linger.on      = true
 tcp_listen_options.linger.timeout = 0
 tcp_listen_options.sndbuf  = 32768
 tcp_listen_options.recbuf  = 32768
-</pre>
+```
 
 The same example for MQTT:
 
-<pre class="lang-ini">
+```ini
 mqtt.tcp_listen_options.backlog = 128
 mqtt.tcp_listen_options.nodelay = true
 mqtt.tcp_listen_options.linger.on      = true
 mqtt.tcp_listen_options.linger.timeout = 0
 mqtt.tcp_listen_options.sndbuf  = 32768
 mqtt.tcp_listen_options.recbuf  = 32768
-</pre>
+```
 
 and for STOMP:
 
-<pre class="lang-ini">
+```ini
 stomp.tcp_listen_options.backlog = 128
 stomp.tcp_listen_options.nodelay = true
 stomp.tcp_listen_options.linger.on      = true
 stomp.tcp_listen_options.linger.timeout = 0
 stomp.tcp_listen_options.sndbuf  = 32768
 stomp.tcp_listen_options.recbuf  = 32768
-</pre>
+```
 
 Note that lowering TCP buffer sizes will result in a proportional throughput drop,
 so an optimal value between throughput and per-connection RAM use needs to be
@@ -727,10 +727,10 @@ A large number of concurrent connections will generate a lot of metric (stats) e
 This increases CPU consumption even with mostly idle connections. To reduce this footprint,
 increase the statistics collection interval using the `collect_statistics_interval` key:
 
-<pre class="lang-ini">
+```ini
 # sets the interval to 60 seconds
 collect_statistics_interval = 60000
-</pre>
+```
 
 The default is 5 seconds (5000 milliseconds).
 
@@ -747,9 +747,9 @@ Channels also consume RAM. By optimising how many channels applications use, tha
 can be decreased. It is possible to cap the max number of channels on a connection using
 the `channel_max` configuration setting:
 
-<pre class="lang-ini">
+```ini
 channel_max = 16
-</pre>
+```
 
 Note that some libraries and tools that build on top of RabbitMQ clients may implicitly require
 a certain number of channels. Values above 200 are rarely necessary.
@@ -770,25 +770,25 @@ When configuring sockets that serve client connections,
 
 The following example demonstrates that. First, `rabbitmq.conf`:
 
-<pre class="lang-ini">
+```ini
 tcp_listen_options.backlog = 4096
 tcp_listen_options.nodelay = true
-</pre>
+```
 
 which should be used together with the following bits in the [advanced config file](./configure.html#advanced-config-file):
 
-<pre class="lang-erlang">
+```erlang
 [
   {kernel, [
     {inet_default_connect_options, [{nodelay, true}]},
     {inet_default_listen_options,  [{nodelay, true}]}
   ]}].
-</pre>
+```
 
 When using the [classic config format](./configure.html#erlang-term-config-file),
 everything is configured in a single file:
 
-<pre class="lang-erlang">
+```erlang
 [
   {kernel, [
     {inet_default_connect_options, [{nodelay, true}]},
@@ -803,7 +803,7 @@ everything is configured in a single file:
                          ]}
   ]}
 ].
-</pre>
+```
 
 ### <a id="tuning-for-large-number-of-connections-async-thread-pool" class="anchor" href="#tuning-for-large-number-of-connections-async-thread-pool">Erlang VM I/O Thread Pool Tuning</a>
 
@@ -821,14 +821,14 @@ disconnect due to a network interruption or choose to reconnect.
 This is configured using the `tcp_listen_options.backlog`
 option:
 
-<pre class="lang-ini">
+```ini
 tcp_listen_options.backlog = 4096
 tcp_listen_options.nodelay = true
-</pre>
+```
 
 In the [classic config format](./configure.html#erlang-term-config-file):
 
-<pre class="lang-erlang">
+```erlang
 [
   {rabbit, [
     {tcp_listen_options, [
@@ -839,7 +839,7 @@ In the [classic config format](./configure.html#erlang-term-config-file):
                          ]}
   ]}
 ].
-</pre>
+```
 
 Default value is 128. When pending connection queue length grows beyond this value,
 connections will be rejected by the operating system. See also `net.core.somaxconn`
@@ -897,9 +897,9 @@ up disconnected client detection.
 TCP stack tuning can also reduce the amount of time connections spend in the `TIME_WAIT` state.
 The `net.ipv4.tcp_fin_timeout` setting specifically can help here:
 
-<pre class="lang-ini">
+```ini
 net.ipv4.tcp_fin_timeout = 30
-</pre>
+```
 
 Note that like other settings prefixed with `net.ipv4.`, this one applies to both IPv4 and IPv6
 connections despite the name.
@@ -915,7 +915,7 @@ The settings above generally should be combined with reduced [TCP keepalive](#tc
 values, for example:
 
 
-<pre class="lang-ini">
+```ini
 net.ipv4.tcp_fin_timeout = 30
 
 net.ipv4.tcp_keepalive_time=30
@@ -923,7 +923,7 @@ net.ipv4.tcp_keepalive_intvl=10
 net.ipv4.tcp_keepalive_probes=4
 
 net.ipv4.tcp_tw_reuse = 1
-</pre>
+```
 
 
 ## <a id="os-tuning" class="anchor" href="#os-tuning">OS Level Tuning</a>
@@ -1036,9 +1036,9 @@ Kernel parameter tuning differs from OS to OS. This guide focuses on Linux.
 To configure a kernel parameter interactively, use `sysctl -w` (requires superuser
 privileges), for example:
 
-<pre class="lang-bash">
+```bash
 sysctl -w fs.file-max 200000
-</pre>
+```
 
 To make the changes permanent (stick between reboots), they need to be added to
 `/etc/sysctl.conf`. See [sysctl(8)](http://man7.org/linux/man-pages/man8/sysctl.8.html)
@@ -1153,11 +1153,11 @@ Below is an example sysctl configuration for TCP keepalives
 that considers TCP connections dead or unreachable after 70
 seconds (4 attempts every 10 seconds after connection idle for 30 seconds):
 
-<pre class="lang-ini">
+```ini
 net.ipv4.tcp_keepalive_time=30
 net.ipv4.tcp_keepalive_intvl=10
 net.ipv4.tcp_keepalive_probes=4
-</pre>
+```
 
 TCP keepalives can be a useful additional defense mechanism
 in environments where RabbitMQ operator has no control
@@ -1171,9 +1171,9 @@ default. When clients run in heavily constrained environments,
 it may be necessary to increase the timeout. This can be done via
 the `rabbit.handshake_timeout` (in milliseconds):
 
-<pre class="lang-ini">
+```ini
 handshake_timeout = 20000
-</pre>
+```
 
 It should be pointed out that this is only necessary with very constrained
 clients and networks. Handshake timeouts in other circumstances indicate
@@ -1185,9 +1185,9 @@ If TLS/SSL is enabled, it may be necessary to increase also the TLS/SSL
 handshake timeout. This can be done via
 the `rabbit.ssl_handshake_timeout` (in milliseconds):
 
-<pre class="lang-ini">
+```ini
 ssl_handshake_timeout = 10000
-</pre>
+```
 
 
 ## <a id="dns" class="anchor" href="#dns">Hostname Resolution and DNS</a>
@@ -1232,15 +1232,15 @@ optimally configured. This can increase latency when accepting client connection
 
 To explicitly activate or turn on reverse DNS lookups:
 
-<pre class="lang-ini">
+```ini
 reverse_dns_lookups = true
-</pre>
+```
 
 To deactivate reverse DNS lookups:
 
-<pre class="lang-ini">
+```ini
 reverse_dns_lookups = false
-</pre>
+```
 
 ### <a id="dns-verify-resolution" class="anchor" href="#dns-verify-resolution">Verify Hostname Resolution</a> on a Node or Locally
 
@@ -1253,24 +1253,24 @@ into account.
 
 The first command is `rabbitmq-diagnostics resolve_hostname`:
 
-<pre class="lang-bash">
+```bash
 # resolves node2.cluster.local.svc to IPv6 addresses on node rabbit@node1.cluster.local.svc
 rabbitmq-diagnostics resolve_hostname node2.cluster.local.svc --address-family IPv6 -n rabbit@node1.cluster.local.svc
 
 # makes local CLI tool resolve node2.cluster.local.svc to IPv4 addresses
 rabbitmq-diagnostics resolve_hostname node2.cluster.local.svc --address-family IPv4 --offline
-</pre>
+```
 
 The second one is `rabbitmq-diagnostics resolver_info`:
 
-<pre class="lang-bash">
+```bash
 rabbitmq-diagnostics resolver_info
-</pre>
+```
 
 It will report key resolver settings such as the lookup order (whether CLI tools should prefer the OS resolver,
 inetrc file, and so on) as well as inetrc hostname entries, if any:
 
-<pre class="lang-plaintext">
+```plaintext
 Runtime Hostname Resolver (inetrc) Settings
 
 Lookup order: native
@@ -1281,7 +1281,7 @@ Cache size:
 inetrc File Host Entries
 
 (none)
-</pre>
+```
 
 
 ## <a id="logging" class="anchor" href="#logging">Connection Event Logging</a>
@@ -1307,21 +1307,21 @@ To "unblock" a command line tool, use `sudo /usr/libexec/ApplicationFirewall/soc
 The examples below assume that Erlang is installed under `/usr/local/Cellar/erlang/{version}`,
 used by the Homebrew Erlang formula:
 
-<pre class="lang-bash">
+```bash
 # allow CLI tools and shell to bind to ports and accept inbound connections
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add /usr/local/Cellar/erlang/{version}/lib/erlang/bin/erl
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp /usr/local/Cellar/erlang/{version}/lib/erlang/bin/erl
-</pre>
+```
 
-<pre class="lang-bash">
+```bash
 # allow server nodes (Erlang VM) to bind to ports and accept inbound connections
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --add /usr/local/Cellar/erlang/{version}/lib/erlang/erts-{erts version}/bin/beam.smp
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --unblockapp /usr/local/Cellar/erlang/{version}/lib/erlang/erts-{erts version}/bin/beam.smp
-</pre>
+```
 
 Note that `socketfilterfw` command line arguments can vary between MacOS releases.
 To see supports command line arguments, use
 
-<pre class="lang-bash">
+```bash
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --help
-</pre>
+```

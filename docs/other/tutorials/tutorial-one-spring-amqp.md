@@ -77,7 +77,7 @@ an `application.properties` file in the generated project with nothing in it.
 Rename application.properties to `application.yml` file with the following
 properties:
 
-<pre class="lang-java">
+```java
 spring:
   profiles:
     active: usage_message
@@ -89,13 +89,13 @@ logging:
 tutorial:
   client:
     duration: 10000
-</pre>
+```
 
 Create a new package `tut1` where we can put the tutorial code.
 We'll now create a Java configuration file `Tut1Config.java` to describe our
 Spring beans in the following manner:
 
-<pre class="lang-java">
+```java
 package org.springframework.amqp.tutorials.tut1;
 
 import org.springframework.amqp.core.Queue;
@@ -124,7 +124,7 @@ public class Tut1Config {
         return new Tut1Sender();
     }
 }
-</pre>
+```
 
 Note that we've defined the first tutorial profile as either `tut1`,
 the package name, or `hello-world`. We use the `@Configuration` annotation to
@@ -137,7 +137,7 @@ now by simply passing in which profiles we are using. To enable
 this we will modify the generated  `RabbitAmqpTutorialsApplication` class
 with the following:
 
-<pre class="lang-java">
+```java
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -171,11 +171,11 @@ public class RabbitAmqpTutorialsApplication {
         SpringApplication.run(RabbitAmqpTutorialsApplication.class, args);
     }
 }
-</pre>
+```
 
 and add the `RabbitAmqpTutorialsRunner` class as follows:
 
-<pre class="lang-java">
+```java
 package org.springframework.amqp.tutorials.tut1;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -198,7 +198,7 @@ public class RabbitAmqpTutorialsRunner implements CommandLineRunner {
         ctx.close();
     }
 }
-</pre>
+```
 
 ### Sending
 
@@ -211,7 +211,7 @@ sender and receiver classes.  Let's call them `Tut1Receiver`
 and `Tut1Sender`. The sender leverages our configuration and the `RabbitTemplate`
 to send the message.
 
-<pre class="lang-java">
+```java
 // Sender
 package org.springframework.amqp.tutorials.tut1;
 
@@ -235,7 +235,7 @@ public class Tut1Sender {
         System.out.println(" [x] Sent '" + message + "'");
     }
 }
-</pre>
+```
 
 You'll notice that Spring AMQP removes the boilerplate code
 leaving you with only the logic of the messaging to be concerned
@@ -265,7 +265,7 @@ class with `@RabbitListener` and pass in the name of the queue.
 We then annotate our `receive` method with `@RabbitHandler`
 passing in the payload that has been pushed to the queue.
 
-<pre class="lang-java">
+```java
 package org.springframework.amqp.tutorials.tut1;
 
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -279,30 +279,30 @@ public class Tut1Receiver {
         System.out.println(" [x] Received '" + in + "'");
     }
 }
-</pre>
+```
 
 ### Putting it all together
 
 We must now build the JAR file:
 
-<pre class="lang-bash">
+```bash
 ./mvnw clean package
-</pre>
+```
 
 The application uses Spring Profiles to control what tutorial it's running, and whether it's a
 sender or receiver. To run the receiver, execute the following command:
 
-<pre class="lang-bash">
+```bash
 # consumer
 java -jar target/rabbitmq-tutorials.jar --spring.profiles.active=hello-world,receiver
-</pre>
+```
 
 Open another shell to run the sender:
 
-<pre class="lang-bash">
+```bash
 # sender
 java -jar target/rabbitmq-tutorials.jar --spring.profiles.active=hello-world,sender
-</pre>
+```
 
 
 > #### Listing queues
@@ -310,14 +310,14 @@ java -jar target/rabbitmq-tutorials.jar --spring.profiles.active=hello-world,sen
 > You may wish to see what queues RabbitMQ has and how many
 > messages are in them. You can do it (as a privileged user) using the `rabbitmqctl` tool:
 >
-> <pre class="lang-bash">
+> ```bash
 > sudo rabbitmqctl list_queues
-> </pre>
+> ```
 >
 > On Windows, omit the sudo:
-> <pre class="lang-powershell">
+> ```powershell
 > rabbitmqctl.bat list_queues
-> </pre>
+> ```
 
 Time to move on to [part 2](tutorial-two-spring-amqp.html) and
 build a simple _work queue_.

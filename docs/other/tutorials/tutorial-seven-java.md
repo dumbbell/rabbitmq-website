@@ -44,10 +44,10 @@ Publisher confirms are a RabbitMQ extension to the AMQP 0.9.1 protocol,
 so they are not enabled by default. Publisher confirms are
 enabled at the channel level with the `confirmSelect` method:
 
-<pre class="lang-java">
+```java
 Channel channel = connection.createChannel();
 channel.confirmSelect();
-</pre>
+```
 
 This method must be called on every channel that you expect to use publisher
 confirms. Confirms should be enabled just once, not for every message published.
@@ -57,7 +57,7 @@ confirms. Confirms should be enabled just once, not for every message published.
 Let's start with the simplest approach to publishing with confirms,
 that is, publishing a message and waiting synchronously for its confirmation:
 
-<pre class="lang-java">
+```java
 while (thereAreMessagesToPublish()) {
     byte[] body = ...;
     BasicProperties properties = ...;
@@ -65,7 +65,7 @@ while (thereAreMessagesToPublish()) {
     // uses a 5 second timeout
     channel.waitForConfirmsOrDie(5_000);
 }
-</pre>
+```
 
 In the previous example we publish a message as usual and wait for its
 confirmation with the `Channel#waitForConfirmsOrDie(long)` method.
@@ -100,7 +100,7 @@ To improve upon our previous example, we can publish a batch
 of messages and wait for this whole batch to be confirmed.
 The following example uses a batch of 100:
 
-<pre class="lang-java">
+```java
 int batchSize = 100;
 int outstandingMessageCount = 0;
 while (thereAreMessagesToPublish()) {
@@ -116,7 +116,7 @@ while (thereAreMessagesToPublish()) {
 if (outstandingMessageCount > 0) {
     channel.waitForConfirmsOrDie(5_000);
 }
-</pre>
+```
 
 Waiting for a batch of messages to be confirmed improves throughput drastically over
 waiting for a confirm for individual message (up to 20-30 times with a remote RabbitMQ node).
@@ -131,7 +131,7 @@ blocks the publishing of messages.
 The broker confirms published messages asynchronously, one just needs
 to register a callback on the client to be notified of these confirms:
 
-<pre class="lang-java">
+```java
 Channel channel = connection.createChannel();
 channel.confirmSelect();
 channel.addConfirmListener((sequenceNumber, multiple) -> {
@@ -139,7 +139,7 @@ channel.addConfirmListener((sequenceNumber, multiple) -> {
 }, (sequenceNumber, multiple) -> {
     // code when message is nack-ed
 });
-</pre>
+```
 
 There are 2 callbacks: one for confirmed messages and one for nack-ed messages
 (messages that can be considered lost by the broker). Each callback has
@@ -153,29 +153,29 @@ There are 2 callbacks: one for confirmed messages and one for nack-ed messages
 The sequence number can be obtained with `Channel#getNextPublishSeqNo()`
 before publishing:
 
-<pre class="lang-java">
+```java
 int sequenceNumber = channel.getNextPublishSeqNo());
 ch.basicPublish(exchange, queue, properties, body);
-</pre>
+```
 
 A simple way to correlate messages with sequence number consists in using a
 map. Let's assume we want to publish strings because they are easy to turn into
 an array of bytes for publishing. Here is a code sample that uses a map to
 correlate the publishing sequence number with the string body of the message:
 
-<pre class="lang-java">
+```java
 ConcurrentNavigableMap&lt;Long, String> outstandingConfirms = new ConcurrentSkipListMap&lt;>();
 // ... code for confirm callbacks will come later
 String body = "...";
 outstandingConfirms.put(channel.getNextPublishSeqNo(), body);
 channel.basicPublish(exchange, queue, properties, body.getBytes());
-</pre>
+```
 
 The publishing code now tracks outbound messages with a map. We need
 to clean this map when confirms arrive and do something like logging a warning
 when messages are nack-ed:
 
-<pre class="lang-java">
+```java
 ConcurrentNavigableMap&lt;Long, String&gt; outstandingConfirms = new ConcurrentSkipListMap&lt;&gt;();
 ConfirmCallback cleanOutstandingConfirms = (sequenceNumber, multiple) -> {
     if (multiple) {
@@ -197,7 +197,7 @@ channel.addConfirmListener(cleanOutstandingConfirms, (sequenceNumber, multiple) 
     cleanOutstandingConfirms.handle(sequenceNumber, multiple);
 });
 // ... publishing code
-</pre>
+```
 
 The previous sample contains a callback that cleans the map when
 confirms arrive. Note this callback handles both single and multiple
@@ -264,18 +264,18 @@ The [`PublisherConfirms.java`](https://github.com/rabbitmq/rabbitmq-tutorials/bl
 class contains code for the techniques we covered. We can compile it, execute it as-is and
 see how they each perform:
 
-<pre class="lang-bash">
+```bash
 javac -cp $CP PublisherConfirms.java
 java -cp $CP PublisherConfirms
-</pre>
+```
 
 The output will look like the following:
 
-<pre class="lang-bash">
+```bash
 Published 50,000 messages individually in 5,549 ms
 Published 50,000 messages in batch in 2,331 ms
 Published 50,000 messages and handled confirms asynchronously in 4,054 ms
-</pre>
+```
 
 The output on your computer should look similar if the
 client and the server sit on the same machine. Publishing messages individually
@@ -287,7 +287,7 @@ trying with a remote node, which is more realistic as clients
 and servers are usually not on the same machine in production.
 `PublisherConfirms.java` can easily be changed to use a non-local node:
 
-<pre class="lang-bash">
+```bash
 static Connection createConnection() throws Exception {
     ConnectionFactory cf = new ConnectionFactory();
     cf.setHost("remote-host");
@@ -295,15 +295,15 @@ static Connection createConnection() throws Exception {
     cf.setPassword("remote-password");
     return cf.newConnection();
 }
-</pre>
+```
 
 Recompile the class, execute it again, and wait for the results:
 
-<pre class="lang-bash">
+```bash
 Published 50,000 messages individually in 231,541 ms
 Published 50,000 messages in batch in 7,232 ms
 Published 50,000 messages and handled confirms asynchronously in 6,332 ms
-</pre>
+```
 
 We see publishing individually now performs terribly. But
 with the network between the client and the server, batch publishing and asynchronous handling

@@ -46,7 +46,7 @@ The configuration for the Shovel plugin must be defined in the
 It consists of a single `shovels` clause that lists the shovels that should
 be started on node boot:
 
-<pre class="lang-erlang">
+```erlang
 {rabbit, [
   %% ...
 ]},
@@ -59,7 +59,7 @@ be started on node boot:
     %% ...
   ]}
 ]}
-</pre>
+```
 
 A (deliberately verbose) [example configuration](#example-config) can be found below.
 
@@ -68,14 +68,14 @@ The names in the list must be distinct.
 
 A shovel definition looks like this at the top level:
 
-<pre class="lang-erlang">
+```erlang
 {<em>shovel_name</em>, [
   {source, [ <em>...protocol specific config...</em> ]},
   {destination, [ <em>...protocol specific config...</em> ]},
   {ack_mode, <em>a_mode</em>},
   {reconnect_delay, <em>reconn_delay</em>}
 ]}
-</pre>
+```
 
 where <code><em>shovel_name</em></code> is the name of the
 shovel (an Erlang atom). The name should be enclosed in single quotes (`'`) if they do
@@ -97,19 +97,19 @@ protocols: `protocol` and `uris`.
 `protocol` supports two values: `amqp091` and `amqp10`,
 for AMQP 0-9-1 and AMQP 1.0, respectively:
 
-<pre class="lang-erlang">
+```erlang
 %% for AMQP 0-9-1
 {protocol, amqp091}
-</pre>
+```
 
 `uris` is a list of <a href="./uri-spec.html">AMQP connection URIs</a>:
 
-<pre class="lang-erlang">
+```erlang
 {uris, [
         "amqp://fred:secret@host1.domain/my_vhost",
         "amqp://john:secret@host2.domain/my_vhost"
        ]}
-</pre>
+```
 
 The URI syntax is extended to include a query part to
 permit the configuration of additional connection parameters.
@@ -138,9 +138,9 @@ They are described in the table below.
         The duration (in seconds) to wait before reconnecting to the
         brokers after being disconnected at either end. Default is 1.
 
-<pre class="lang-erlang">
+```erlang
 {reconnect_delay, 5}
-</pre>
+```
         would delay for five seconds before reconnecting after failure. Value of `0`
         means no reconnection: the shovel will stop after first failure or unsuccessful
         connection attempt.
@@ -195,16 +195,16 @@ AMQP 0-9-1-specific source keys are covered in a separate table:
           before it starts transferring messages. They are typically used to set
           up the topology.
         </p>
-<pre class="lang-erlang">
+```erlang
   {declarations, <em>declaration_list</em>}
-</pre>
+```
         <p>
           The declarations follow method and property names used by the <a href="erlang-client-user-guide.html">RabbitMQ Erlang Client</a>.
         </p>
         <p>
           A minimalistic declaration example:
         </p>
-<pre class="lang-erlang">
+```erlang
   {declarations, [
                    'queue.declare',
                    {'queue.bind', [
@@ -212,7 +212,7 @@ AMQP 0-9-1-specific source keys are covered in a separate table:
                                     {queue,    &lt;&lt;&gt;&gt;}
                                   ]}
                  ]}
-</pre>
+```
         <p>
           will first declare an anonymous queue, and then bind it
           to the exchange called <code>"my_exchange"</code>. The
@@ -238,13 +238,13 @@ AMQP 0-9-1-specific source keys are covered in a separate table:
         <p>
           Here is another example:
         </p>
-<pre class="lang-erlang">
+```erlang
 {'exchange.declare', [
                       {exchange, &lt;&lt;"my_exchange"&gt;&gt;},
                       {type, &lt;&lt;"direct"&gt;&gt;},
                       durable
                      ]}
-</pre>
+```
         <p>
           will declare a durable, direct exchange called
           "<code>my_exchange</code>".
@@ -258,9 +258,9 @@ AMQP 0-9-1-specific source keys are covered in a separate table:
           <p>
             The name of the source queue as an Erlang binary value. This property is mandatory:
 
-<pre class="lang-erlang">
+```erlang
 {queue, &lt;&lt;"queue.1"&gt;&gt;}
-</pre>
+```
           </p>
           <p>
             <code>queue.1</code> is the name of the queue
@@ -282,9 +282,9 @@ AMQP 0-9-1-specific source keys are covered in a separate table:
         The maximum number of unacknowledged messages copied over a shovel at
         any one time. Default is <code>1000</code>:
 
-<pre class="lang-erlang">
+```erlang
 {prefetch_count, 1000}
-</pre>
+```
       </td>
     </tr>
   </tbody>
@@ -311,9 +311,9 @@ AMQP 1.0 source settings are different from those of AMQP 0-9-1 sources.
         This represents the source address of the AMQP 1.0 link.
         This key is mandatory:
 
-<pre class="lang-erlang">
+```erlang
 {source_address, &lt;&lt;"my-address"&gt;&gt;}
-</pre>
+```
       </td>
     </tr>
 
@@ -325,9 +325,9 @@ AMQP 1.0 source settings are different from those of AMQP 0-9-1 sources.
         renewed when it falls below a 10th of this value. The default is 1000.
         It takes the form
 
-<pre class="lang-erlang">
+```erlang
   {prefetch_count, 10}
-</pre>
+```
       </td>
     </tr>
   </tbody>
@@ -341,19 +341,19 @@ protocols: `protocol` and `uris`.
 `protocol` supports two values: `amqp091` and `amqp10`,
 for AMQP 0-9-1 and AMQP 1.0, respectively:
 
-<pre class="lang-erlang">
+```erlang
 %% for AMQP 0-9-1
 {protocol, amqp091}
-</pre>
+```
 
 `uris` is a list of <a href="./uri-spec.html">AMQP connection URIs</a>:
 
-<pre class="lang-erlang">
+```erlang
 {uris, [
         "amqp://fred:secret@host1.domain/my_vhost",
         "amqp://john:secret@host2.domain/my_vhost"
        ]}
-</pre>
+```
 
 The URI syntax is extended to include a query part to
 permit the configuration of additional connection parameters.
@@ -379,9 +379,9 @@ are available to static shovels, such as TLS certificate and private key.
         The duration (in seconds) to wait before reconnecting to the
         brokers after being disconnected at either end. Default is 1.
 
-<pre class="lang-erlang">
+```erlang
 {reconnect_delay, 5}
-</pre>
+```
         would delay for five seconds before reconnecting after failure. Value of `0`
         means no reconnection: the shovel will stop after first failure or unsuccessful
         connection attempt.
@@ -410,11 +410,11 @@ are available to static shovels, such as TLS certificate and private key.
           This optional key controls <a href="./publishers.html#message-properties">message properties</a>
           set or overridden by the shovel. It takes the following form
         </p>
-<pre class="lang-erlang">
+```erlang
 {publish_properties, [
   {delivery_mode, 2}
 ]}
-</pre>
+```
           <p>
             where the properties in the list are set on the
             basic properties of each message before it is re-published.
@@ -422,11 +422,11 @@ are available to static shovels, such as TLS certificate and private key.
           <p>
             This specific example would mark all re-published messages as persistent:
           </p>
-<pre class="lang-erlang">
+```erlang
 {publish_properties, [
   {delivery_mode, 2}
 ]}
-</pre>
+```
           <p>
             By default the original properties of the message are preserved, but
             this clause can be used to change or set any known property:
@@ -458,12 +458,12 @@ are available to static shovels, such as TLS certificate and private key.
             This optional key is similar to <code>publish_properties</code> but controls the publishing settings
             instead of message properties that are accessible to consumers. It takes the form of
           </p>
-<pre class="lang-erlang">
+```erlang
 {publish_fields, [
                     {exchange, &lt;&lt;"my_exchange"&gt;&gt;},
                     {routing_key, &lt;&lt;"from_shovel"&gt;&gt;}
                   ]}
-</pre>
+```
           <p>
             where the properties in the list are used to set the
             <em>fields</em> on the <code>basic.publish</code> method
@@ -473,12 +473,12 @@ are available to static shovels, such as TLS certificate and private key.
            By default the messages are re-published using the original
            exchange name and routing key. By specifying
          </p>
-<pre class="lang-erlang">
+```erlang
 {publish_fields, [
                     {exchange, &lt;&lt;"my_exchange"&gt;&gt;},
                     {routing_key, &lt;&lt;"from_shovel"&gt;&gt;}
                   ]}
-</pre>
+```
           <p>
             messages would be re-published to an explicit exchange name
             with an explicit, fixed routing key.
@@ -492,9 +492,9 @@ are available to static shovels, such as TLS certificate and private key.
         This boolean key controls whether a custom header, <code>x-shovelled-timestamp</code>,
         will be added to the message before it is re-published:
 
-<pre class="lang-erlang">
+```erlang
 {add_timestamp_header, true}
-</pre>
+```
 
         This header value is timestamp (in seconds since epoch) when message had been shovelled.
         By default the header is not added.
@@ -507,9 +507,9 @@ are available to static shovels, such as TLS certificate and private key.
         When set to true the shovel will add a number of custom message headers: <code>shovelled-by</code>, <code>shovel-type</code>, <code>shovel-name</code>,
         to provide some additional metadata about the transfer.
 
-<pre class="lang-erlang">
+```erlang
 {add_forward_headers, true}
-</pre>
+```
       </td>
     </tr>
   </tbody>
@@ -534,9 +534,9 @@ are available to static shovels, such as TLS certificate and private key.
         <p>
           This represents the target address of the sending AMQP 1.0 link:
 
-<pre class="lang-erlang">
+```erlang
 {target_address, &lt;&lt;"some-address"&gt;&gt;}
-</pre>
+```
         </p>
       </td>
     </tr>
@@ -547,11 +547,11 @@ are available to static shovels, such as TLS certificate and private key.
         This optional key controls what additional properties will be added when re-publishing
         messages. It takes the form of
 
-<pre class="lang-erlang">
+```erlang
 {properties, [
   {content_typle, &lt;&lt;"application/json"&gt;&gt;}
 ]}
-</pre>
+```
         <p>
           The available keys include
           <code>message_id</code>, <code>user_id</code>, <code>to</code>, <code>subject</code>, <code>reply_to</code>, <code>correlation_id</code>, <code>content_type</code>, <code>content_encoding</code>, <code>absolute_expiry_time</code>, <code>creation_time</code>.
@@ -567,12 +567,12 @@ are available to static shovels, such as TLS certificate and private key.
               This optional key declares any additional application properties
               to be added when re-publishing a message. It takes the form of
             </p>
-<pre class="lang-erlang">
+```erlang
 {application_properties, [
   {&lt;&lt;"application-key-1"&gt;&gt;, &lt;&lt;"value-1"&gt;&gt;},
   {&lt;&lt;"application-key-2"&gt;&gt;, &lt;&lt;"value-2"&gt;&gt;}
 ]}
-</pre>
+```
         <p>
           Keys and values should be binary strings as in the example below.
         </p>
@@ -585,9 +585,9 @@ are available to static shovels, such as TLS certificate and private key.
         This boolean key controls whether a <code>creation_time</code> property
         will be set on the message before it is re-published:
 
-<pre class="lang-erlang">
+```erlang
 {add_timestamp_header, true}
-</pre>
+```
 
         This value is timestamp (in seconds since epoch) when message had been shovelled.
         By default the property is not set.
@@ -601,9 +601,9 @@ are available to static shovels, such as TLS certificate and private key.
         following keys: <code>shovelled-by</code>, <code>shovel-type</code>, <code>shovel-name</code>
         to provide some additional metadata about the transfer.
 
-<pre class="lang-erlang">
+```erlang
 {add_forward_headers, true}
-</pre>
+```
       </td>
     </tr>
   </tbody>
@@ -615,7 +615,7 @@ are available to static shovels, such as TLS certificate and private key.
 A reasonably complete static shovel configuration between AMQP 0.9.1 endpoints
 might look like this:
 
-<pre class="lang-erlang">
+```erlang
 {rabbitmq_shovel,
   [ {shovels, [ {my_first_shovel,
                   [ {source,
@@ -658,7 +658,7 @@ might look like this:
                   ]}
               ]}
   ]}
-</pre>
+```
 
 The configuration above defines a single shovel called
 `'my_first_shovel'`.
@@ -690,7 +690,7 @@ unacknowledged messages at any moment in time.
 A reasonably complete shovel configuration between an AMQP 1.0 source and an
 AMQP 0.9.1 destination might look like this:
 
-<pre class="lang-erlang">
+```erlang
 {rabbitmq_shovel,
  [ {shovels, [ {my_first_shovel,
                 [ {source,
@@ -720,7 +720,7 @@ AMQP 0.9.1 destination might look like this:
                 ]}
              ]}
  ]}
-</pre>
+```
 
 
 ## <a id="example-config-amqp091-amqp10" class="anchor" href="#example-config-amqp091-amqp10">Example Configuration (0.9.1 Source — 1.0 Destination)</a>
@@ -728,7 +728,7 @@ AMQP 0.9.1 destination might look like this:
 A more extensive shovel configuration between an AMQP 0.9.1 Source and an
 AMQP 1.0 destination might look like this:
 
-<pre class="lang-erlang">
+```erlang
 {rabbitmq_shovel,
  [{shovels, [{my_first_shovel,
               {source,
@@ -768,4 +768,4 @@ AMQP 1.0 destination might look like this:
              }]}
  ]}
 }
-</pre>
+```

@@ -575,9 +575,9 @@ use a thread pool.
 It is possible to effectively block all publishing in a cluster by setting the [memory high watermark](memory.html)
 to `0`, thus making [a resource alarm](alarms.html) to go off immediately:
 
-<pre class="lang-bash">
+```bash
 rabbitmqctl set_vm_memory_high_watermark 0
-</pre>
+```
 
 
 ## <a id="troubleshooting" class="anchor" href="#troubleshooting">Troubleshooting Publishers</a>
@@ -648,12 +648,12 @@ In the following example the exchange has no bindings, so no messages will be ro
 
 Bindings can also be listed using [rabbitmq-diagnostics](cli.html):
 
-<pre class="lang-ini">
+```ini
 # note that the implicit default exchange bindings won't
 # be listed as of RabbitMQ 3.8
 rabbitmq-diagnostics list_bindings --vhost "/"
 =&gt; Listing bindings for vhost /...
-</pre>
+```
 
 In the example above the command yields no results.
 
