@@ -886,7 +886,7 @@ cluster_formation.consul.include_nodes_with_warnings = true
 
 If node name is computed and long node names are used, it is possible to
 append a suffix to node names retrieved from Consul. The format is
-<em>.node.{domain_suffix}</em>. This can be useful in environments with
+<em>.node.&lcub;domain_suffix}</em>. This can be useful in environments with
 DNS conventions, e.g. when all service nodes
 are organised in a separate subdomain. Here's an example:
 

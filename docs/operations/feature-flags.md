@@ -64,10 +64,12 @@ upgrade to the next minor or major RabbitMQ version is possible.
 
  *  To list feature flags:
     ```bash
-rabbitmqctl list_feature_flags```
+    rabbitmqctl list_feature_flags
+    ```
  *  To enable a feature flag (or all currently disabled flags):
     ```bash
-rabbitmqctl enable_feature_flag &lt;all | name&gt;```
+    rabbitmqctl enable_feature_flag &lt;all | name&gt;
+    ```
 
 It is also possible to list and enable feature flags from the
 [Management plugin UI](./management.html), in "*Admin > Feature flags*".
@@ -76,8 +78,8 @@ It is also possible to list and enable feature flags from the
 
 #### Example 1: Compatible Nodes
 
-<div style="text-align: center;">
-<img src="./img/feature-flags/compatible-nodes.svg" style="width: 100%; max-width: 400px;" alt="Example 1: 2 compatible nodes, the first node A has feature flags enabled and includes Toaster (set to ON), Coffee Maker (set to OFF), and Juicer Machine (set to OFF and deactivated). The second node, node B has feature flags enabled and includes Toaster (set to ON) and Coffee Maker (set to OFF)." title="Example 1: Compatible Nodes"/>
+<div style={{ textAlign: 'center', }}>
+<img src="/img/feature-flags/compatible-nodes.svg" style={{ width: '100%', maxWidth: '400px', }} alt="Example 1: 2 compatible nodes, the first node A has feature flags enabled and includes Toaster (set to ON), Coffee Maker (set to OFF), and Juicer Machine (set to OFF and deactivated). The second node, node B has feature flags enabled and includes Toaster (set to ON) and Coffee Maker (set to OFF)." title="Example 1: Compatible Nodes"/>
 </div>
 
  * If nodes A and B are not clustered, they can be clustered.
@@ -87,8 +89,8 @@ It is also possible to list and enable feature flags from the
 
 #### Example 2: Incompatible Nodes
 
-<div style="text-align: center;">
-<img src="./img/feature-flags/incompatible-nodes.svg" style="width: 100%; max-width: 400px;" alt="Example 2: 2 incompatible nodes, the first node A has feature flags enabled and includes Toaster (set to ON), Coffee Maker (set to OFF), and Juicer Machine (set to ON). The second node, node B has feature flags enabled and includes Toaster (set to ON) and Coffee Maker (set to OFF)." title="Example 2: Incompatible Nodes"/>
+<div style={{ textAlign: 'center', }}>
+<img src="./img/feature-flags/incompatible-nodes.svg" style={{ width: '100%', maxWidth: '400px', }} alt="Example 2: 2 incompatible nodes, the first node A has feature flags enabled and includes Toaster (set to ON), Coffee Maker (set to OFF), and Juicer Machine (set to ON). The second node, node B has feature flags enabled and includes Toaster (set to ON) and Coffee Maker (set to OFF)." title="Example 2: Incompatible Nodes"/>
 </div>
 
  * If nodes A and B are not clustered, they cannot be clustered because
@@ -107,8 +109,8 @@ next patch or minor release, except if it is stated otherwise
 in the release notes. Indeed, there are some changes which cannot be
 implemented as feature flags.
 
-<div style="text-align: center;">
-<img src="./img/feature-flags/feature-flags-and-rabbitmq-versions.svg" style="width: 100%; max-width: 647px;" alt="Feature flags compatibility with different RabbitMQ versions." title="Feature flags compatibility with different RabbitMQ versions."/>
+<div style={{ textAlign: 'center', }}>
+<img src="./img/feature-flags/feature-flags-and-rabbitmq-versions.svg" style={{ width: '100%', maxWidth: '647px', }} alt="Feature flags compatibility with different RabbitMQ versions." title="Feature flags compatibility with different RabbitMQ versions."/>
 </div>
 
 However, note that only upgrading from one minor to the next minor
@@ -165,7 +167,7 @@ rabbitmqctl -q --formatter pretty_table list_feature_flags \
 
 which would produce a table that looks like this:
 
-```bash" style="line-height: 1.2em;
+```bash
 ┌───────────────────────────┬─────────┬───────────────────────────┬───────┬────────────┐
 │ name                      │ state   │ provided_by               │ desc  │ doc_url    │
 ├───────────────────────────┼─────────┼───────────────────────────┼───────┼────────────┤
@@ -215,7 +217,7 @@ The `list_feature_flags` command can be used again to verify the feature
 flags' states. Assuming all feature flags were disabled initially, here
 is the state after enabling the `quorum_queue` feature flag:
 
-```bash" style="line-height: 1.2em;
+```bash
 rabbitmqctl -q --formatter pretty_table list_feature_flags
 
 ┌───────────────────────────┬──────────┐
@@ -232,8 +234,8 @@ rabbitmqctl -q --formatter pretty_table list_feature_flags
 It is also possible to list and enable feature flags from the
 [Management Plugin UI](./management.html), in "*Admin > Feature flags*":
 
-<div style="text-align: center;">
-<img src="./img/feature-flags/management-ui-ff-panel.png" style="width: 100%; border: solid 1px #75757f;" alt="Feature flags page on the Management Plugin User Interface, access this page by selecting Admin (which is a tab) and then Feature Flags (which is a menu option) ." title="Feature flags Page on the Management Plugin User Interface."/>
+<div style={{ textAlign: 'center', }}>
+<img src="./img/feature-flags/management-ui-ff-panel.png" style={{ width: '100%', border: 'solid 1px #75757f', }} alt="Feature flags page on the Management Plugin User Interface, access this page by selecting Admin (which is a tab) and then Feature Flags (which is a menu option) ." title="Feature flags Page on the Management Plugin User Interface."/>
 </div>
 
 ## <a id="how-to-disable-feature-flags" class="anchor" href="#how-to-disable-feature-flags">How to Disable Feature Flags</a>
@@ -253,7 +255,7 @@ There are two ways to do this:
 RABBITMQ_FEATURE_FLAGS=quorum_queue,implicit_default_bindings```
  2. Using the `forced_feature_flags_on_init` configuration parameter:
   ```erlang
-{rabbit, [{forced_feature_flags_on_init, [quorum_queue, implicit_default_bindings]}]}```
+&lcub;rabbit, [&lcub;forced_feature_flags_on_init, [quorum_queue, implicit_default_bindings]}]}```
 
 The environment variable has precedence over the configuration parameter.
 
@@ -591,7 +593,7 @@ future (i.e. those added to the `main` branch) feature flags and see
 if the new code can be adapted to take advantage of them.
 
 Here is an example. When developing a plugin which used to use the
-`#amqqueue{}` record defined in `rabbit_common/include/rabbit.hrl`, the
+`#amqqueue&lcub;}` record defined in `rabbit_common/include/rabbit.hrl`, the
 plugin has to be adapted to use the new `amqqueue` API which hides the
 previous record (which is private now). However, there is no need to
 query feature flags for that: the plugin will be ABI-compatible (i.e. no
@@ -630,11 +632,11 @@ The two most important parts of a feature flag are:
 The declaration is a module attribute which looks like this:
 ```erlang
 -rabbit_feature_flag(
-   {quorum_queue,
-    #{desc          => "Support queues of type quorum",
+   &lcub;quorum_queue,
+    #&lcub;desc          => "Support queues of type quorum",
       doc_url       => "https://www.rabbitmq.com/quorum-queues.html",
       stability     => stable,
-      migration_fun => {?MODULE, quorum_queue_migration}
+      migration_fun => &lcub;?MODULE, quorum_queue_migration}
      }}).
 ```
 

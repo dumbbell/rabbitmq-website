@@ -340,8 +340,6 @@ spec:
 For more information about concepts mentioned above, see:
 
 <table class="nice">
-<col width="50%"></col>
-<col width="50%">
 	<th>Concept</th>
 	<th>More information in…</th>
 	<tr>
@@ -356,7 +354,6 @@ For more information about concepts mentioned above, see:
 		<td>Kubernetes Resource Quantity</td>
 		<td>The <a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/">Kubernetes Resource Model documentation</a> in GitHub</td>
 	</tr>
-    </col>
  </table>
 
  <p class="note">
@@ -407,8 +404,6 @@ This means the actual memory limit set in RabbitMQ is 20% less than the specifie
 For more information about concepts mentioned above, see:
 
 <table class="nice">
-  <col width="50%"></col>
-  <col width="50%">
 	<th>Concept</th>
 	<th>More information in…</th>
 	<tr>
@@ -423,7 +418,6 @@ For more information about concepts mentioned above, see:
 		<td>High-water mark</td>
 		<td>The <a href="../../memory.html#threshold">RabbitMQ documentation</a></td>
 	</tr>
-  </col>
 </table>
 
 ### <a name='affinity' class='anchor' href='#affinity'>Affinity and Anti-affinity Rules</a>
@@ -714,7 +708,6 @@ To view the default values, see [Configure a RabbitMQ Instance](#configure) abov
 The configurations are listed in the table below.
 
 <table class="nice">
-    <col width="33%">
     <th>Custom Resource attribute</th>
     <th>Description</th>
     <tr>
@@ -909,7 +902,6 @@ The configurations are listed in the table below.
         See the <a href='#override'>Override section</a> to learn more.
       </td>
     </tr>
-    </col>
 </table>
 
 For more information about CPU units, the Kubernetes scheduler, and CPU time availability, see the
@@ -962,8 +954,6 @@ kubectl apply -f rabbitmq-pdb.yaml
 For more information about concepts mentioned above, see:
 
 <table class="nice">
-  <col width="50%"></col>
-  <col width="50%">
 	<th>Concept</th>
 	<th>More information in…</th>
 	<tr>
@@ -978,7 +968,6 @@ For more information about concepts mentioned above, see:
 		<td>pause-minority mode</td>
 		<td>The <a href="../../partitions.html#automatic-handling">RabbitMQ documentation</a></td>
 	</tr>
-  </col>
 </table>
 
 ## <a id='tls' class='anchor' href='#tls'>(Optional) Configure TLS</a>

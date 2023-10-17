@@ -309,11 +309,11 @@ to
 ```erlang
 %% A classic format snippet, now used by advanced.config files.
 [
-  {rabbit, [{ssl_options, [{cacertfile,           "/path/to/ca_certificate.pem"},
-                           {certfile,             "/path/to/server_certificate.pem"},
-                           {keyfile,              "/path/to/server_key.pem"},
-                           {verify,               verify_peer},
-                           {fail_if_no_peer_cert, true}]}]}
+  &lcub;rabbit, [&lcub;ssl_options, [&lcub;cacertfile,           "/path/to/ca_certificate.pem"},
+                           &lcub;certfile,             "/path/to/server_certificate.pem"},
+                           &lcub;keyfile,              "/path/to/server_key.pem"},
+                           &lcub;verify,               verify_peer},
+                           &lcub;fail_if_no_peer_cert, true}]}]}
 ].
 ```
 
@@ -342,8 +342,8 @@ The same example in the <a href="#config-file-formats">classic config format</a>
 ```erlang
 %% this is a comment
 [
-  {rabbit, [
-      {tcp_listeners, [5673]}
+  &lcub;rabbit, [
+      &lcub;tcp_listeners, [5673]}
     ]
   }
 ].
@@ -493,12 +493,12 @@ any configuration files. Users and deployment tool should use the following loca
     <tr>
       <td><a href="./install-homebrew.html">MacOS Homebrew Formula</a></td>
       <td>
-        <code>${install_prefix}/etc/rabbitmq/</code>,
+        <code>$&lcub;install_prefix}/etc/rabbitmq/</code>,
         and the Homebrew cellar prefix is usually <code>/usr/local</code>
       </td>
       <td>
-        <code>${install_prefix}/etc/rabbitmq/rabbitmq.conf</code>,
-        <code>${install_prefix}/etc/rabbitmq/advanced.config</code>
+        <code>$&lcub;install_prefix}/etc/rabbitmq/rabbitmq.conf</code>,
+        <code>$&lcub;install_prefix}/etc/rabbitmq/advanced.config</code>
       </td>
     </tr>
   </tbody>
@@ -1332,8 +1332,8 @@ documentation before changing this.
 <p>
 Default: <code>rabbit_msg_store_ets_index</code>
 ```erlang
-{rabbit, [
-{msg_store_index_module, rabbit_msg_store_ets_index}
+&lcub;rabbit, [
+&lcub;msg_store_index_module, rabbit_msg_store_ets_index}
 ]}
 ```
 </p>
@@ -1346,8 +1346,8 @@ Implementation module for queue contents.
 <p>
 Default:
 ```erlang
-{rabbit, [
-{backing_queue_module, rabbit_variable_queue}
+&lcub;rabbit, [
+&lcub;backing_queue_module, rabbit_variable_queue}
 ]}
 ```
 </p>
@@ -1365,7 +1365,7 @@ Default: <code>16777216</code>
 &lcub;rabbit, [
 %% Changing this for a node with an existing (initialised) database is
 %% dangerous can lead to data loss!
-{msg_store_file_size_limit, 16777216}
+&lcub;msg_store_file_size_limit, 16777216}
 ]}
 ```
 </p>
@@ -1381,7 +1381,7 @@ change this.
 Default:
 ```erlang
 &lcub;rabbit, [
-{trace_vhosts, []}
+&lcub;trace_vhosts, []}
 ]}
 ```
 </p>
@@ -1408,7 +1408,7 @@ If messages are embedded on the queue index, then modifying this setting has no 
 Default:
 ```erlang
 &lcub;rabbit, [
-&lcub;msg_store_credit_disc_bound, {4000, 800}}
+&lcub;msg_store_credit_disc_bound, &lcub;4000, 800}}
 ]}
 ```
 </p>
@@ -1496,21 +1496,21 @@ that no sensitive data should appear in plain text
 in configuration files.
 
 Encrypted values must be inside an Erlang `encrypted`
-tuple: `{encrypted, ...}`.
+tuple: `&lcub;encrypted, ...}`.
 Here is an example of a configuration file with an encrypted password
 for the default user:
 
 ```erlang
 [
-  {rabbit, [
-      {default_user, &lt;&lt;"guest"&gt;&gt;},
-      {default_pass,
-        {encrypted,
+  &lcub;rabbit, [
+      &lcub;default_user, &lt;&lt;"guest"&gt;&gt;},
+      &lcub;default_pass,
+        &lcub;encrypted,
          &lt;&lt;"cPAymwqmMnbPXXRVqVzpxJdrS8mHEKuo2V+3vt1u/fymexD9oztQ2G/oJ4PAaSb2c5N/hRJ2aqP/X0VAfx8xOQ=="&gt;&gt;
         }
       },
-      {config_entry_decoder, [
-             {passphrase, &lt;&lt;"mypassphrase"&gt;&gt;}
+      &lcub;config_entry_decoder, [
+             &lcub;passphrase, &lt;&lt;"mypassphrase"&gt;&gt;}
          ]}
     ]}
 ].
@@ -1524,52 +1524,52 @@ it can be in a separate file:
 
 ```erlang
 [
-  {rabbit, [
+  &lcub;rabbit, [
       %% ...
-      {config_entry_decoder, [
-             {passphrase, {file, "/path/to/passphrase/file"}}
+      &lcub;config_entry_decoder, [
+             &lcub;passphrase, &lcub;file, "/path/to/passphrase/file"}}
          ]}
     ]}
 ].
 ```
 
 RabbitMQ can also request an operator to enter the passphrase
-when it starts by using `{passphrase, prompt}`.
+when it starts by using `&lcub;passphrase, prompt}`.
 
 Use [rabbitmqctl](./cli.html) and the `encode`
 command to encrypt values:
 
 ```bash
 rabbitmqctl encode '&lt;&lt;"guest"&gt;&gt;' mypassphrase
-{encrypted,&lt;&lt;"... long encrypted value..."&gt;&gt;}
+&lcub;encrypted,&lt;&lt;"... long encrypted value..."&gt;&gt;}
 rabbitmqctl encode '"amqp://fred:secret@host1.domain/my_vhost"' mypassphrase
-{encrypted,&lt;&lt;"... long encrypted value..."&gt;&gt;}
+&lcub;encrypted,&lt;&lt;"... long encrypted value..."&gt;&gt;}
 ```
 
 Or, on Windows:
 
 ```powershell
 rabbitmqctl encode "&lt;&lt;""guest""&gt;&gt;" mypassphrase
-{encrypted,&lt;&lt;"... long encrypted value..."&gt;&gt;}
+&lcub;encrypted,&lt;&lt;"... long encrypted value..."&gt;&gt;}
 rabbitmqctl encode '"amqp://fred:secret@host1.domain/my_vhost"' mypassphrase
-{encrypted,&lt;&lt;"... long encrypted value..."&gt;&gt;}
+&lcub;encrypted,&lt;&lt;"... long encrypted value..."&gt;&gt;}
 ```
 
 Add the `decode` command if you want to decrypt values:
 
 ```bash
-rabbitmqctl decode '{encrypted, &lt;&lt;"..."&gt;&gt;}' mypassphrase
+rabbitmqctl decode '&lcub;encrypted, &lt;&lt;"..."&gt;&gt;}' mypassphrase
 &lt;&lt;"guest"&gt;&gt;
-rabbitmqctl decode '{encrypted, &lt;&lt;"..."&gt;&gt;}' mypassphrase
+rabbitmqctl decode '&lcub;encrypted, &lt;&lt;"..."&gt;&gt;}' mypassphrase
 "amqp://fred:secret@host1.domain/my_vhost"
 ```
 
 Or, on Windows:
 
 ```powershell
-rabbitmqctl decode "{encrypted, &lt;&lt;""...""&gt;&gt;}" mypassphrase
+rabbitmqctl decode "&lcub;encrypted, &lt;&lt;""...""&gt;&gt;}" mypassphrase
 &lt;&lt;"guest"&gt;&gt;
-rabbitmqctl decode "{encrypted, &lt;&lt;""...""&gt;&gt;}" mypassphrase
+rabbitmqctl decode "&lcub;encrypted, &lt;&lt;""...""&gt;&gt;}" mypassphrase
 "amqp://fred:secret@host1.domain/my_vhost"
 ```
 
@@ -1586,13 +1586,13 @@ These defaults can be changed in the configuration file:
 
 ```erlang
 [
-  {rabbit, [
+  &lcub;rabbit, [
       ...
-      {config_entry_decoder, [
-             {passphrase, "mypassphrase"},
-             {cipher, blowfish_cfb64},
-             {hash, sha256},
-             {iterations, 10000}
+      &lcub;config_entry_decoder, [
+             &lcub;passphrase, "mypassphrase"},
+             &lcub;cipher, blowfish_cfb64},
+             &lcub;hash, sha256},
+             &lcub;iterations, 10000}
          ]}
     ]}
 ].```
@@ -1626,7 +1626,7 @@ and so on). Those paths have must exclude a number of characters:
  * `*` and `?` (on Linux, macOS, BSD and other UNIX-like systems)
  * `^` and `!` (on Windows)
  * `[` and `]`
- * `{` and `}`
+ * `&lcub;` and `}`
 
 The above characters will render the node unable to start or function as expected (e.g. expand plugins and load their metadata).
 
@@ -1679,7 +1679,7 @@ This can be done using the installer or on the command line
 with administrator permissions:
 
  * Start an [administrative command prompt](https://technet.microsoft.com/en-us/library/cc947813%28v=ws.10%29.aspx)
- * cd into the sbin folder under the RabbitMQ server installation directory (such as `C:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-{version}\sbin`)
+ * cd into the sbin folder under the RabbitMQ server installation directory (such as `C:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-&lcub;version}\sbin`)
  * Run `rabbitmq-service.bat stop` to stop the service
  * Run `rabbitmq-service.bat remove` to remove the Windows service (this will *not* remove RabbitMQ or its data directory)
  * Set environment variables via command line, i.e. run commands like the following:
@@ -1827,7 +1827,7 @@ If classic config format it used, the extension must be <code>.config</code>
 <li><b>Debian</b>: <code>/etc/rabbitmq/rabbitmq.conf</code></li>
 <li><b>RPM</b>: <code>/etc/rabbitmq/rabbitmq.conf</code></li>
 <li>
-<b>MacOS(Homebrew)</b>: <code>${install_prefix}/etc/rabbitmq/rabbitmq.conf</code>,
+<b>MacOS(Homebrew)</b>: <code>$&lcub;install_prefix}/etc/rabbitmq/rabbitmq.conf</code>,
 the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
 </li>
 <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\rabbitmq.conf</code></li>
@@ -1852,7 +1852,7 @@ is a common practice.
 <li><b>Debian</b>: <code>/etc/rabbitmq/conf.d</code></li>
 <li><b>RPM</b>: <code>/etc/rabbitmq/conf.d</code></li>
 <li>
-<b>MacOS(Homebrew)</b>: <code>${install_prefix}/etc/rabbitmq/conf.d</code>,
+<b>MacOS(Homebrew)</b>: <code>$&lcub;install_prefix}/etc/rabbitmq/conf.d</code>,
 the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
 </li>
 <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\conf.d</code></li>
@@ -1877,7 +1877,7 @@ For example, <code>/data/rabbitmq/advanced.config</code>.
 <li><b>Debian</b>: <code>/etc/rabbitmq/advanced.config</code></li>
 <li><b>RPM</b>: <code>/etc/rabbitmq/advanced.config</code></li>
 <li>
-<b>MacOS (Homebrew)</b>: <code>${install_prefix}/etc/rabbitmq/advanced.config</code>,
+<b>MacOS (Homebrew)</b>: <code>$&lcub;install_prefix}/etc/rabbitmq/advanced.config</code>,
 the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
 </li>
 <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\advanced.config</code></li>
@@ -1900,7 +1900,7 @@ prefix). Note that the file name on Windows is different from other operating sy
 <li><b>Ubuntu and Debian</b>: <code>/etc/rabbitmq/rabbitmq-env.conf</code></li>
 <li><b>RPM</b>: <code>/etc/rabbitmq/rabbitmq-env.conf</code></li>
 <li>
-<b>MacOS (Homebrew)</b>: <code>${install_prefix}/etc/rabbitmq/rabbitmq-env.conf</code>,
+<b>MacOS (Homebrew)</b>: <code>$&lcub;install_prefix}/etc/rabbitmq/rabbitmq-env.conf</code>,
 the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
 </li>
 <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\rabbitmq-env-conf.bat</code></li>
@@ -1922,7 +1922,7 @@ Can be used to override log files directory location.
 <li><b>Ubuntu and Debian</b> packages: <code>/var/log/rabbitmq</code></li>
 <li><b>RPM</b>: <code>/var/log/rabbitmq</code></li>
 <li>
-<b>MacOS (Homebrew)</b>: <code>${install_prefix}/var/log/rabbitmq</code>,
+<b>MacOS (Homebrew)</b>: <code>$&lcub;install_prefix}/var/log/rabbitmq</code>,
 the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
 </li>
 <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\log</code></li>
@@ -1950,7 +1950,7 @@ Usually <code>RABBITMQ_MNESIA_DIR</code> is overridden instead.
 <li><b>Ubuntu and Debian</b> packages: <code>/var/lib/rabbitmq/mnesia/</code></li>
 <li><b>RPM</b>: <code>/var/lib/rabbitmq/plugins</code></li>
 <li>
-<b>MacOS (Homebrew)</b>: <code>${install_prefix}/var/lib/rabbitmq/mnesia</code>,
+<b>MacOS (Homebrew)</b>: <code>$&lcub;install_prefix}/var/lib/rabbitmq/mnesia</code>,
 the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
 </li>
 <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ</code></li>
@@ -1974,7 +1974,7 @@ persistent node state.
 <li><b>Ubuntu and Debian</b> packages: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME</code></li>
 <li><b>RPM</b>: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME</code></li>
 <li>
-<b>MacOS (Homebrew)</b>: <code>${install_prefix}/var/lib/rabbitmq/mnesia/$RABBITMQ_NODENAME</code>,
+<b>MacOS (Homebrew)</b>: <code>$&lcub;install_prefix}/var/lib/rabbitmq/mnesia/$RABBITMQ_NODENAME</code>,
 the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
 </li>
 <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\$RABBITMQ_NODENAME</code></li>
@@ -2004,7 +2004,7 @@ this variable on <code>rabbitmq-plugins</code>.
 <li><b>Ubuntu and Debian</b> packages: <code>/var/lib/rabbitmq/plugins</code></li>
 <li><b>RPM</b>: <code>/var/lib/rabbitmq/plugins</code></li>
 <li>
-<b>MacOS (Homebrew)</b>: <code>${install_prefix}/Cellar/rabbitmq/${version}/plugins</code>,
+<b>MacOS (Homebrew)</b>: <code>$&lcub;install_prefix}/Cellar/rabbitmq/$&lcub;version}/plugins</code>,
 the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
 </li>
 <li><b>Windows</b>: <code>%RABBITMQ_HOME%\plugins</code></li>
@@ -2028,7 +2028,7 @@ Must not contain any characters mentioned in the <a href="#directory-and-path-re
 <li><b>RPM</b>: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME-plugins-expand</code></li>
 <li>
 <b>MacOS (Homebrew)</b>:
-<code>${install_prefix}/var/lib/rabbitmq/mnesia/$RABBITMQ_NODENAME-plugins-expand</code>
+<code>$&lcub;install_prefix}/var/lib/rabbitmq/mnesia/$RABBITMQ_NODENAME-plugins-expand</code>
 </li>
 <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\$RABBITMQ_NODENAME-plugins-expand</code></li>
 </ul>
@@ -2299,9 +2299,9 @@ To configure kernel limits for Docker contains, use the `"default-ulimits"` key 
 The file has to be installed on Docker hosts at `/etc/docker/daemon.json`:
 
 ```json
-{
-  "default-ulimits": {
-    "nofile": {
+&lcub;
+  "default-ulimits": &lcub;
+    "nofile": &lcub;
       "Name": "nofile",
       "Hard": 64000,
       "Soft": 64000
