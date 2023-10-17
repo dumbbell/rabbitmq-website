@@ -92,7 +92,7 @@ messages are subsequently published, the messages may not spend
 any time waiting in the priority queue before the consumer accepts these messages (all the messages are accepted immediately).
 In this scenario, the priority queue does not get any opportunity to prioritise the messages, priority is not needed.
 
-However, in most cases, the previous situation is not the norm, therefore you should use the `basic.qos` ([prefetch](./confirms.md#channel-qos-prefetchconsumer-prefetch))
+However, in most cases, the previous situation is not the norm, therefore you should use the `basic.qos` ([prefetch](./confirms#channel-qos-prefetchconsumer-prefetch))
 method in manual acknowledgement mode on your consumers to limit the number of messages that can be out for delivery at any time and allow messages to be prioritised.
 `basic.qos` is a value a consumer sets when connecting to a queue. It indicates how many messages the consumer can handle at one time.
 
