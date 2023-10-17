@@ -70,13 +70,11 @@ for different areas:
     <td>
       contains server and plugin settings for
 
-      <ul>
-        <li><a href="./networking.html">TCP listeners and other networking-related settings</a></li>
-        <li><a href="./ssl.html">TLS</a></li>
-        <li><a href="./alarms.html">resource constraints (alarms)</a></li>
-        <li><a href="./access-control.html">authentication and authorisation backends</a></li>
-        <li><a href="./persistence-conf.html">message store settings</a></li>
-      </ul>
+      * [TCP listeners and other networking-related settings](./networking.html)
+      * [TLS](./ssl.html)
+      * [resource constraints (alarms)](./alarms.html)
+      * [authentication and authorisation backends](./access-control.html)
+      * [message store settings](./persistence-conf.html)
 
       and so on.
     </td>

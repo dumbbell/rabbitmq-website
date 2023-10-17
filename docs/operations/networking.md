@@ -438,7 +438,9 @@ tools discover what port they should use to communicate to it. It can be configu
 to a specific interface, much like RabbitMQ listeners. This is done using the `ERL_EPMD_ADDRESS`
 environment variable:
 
+```bash
 export ERL_EPMD_ADDRESS="::1"
+```
 
 By default RabbitMQ nodes will use an IPv4 interface when connecting to `epmd`.
 Nodes that are configured to use IPv6 for inter-node communication ([see above](#distribution-ipv6))

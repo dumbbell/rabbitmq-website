@@ -77,7 +77,7 @@ A shovel definition looks like this at the top level:
 ]}
 ```
 
-where <code><em>shovel_name</em></code> is the name of the
+where `shovel_name` is the name of the
 shovel (an Erlang atom). The name should be enclosed in single quotes (`'`) if they do
 not begin with a lower-case letter or if they contain
 other characters than alphanumeric characters, underscore
@@ -150,20 +150,20 @@ They are described in the table below.
       <td>ack-mode</td>
       <td>
         <p>
-          Determines how the shovel should <a href="./confirms.html">acknowledge</a> consumed messages.
-          If set to <code>on-confirm</code> (the default), messages are
+          Determines how the shovel should [acknowledge](./confirms.html) consumed messages.
+          If set to `on-confirm` (the default), messages are
           acknowledged to the source broker after they have been confirmed
           by the destination. This handles network errors and broker
           failures without losing messages, and is the slowest option.
         </p>
         <p>
-          If set to <code>on-publish</code>, messages are acknowledged to
+          If set to `on-publish`, messages are acknowledged to
           the source broker after they have been published at the
           destination. This handles network errors without losing messages,
           but may lose messages in the event of broker failures.
         </p>
         <p>
-          If set to <code>no-ack</code>, message acknowledgements are not
+          If set to `no-ack`, message acknowledgements are not
           used. This is the fastest option, but may lose messages in the
           event of network or broker failures.
         </p>
@@ -215,20 +215,20 @@ AMQP 0-9-1-specific source keys are covered in a separate table:
 ```
         <p>
           will first declare an anonymous queue, and then bind it
-          to the exchange called <code>"my_exchange"</code>. The
-          queue name of <code>&lt;&lt;&gt;&gt;</code> on method <code>queue.bind</code>
+          to the exchange called `"my_exchange"`. The
+          queue name of `&lt;&lt;&gt;&gt;` on method `queue.bind`
           means "use the queue last declared on this channel".
         </p>
         <p>
           Each element of the declaration list is either an AMQP 0-9-1 method
-          given as single quoted atom such as <code>'queue.declare'</code>,
+          given as single quoted atom such as `'queue.declare'`,
           or a tuple with first element the method atom, and second element
           a property list of parameters.
         </p>
         <p>
           If just the method name is used all the
           parameters take their defaults (as illustrated with
-          <code>'queue.declare'</code> above).
+          `'queue.declare'` above).
         </p>
         <p>
           If a tuple and property-list is supplied, then the
@@ -247,7 +247,7 @@ AMQP 0-9-1-specific source keys are covered in a separate table:
 ```
         <p>
           will declare a durable, direct exchange called
-          "<code>my_exchange</code>".
+          "`my_exchange`".
         </p>
       </td>
     </tr>
@@ -263,14 +263,14 @@ AMQP 0-9-1-specific source keys are covered in a separate table:
 ```
           </p>
           <p>
-            <code>queue.1</code> is the name of the queue
+            `queue.1` is the name of the queue
             to shovel messages from, as a binary string.
           </p>
           <p>
-            This queue must exist. Use the resource <code>declarations</code>
+            This queue must exist. Use the resource `declarations`
             covered above to declare the queue or ensure it exists. If
-            the value is <code>&lt;&lt;&gt;&gt;</code> (the empty binary string) then the
-            <em>most recently declared queue</em> in <code>declarations</code> is used.
+            the value is `&lt;&lt;&gt;&gt;` (the empty binary string) then the
+            <em>most recently declared queue</em> in `declarations` is used.
             This allows anonymous queues to be declared and used.
           </p>
       </td>
@@ -280,7 +280,7 @@ AMQP 0-9-1-specific source keys are covered in a separate table:
       <td>prefetch-count</td>
       <td>
         The maximum number of unacknowledged messages copied over a shovel at
-        any one time. Default is <code>1000</code>:
+        any one time. Default is `1000`:
 
 ```erlang
 {prefetch_count, 1000}
@@ -432,20 +432,20 @@ are available to static shovels, such as TLS certificate and private key.
             this clause can be used to change or set any known property:
 
             <ul>
-              <li><code>content_type</code></li>
-              <li><code>content_encoding</code></li>
-              <li><code>headers</code></li>
-              <li><code>delivery_mode</code></li>
-              <li><code>priority</code></li>
-              <li><code>correlation_id</code></li>
-              <li><code>reply_to</code></li>
-              <li><code>expiration</code></li>
-              <li><code>message_id</code></li>
-              <li><code>timestamp</code></li>
-              <li><code>type</code></li>
-              <li><code>user_id</code></li>
-              <li><code>app_id</code></li>
-              <li><code>cluster_id</code></li>
+              <li>`content_type`</li>
+              <li>`content_encoding`</li>
+              <li>`headers`</li>
+              <li>`delivery_mode`</li>
+              <li>`priority`</li>
+              <li>`correlation_id`</li>
+              <li>`reply_to`</li>
+              <li>`expiration`</li>
+              <li>`message_id`</li>
+              <li>`timestamp`</li>
+              <li>`type`</li>
+              <li>`user_id`</li>
+              <li>`app_id`</li>
+              <li>`cluster_id`</li>
             </ul>
           </p>
       </td>
@@ -455,7 +455,7 @@ are available to static shovels, such as TLS certificate and private key.
       <td>publish_fields</td>
       <td>
           <p>
-            This optional key is similar to <code>publish_properties</code> but controls the publishing settings
+            This optional key is similar to `publish_properties` but controls the publishing settings
             instead of message properties that are accessible to consumers. It takes the form of
           </p>
 ```erlang
@@ -466,7 +466,7 @@ are available to static shovels, such as TLS certificate and private key.
 ```
           <p>
             where the properties in the list are used to set the
-            <em>fields</em> on the <code>basic.publish</code> method
+            <em>fields</em> on the `basic.publish` method
             used to re-publish messages.
           </p>
           <p>
@@ -489,7 +489,7 @@ are available to static shovels, such as TLS certificate and private key.
     <tr>
       <td>add_timestamp_header</td>
       <td>
-        This boolean key controls whether a custom header, <code>x-shovelled-timestamp</code>,
+        This boolean key controls whether a custom header, `x-shovelled-timestamp`,
         will be added to the message before it is re-published:
 
 ```erlang
@@ -504,7 +504,7 @@ are available to static shovels, such as TLS certificate and private key.
     <tr>
       <td>add_forward_headers</td>
       <td>
-        When set to true the shovel will add a number of custom message headers: <code>shovelled-by</code>, <code>shovel-type</code>, <code>shovel-name</code>,
+        When set to true the shovel will add a number of custom message headers: `shovelled-by`, `shovel-type`, `shovel-name`,
         to provide some additional metadata about the transfer.
 
 ```erlang
@@ -554,7 +554,7 @@ are available to static shovels, such as TLS certificate and private key.
 ```
         <p>
           The available keys include
-          <code>message_id</code>, <code>user_id</code>, <code>to</code>, <code>subject</code>, <code>reply_to</code>, <code>correlation_id</code>, <code>content_type</code>, <code>content_encoding</code>, <code>absolute_expiry_time</code>, <code>creation_time</code>.
+          `message_id`, `user_id`, `to`, `subject`, `reply_to`, `correlation_id`, `content_type`, `content_encoding`, `absolute_expiry_time`, `creation_time`.
           See the AMQP 1.0 spec (§3.2.4) for the all the available keys and values.
         </p>
       </td>
@@ -582,7 +582,7 @@ are available to static shovels, such as TLS certificate and private key.
     <tr>
       <td>add_timestamp_header</td>
       <td>
-        This boolean key controls whether a <code>creation_time</code> property
+        This boolean key controls whether a `creation_time` property
         will be set on the message before it is re-published:
 
 ```erlang
@@ -598,7 +598,7 @@ are available to static shovels, such as TLS certificate and private key.
       <td>add_forward_headers</td>
       <td>
         When set to true the shovel will add application properties for the
-        following keys: <code>shovelled-by</code>, <code>shovel-type</code>, <code>shovel-name</code>
+        following keys: `shovelled-by`, `shovel-type`, `shovel-name`
         to provide some additional metadata about the transfer.
 
 ```erlang

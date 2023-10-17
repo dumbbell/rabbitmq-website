@@ -79,14 +79,14 @@ policy definition:
         <th>rabbitmqctl</th>
         <td>
             ```bash
-rabbitmqctl set_policy TTL ".*" '{"message-ttl":60000}' --apply-to queues```
+rabbitmqctl set_policy TTL ".*" '&lcub;"message-ttl":60000}' --apply-to queues```
         </td>
     </tr>
     <tr>
         <th>rabbitmqctl (Windows)</th>
         <td>
             ```powershell
-rabbitmqctl set_policy TTL ".*" "{""message-ttl"":60000}" --apply-to queues```
+rabbitmqctl set_policy TTL ".*" "&lcub;""message-ttl"":60000}" --apply-to queues```
         </td>
     </tr>
 </table>

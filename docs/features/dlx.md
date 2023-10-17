@@ -55,7 +55,7 @@ to a policy definition. For example:
     <th>rabbitmqctl</th>
     <td>
 ```bash
-rabbitmqctl set_policy DLX ".*" '{"dead-letter-exchange":"my-dlx"}' --apply-to queues
+rabbitmqctl set_policy DLX ".*" '&lcub;"dead-letter-exchange":"my-dlx"}' --apply-to queues
 ```
     </td>
   </tr>
@@ -63,7 +63,7 @@ rabbitmqctl set_policy DLX ".*" '{"dead-letter-exchange":"my-dlx"}' --apply-to q
     <th>rabbitmqctl (Windows)</th>
     <td>
 ```powershell
-rabbitmqctl set_policy DLX ".*" "{""dead-letter-exchange"":""my-dlx""}" --apply-to queues
+rabbitmqctl set_policy DLX ".*" "&lcub;""dead-letter-exchange"":""my-dlx""}" --apply-to queues
 ```
     </td>
   </tr>
