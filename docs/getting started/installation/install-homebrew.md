@@ -1,7 +1,7 @@
 ---
 title: macOS
 description: Install RabbitMQ on macOS
-weight: 10
+sidebar_position: 4
 ---
 
 <!--

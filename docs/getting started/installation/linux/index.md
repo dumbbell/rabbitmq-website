@@ -1,6 +1,6 @@
 ---
 title: Linux
-weight: 3
+sidebar_position: 1
 description: >
   Installing RabbitMQ on Linux
 ---

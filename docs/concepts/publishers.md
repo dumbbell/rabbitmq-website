@@ -1,7 +1,7 @@
 ---
 title: Publishers
 description: Publishers
-weight: 10
+sidebar_position: 2
 ---
 
 <!--

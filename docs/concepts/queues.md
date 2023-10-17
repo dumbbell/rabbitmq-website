@@ -1,7 +1,7 @@
 ---
 title: Queues
 description: Queues
-weight: 10
+sidebar_position: 3
 ---
 
 <!--

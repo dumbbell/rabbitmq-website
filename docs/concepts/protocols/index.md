@@ -2,7 +2,6 @@
 title: Supported Protocols
 description: RabbitMQ supports multiple protocols including AMQP 0.9.1, AMQP 1.0, MQTT, STOMP and Stream
 date: 2023-08-25
-weight: 40
 ---
 
 # Which protocols does RabbitMQ support?

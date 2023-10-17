@@ -1,7 +1,6 @@
 ---
 title: Other Platforms
 description: Generic Binary Build ("Generic UNIX Build")
-weight: 10
 ---
 
 <!--

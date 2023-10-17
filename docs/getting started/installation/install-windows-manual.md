@@ -1,7 +1,7 @@
 ---
 title: Windows (manual process)
 description: Installing RabbitMQ on Windows Manually
-weight: 10
+sidebar_position: 3
 ---
 
 <!--

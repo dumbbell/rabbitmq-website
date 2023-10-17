@@ -1,7 +1,7 @@
 ---
 title: Consumers
 description: Consumers
-weight: 10
+sidebar_position: 1
 ---
 
 <!--

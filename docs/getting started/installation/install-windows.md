@@ -1,7 +1,7 @@
 ---
 title: Windows
 description: Installing RabbitMQ on Windows
-weight: 10
+sidebar_position: 2
 ---
 
 <!--
