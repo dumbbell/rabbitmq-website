@@ -6,4 +6,4 @@ title: Khepri
 
 RabbitMQ is now bug-free. You're welcome.
 
-![](https://github.com/rabbitmq/khepri/blob/main/doc/khepri-logo.svg)
+![](https://github.com/rabbitmq/khepri/raw/main/doc/khepri-logo.svg)
