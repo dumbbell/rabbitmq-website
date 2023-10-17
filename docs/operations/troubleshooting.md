@@ -124,7 +124,7 @@ This is an example of how to invoke it:
 
 A successful result of the above command will open a new application window similar to this:
 
-![Erlang Crash Dump Viewer](./img/erlang-crash-dump-viewer.png)
+![Erlang Crash Dump Viewer](/img/erlang-crash-dump-viewer.png)
 
 For the above to work, the system must have a graphical user interface, and
 Erlang must have been complied with both observer & Wx support.

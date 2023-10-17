@@ -946,86 +946,86 @@ A few important configurable kernel options include (note that despite option na
 are effective for both IPv4 and IPv6 connections):
 
 <table>
-  <thead>
-    <tr>
-      <th>Kernel setting</th>
-      <th>Description</th>
-    </tr>
-  </thead>
+<thead>
+<tr>
+<th>Kernel setting</th>
+<th>Description</th>
+</tr>
+</thead>
 
-  <tbody>
-    <tr>
-      <td><code>fs.file-max</code></td>
-      <td>
-        Max number of files the kernel will allocate. Limits and current value
-        can be inspected using <code>/proc/sys/fs/file-nr</code>.
-      </td>
-    </tr>
-    <tr>
-      <td><code>net.ipv4.ip_local_port_range</code></td>
-      <td>
-        Local IP port range, define as a pair of values. The range must provide enough
-        entries for the peak number of concurrent connections.
-      </td>
-    </tr>
-    <tr>
-      <td><code>net.ipv4.tcp_tw_reuse</code></td>
-      <td>
-        When enabled, allows the kernel to reuse sockets in <code>TIME_WAIT</code>
-        state when it's safe to do so. See <a href="#dealing-with-high-connection-churn">Dealing with High Connection Churn</a>.
-        This option is dangerous when clients and peers connect using NAT.
-      </td>
-    </tr>
-    <tr>
-      <td><code>net.ipv4.tcp_fin_timeout</code></td>
-      <td>
-        Lowering this timeout to a value in the 15-30 second range reduces the amount of time closed connections
-        will stay in the TIME_WAIT state. See <a href="#dealing-with-high-connection-churn">Dealing with High Connection Churn</a>.
-      </td>
-    </tr>
-    <tr>
-      <td><code>net.core.somaxconn</code></td>
-      <td>
-        Size of the listen queue (how many connections are in
-        the process of being established at the same time).
-        Default is 128. Increase to 4096 or higher to support
-        inbound connection bursts, e.g. when clients reconnect
-        en masse.
-      </td>
-    </tr>
-    <tr>
-      <td><code>net.ipv4.tcp_max_syn_backlog</code></td>
-      <td>
-        Maximum number of remembered connection requests which
-        did not receive an acknowledgment yet from
-        connecting client. Default is 128, max value is 65535. 4096 and 8192 are
-        recommended starting values when optimising for throughput.
-      </td>
-    </tr>
-    <tr>
-      <td><code>net.ipv4.tcp_keepalive_*</code></td>
-      <td>
-        <code>net.ipv4.tcp_keepalive_time</code>, <code>net.ipv4.tcp_keepalive_intvl</code>,
-        and <code>net.ipv4.tcp_keepalive_probes</code> configure TCP keepalive.
+<tbody>
+<tr>
+<td><code>fs.file-max</code></td>
+<td>
+Max number of files the kernel will allocate. Limits and current value
+can be inspected using <code>/proc/sys/fs/file-nr</code>.
+</td>
+</tr>
+<tr>
+<td><code>net.ipv4.ip_local_port_range</code></td>
+<td>
+Local IP port range, define as a pair of values. The range must provide enough
+entries for the peak number of concurrent connections.
+</td>
+</tr>
+<tr>
+<td><code>net.ipv4.tcp_tw_reuse</code></td>
+<td>
+When enabled, allows the kernel to reuse sockets in <code>TIME_WAIT</code>
+state when it's safe to do so. See <a href="#dealing-with-high-connection-churn">Dealing with High Connection Churn</a>.
+This option is dangerous when clients and peers connect using NAT.
+</td>
+</tr>
+<tr>
+<td><code>net.ipv4.tcp_fin_timeout</code></td>
+<td>
+Lowering this timeout to a value in the 15-30 second range reduces the amount of time closed connections
+will stay in the TIME_WAIT state. See <a href="#dealing-with-high-connection-churn">Dealing with High Connection Churn</a>.
+</td>
+</tr>
+<tr>
+<td><code>net.core.somaxconn</code></td>
+<td>
+Size of the listen queue (how many connections are in
+the process of being established at the same time).
+Default is 128. Increase to 4096 or higher to support
+inbound connection bursts, e.g. when clients reconnect
+en masse.
+</td>
+</tr>
+<tr>
+<td><code>net.ipv4.tcp_max_syn_backlog</code></td>
+<td>
+Maximum number of remembered connection requests which
+did not receive an acknowledgment yet from
+connecting client. Default is 128, max value is 65535. 4096 and 8192 are
+recommended starting values when optimising for throughput.
+</td>
+</tr>
+<tr>
+<td><code>net.ipv4.tcp_keepalive_*</code></td>
+<td>
+<code>net.ipv4.tcp_keepalive_time</code>, <code>net.ipv4.tcp_keepalive_intvl</code>,
+and <code>net.ipv4.tcp_keepalive_probes</code> configure TCP keepalive.
 
-        AMQP 0-9-1 and STOMP have <a href="./heartbeats.html">Heartbeats</a> which partially
-        undo its effect, namely that it can take minutes to detect an unresponsive peer,
-        for example, in case of a hardware or power failure. MQTT also has its own keepalives
-        mechanism which is the same idea under a different name.
+AMQP 0-9-1 and STOMP have <a href="./heartbeats.html">Heartbeats</a> which partially
+undo its effect, namely that it can take minutes to detect an unresponsive peer,
+for example, in case of a hardware or power failure. MQTT also has its own keepalives
+mechanism which is the same idea under a different name.
 
-        When enabling TCP keepalive with default settings, we
-        recommend setting heartbeat timeout to 8-20 seconds. Also see a note on TCP keepalives
-        later in this guide.
-      </td>
-    </tr>
-    <tr>
-      <td><code>net.ipv4.conf.default.rp_filter</code></td>
-      <td>
-        Activating or turning on reverse path filtering. If <a href="http://en.wikipedia.org/wiki/IP_address_spoofing">IP address spoofing</a>
-        is not a concern for your system, deactivate it.
-      </td>
-    </tr>
-  </tbody>
+When enabling TCP keepalive with default settings, we
+recommend setting heartbeat timeout to 8-20 seconds. Also see a note on TCP keepalives
+later in this guide.
+</td>
+</tr>
+<tr>
+<td><code>net.ipv4.conf.default.rp_filter</code></td>
+<td>
+Activating or turning on reverse path filtering. If <a href="http://en.wikipedia.org/wiki/IP_address_spoofing">IP address spoofing</a>
+is not a concern for your system, deactivate it.
+</td>
+</tr>
+</tbody>
 </table>
 
 Note that default values for these vary between Linux kernel releases and distributions.

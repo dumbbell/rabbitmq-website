@@ -138,69 +138,69 @@ policy which matches them and sets policy keys `ha-mode` and (optionally) `ha-pa
 The following table explains the options for these keys:
 
 <table>
-  <tr>
-    <th><code>ha-mode</code></th>
-    <th><code>ha-params</code></th>
-    <th>Result</th>
-  </tr>
-  <tr>
-    <td><code>exactly</code></td>
-    <td><i>count</i></td>
-    <td>
-      Number of queue replicas (leader plus mirrors) in the cluster.
+<tr>
+<th><code>ha-mode</code></th>
+<th><code>ha-params</code></th>
+<th>Result</th>
+</tr>
+<tr>
+<td><code>exactly</code></td>
+<td><i>count</i></td>
+<td>
+Number of queue replicas (leader plus mirrors) in the cluster.
 
-      A <i>count</i> value of 1 means a single replica: just the queue leader.
-      If the node running the queue leader becomes
-      unavailable, <a href="#non-mirrored-queue-behavior-on-node-failure">the behaviour depends on queue durability</a>.
+A <i>count</i> value of 1 means a single replica: just the queue leader.
+If the node running the queue leader becomes
+unavailable, <a href="#non-mirrored-queue-behavior-on-node-failure">the behaviour depends on queue durability</a>.
 
-      A <i>count</i> value of 2 means 2 replicas: 1 queue leader and 1 queue
-      mirror. In other words: `NumberOfQueueMirrors = NumberOfNodes - 1`.
-      If the node running the queue leader becomes unavailable,
-      the queue mirror will be automatically promoted to leader
-      according to the <a href="#unsynchronised-mirrors">mirror promotion strategy</a> configured.
+A <i>count</i> value of 2 means 2 replicas: 1 queue leader and 1 queue
+mirror. In other words: `NumberOfQueueMirrors = NumberOfNodes - 1`.
+If the node running the queue leader becomes unavailable,
+the queue mirror will be automatically promoted to leader
+according to the <a href="#unsynchronised-mirrors">mirror promotion strategy</a> configured.
 
-      If there are fewer than <i>count</i> nodes in the cluster, the
-      queue is mirrored to all nodes. If there are more than
-      <i>count</i> nodes in the cluster, and a node containing a mirror
-      goes down, then a new mirror will be created on another node. Use
-      of `exactly` mode with <a href="#cluster-shutdown">
-      `"ha-promote-on-shutdown": "always"`</a> can be
-      dangerous since queues can migrate across a cluster and become
-      unsynced as it is brought down.
-    </td>
-  </tr>
-  <tr>
-    <td><code>all</code></td>
-    <td>(none)</td>
-    <td>
-      Queue is mirrored across all nodes in the
-      cluster. When a new node is added to the cluster, the
-      queue will be mirrored to that node.
+If there are fewer than <i>count</i> nodes in the cluster, the
+queue is mirrored to all nodes. If there are more than
+<i>count</i> nodes in the cluster, and a node containing a mirror
+goes down, then a new mirror will be created on another node. Use
+of `exactly` mode with <a href="#cluster-shutdown">
+`"ha-promote-on-shutdown": "always"`</a> can be
+dangerous since queues can migrate across a cluster and become
+unsynced as it is brought down.
+</td>
+</tr>
+<tr>
+<td><code>all</code></td>
+<td>(none)</td>
+<td>
+Queue is mirrored across all nodes in the
+cluster. When a new node is added to the cluster, the
+queue will be mirrored to that node.
 
-      This setting is very
-      conservative. Mirroring to a quorum (N/2 + 1) of cluster nodes
-      is <a href="#replication-factor">recommended instead</a>.
-      Mirroring to all nodes will put additional
-      strain on all cluster nodes, including network I/O, disk I/O and
-      disk space usage.
-    </td>
-  </tr>
-  <tr>
-    <td><code>nodes</code></td>
-    <td><i>node names</i></td>
-    <td>
-      Queue is mirrored to the nodes listed in <i>node names</i>.
-      Node names are the Erlang node names as they
-      appear in <code>rabbitmqctl cluster_status</code>; they
-      usually have the form "<tt>rabbit@hostname</tt>".
+This setting is very
+conservative. Mirroring to a quorum (N/2 + 1) of cluster nodes
+is <a href="#replication-factor">recommended instead</a>.
+Mirroring to all nodes will put additional
+strain on all cluster nodes, including network I/O, disk I/O and
+disk space usage.
+</td>
+</tr>
+<tr>
+<td><code>nodes</code></td>
+<td><i>node names</i></td>
+<td>
+Queue is mirrored to the nodes listed in <i>node names</i>.
+Node names are the Erlang node names as they
+appear in <code>rabbitmqctl cluster_status</code>; they
+usually have the form "<tt>rabbit@hostname</tt>".
 
-      If any of those node names are not a part of the cluster,
-      this does not constitute an error. If none of the nodes
-      in the list are online at the time when the queue is
-      declared then the queue will be created on the node that
-      the declaring client is connected to.
-    </td>
-  </tr>
+If any of those node names are not a part of the cluster,
+this does not constitute an error. If none of the nodes
+in the list are online at the time when the queue is
+declared then the queue will be created on the node that
+the declaring client is connected to.
+</td>
+</tr>
 </table>
 
 Whenever the HA policy for a queue changes it will endeavour
@@ -353,64 +353,64 @@ Below is a policy where queues whose names begin with
 cluster, with [automatic synchronisation](#configuring-synchronisation):
 
 <table>
-  <tr>
-    <th>rabbitmqctl</th>
-    <td>
+<tr>
+<th>rabbitmqctl</th>
+<td>
 ```bash
 rabbitmqctl set_policy ha-two "^two\." \
-  '{"ha-mode":"exactly","ha-params":2,"ha-sync-mode":"automatic"}'
+  '&lcub;"ha-mode":"exactly","ha-params":2,"ha-sync-mode":"automatic"}'
 ```
-          </td>
-        </tr>
-        <tr>
-          <th>rabbitmqctl (Windows)</th>
-          <td>
+</td>
+</tr>
+<tr>
+<th>rabbitmqctl (Windows)</th>
+<td>
 ```bash
 rabbitmqctl.bat set_policy ha-two "^two\." ^
-   "{""ha-mode"":""exactly"",""ha-params"":2,""ha-sync-mode"":""automatic""}"
+   "&lcub;""ha-mode"":""exactly"",""ha-params"":2,""ha-sync-mode"":""automatic""}"
  ```
-          </td>
-        </tr>
-        <tr>
-          <th>HTTP API</th>
-          <td>
+</td>
+</tr>
+<tr>
+<th>HTTP API</th>
+<td>
 ```ini
 PUT /api/policies/%2f/ha-two
-{
+&lcub;
   "pattern":"^two\.",
-  "definition": {
+  "definition": &lcub;
     "ha-mode":"exactly",
     "ha-params":2,
     "ha-sync-mode":"automatic"
   }
 }
 ```
-    </td>
-  </tr>
-  <tr>
-    <th>Web UI</th>
-    <td>
-      <ul>
-        <li>
-          Navigate to Admin > Policies > Add / update a
-          policy.
-        </li>
-        <li>
-          Enter "ha-two" next to Name and "^two\." next to
-          Pattern.
-        </li>
-        <li>
-          Enter "ha-mode" = "exactly" in the first line
-          next to Policy, then "ha-params" = 2 in the second
-          line, then "ha-sync-mode" = "automatic" in the third,
-          and set the type on the second line to "Number".
-        </li>
-        <li>
-          Click Add policy.
-        </li>
-      </ul>
-    </td>
-  </tr>
+</td>
+</tr>
+<tr>
+<th>Web UI</th>
+<td>
+<ul>
+<li>
+Navigate to Admin > Policies > Add / update a
+policy.
+</li>
+<li>
+Enter "ha-two" next to Name and "^two\." next to
+Pattern.
+</li>
+<li>
+Enter "ha-mode" = "exactly" in the first line
+next to Policy, then "ha-params" = 2 in the second
+line, then "ha-sync-mode" = "automatic" in the third,
+and set the type on the second line to "Number".
+</li>
+<li>
+Click Add policy.
+</li>
+</ul>
+</td>
+</tr>
 </table>
 
 The following example declares a policy which matches
@@ -429,7 +429,7 @@ See [To How Many Nodes to Mirror?](#replication-factor) above:
 ```bash
 # Note that mirroring to all nodes is rarely necessary.
 # Consider mirroring to the majority (N/2+1) nodes with "ha-mode":"exactly" instead.
-rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
+rabbitmqctl set_policy ha-all "^ha\." '&lcub;"ha-mode":"all"}'
 ```
     </td>
   </tr>
@@ -439,7 +439,7 @@ rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
 ```powershell
 # Note that mirroring to all nodes is rarely necessary.
 # Consider mirroring to the majority (N/2+1) nodes with "ha-mode":"exactly" instead.
-rabbitmqctl.bat set_policy ha-all "^ha\." "{""ha-mode"":""all""}"
+rabbitmqctl.bat set_policy ha-all "^ha\." "&lcub;""ha-mode"":""all""}"
 ```
     </td>
   </tr>
@@ -447,7 +447,7 @@ rabbitmqctl.bat set_policy ha-all "^ha\." "{""ha-mode"":""all""}"
     <th>HTTP API</th>
     <td>
       ```ini
-PUT /api/policies/%2f/ha-all {"pattern":"^ha\.", "definition":{"ha-mode":"all"}}```
+PUT /api/policies/%2f/ha-all &lcub;"pattern":"^ha\.", "definition":&lcub;"ha-mode":"all"}}```
     </td>
   </tr>
   <tr>
@@ -480,7 +480,7 @@ cluster:
     <td>
       ```bash
 rabbitmqctl set_policy ha-nodes "^nodes\." \
-'{"ha-mode":"nodes","ha-params":["rabbit@nodeA", "rabbit@nodeB"]}'```
+  '&lcub;"ha-mode":"nodes","ha-params":["rabbit@nodeA", "rabbit@nodeB"]}'```
     </td>
   </tr>
   <tr>
@@ -488,7 +488,7 @@ rabbitmqctl set_policy ha-nodes "^nodes\." \
     <td>
       ```powershell
 rabbitmqctl set_policy ha-nodes "^nodes\." ^
-"{""ha-mode"":""nodes"",""ha-params"":[""rabbit@nodeA"", ""rabbit@nodeB""]}"```
+"&lcub;""ha-mode"":""nodes"",""ha-params"":[""rabbit@nodeA"", ""rabbit@nodeB""]}"```
     </td>
   </tr>
   <tr>
@@ -496,7 +496,7 @@ rabbitmqctl set_policy ha-nodes "^nodes\." ^
     <td>
       ```ini
 PUT /api/policies/%2f/ha-nodes
-{"pattern":"^nodes\.", "definition":{"ha-mode":"nodes", "ha-params":["rabbit@nodeA", "rabbit@nodeB"]}```
+&lcub;"pattern":"^nodes\.", "definition":&lcub;"ha-mode":"nodes", "ha-params":["rabbit@nodeA", "rabbit@nodeB"]}```
     </td>
   </tr>
   <tr>

@@ -57,27 +57,27 @@ A RabbitMQ node can be configured using a number of mechanisms responsible
 for different areas:
 
 <table>
-  <caption>Ways of configuration RabbitMQ</caption>
-  <thead>
-    <td><strong>Mechanism</strong></td>
-    <td><strong>Description</strong></td>
-  </thead>
+<caption>Ways of configuration RabbitMQ</caption>
+<thead>
+<td><strong>Mechanism</strong></td>
+<td><strong>Description</strong></td>
+</thead>
 
-  <tr>
-    <td>
-      <a href="#configuration-files">Configuration File(s)</a>
-    </td>
-    <td>
-      contains server and plugin settings for
+<tr>
+<td>
+<a href="#configuration-files">Configuration File(s)</a>
+</td>
+<td>
+contains server and plugin settings for
 
-      * [TCP listeners and other networking-related settings](./networking.html)
-      * [TLS](./ssl.html)
-      * [resource constraints (alarms)](./alarms.html)
-      * [authentication and authorisation backends](./access-control.html)
-      * [message store settings](./persistence-conf.html)
+* [TCP listeners and other networking-related settings](./networking.html)
+* [TLS](./ssl.html)
+* [resource constraints (alarms)](./alarms.html)
+* [authentication and authorisation backends](./access-control.html)
+* [message store settings](./persistence-conf.html)
 
-      and so on.
-    </td>
+and so on.
+</td>
   </tr>
   <tr>
     <td>
@@ -526,7 +526,7 @@ in the location specified by the `RABBITMQ_CONF_ENV_FILE` variable.
 On Windows systems, it is named `rabbitmq-env-conf.bat`.
 
 Windows service users will need to **[re-install the service](#rabbitmq-env-file-windows)** if
-configuration file location or any values in ``rabbitmq-env-conf.bat` have changed.
+configuration file location or any values in `rabbitmq-env-conf.bat` have changed.
 Environment variables used by the service would not be updated otherwise.
 
 In the context of deployment automation this means that environment variables
@@ -609,106 +609,106 @@ These variables are the most common. The list is not complete, as
 some settings are quite obscure.
 
 <table class="name-description">
-  <thead>
-    <tr>
-      <th><strong>Key</strong></th>
-      <th><strong>Documentation</strong></th>
-    </tr>
-  </thead>
+<thead>
+<tr>
+<th><strong>Key</strong></th>
+<th><strong>Documentation</strong></th>
+</tr>
+</thead>
 
-  <tr>
-    <td><code>listeners</code></td>
-    <td>
-      Ports or hostname/pair on which to listen for "plain" AMQP 0-9-1 and AMQP 1.0 connections
-      (without <a href="./ssl.html">TLS</a>). See the <a href="./networking.html">Networking guide</a> for more
-      details and examples.
+<tr>
+<td><code>listeners</code></td>
+<td>
+Ports or hostname/pair on which to listen for "plain" AMQP 0-9-1 and AMQP 1.0 connections
+(without <a href="./ssl.html">TLS</a>). See the <a href="./networking.html">Networking guide</a> for more
+details and examples.
 
-      <p>
-        Default:
+<p>
+Default:
 ```ini
 listeners.tcp.default = 5672
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>num_acceptors.tcp</code></td>
-    <td>
-      Number of Erlang processes that will accept connections for the TCP
-      listeners.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>num_acceptors.tcp</code></td>
+<td>
+Number of Erlang processes that will accept connections for the TCP
+listeners.
+<p>
+Default:
 ```ini
 num_acceptors.tcp = 10
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>handshake_timeout</code></td>
-    <td>
-      Maximum time for AMQP 0-9-1 handshake (after socket connection and TLS handshake),
-      in milliseconds.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>handshake_timeout</code></td>
+<td>
+Maximum time for AMQP 0-9-1 handshake (after socket connection and TLS handshake),
+in milliseconds.
+<p>
+Default:
 ```ini
 handshake_timeout = 10000
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>listeners.ssl</code></td>
-    <td>
-      Ports or hostname/pair on which to listen for TLS-enabled AMQP 0-9-1 and AMQP 1.0 connections.
-      See the <a href="./ssl.html">TLS guide</a> for more
-      details and examples.
-      <p>Default: <code>none</code> (not set)</p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>num_acceptors.ssl</code></td>
-    <td>
-      Number of Erlang processes that will accept TLS connections from clients.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>listeners.ssl</code></td>
+<td>
+Ports or hostname/pair on which to listen for TLS-enabled AMQP 0-9-1 and AMQP 1.0 connections.
+See the <a href="./ssl.html">TLS guide</a> for more
+details and examples.
+<p>Default: <code>none</code> (not set)</p>
+</td>
+</tr>
+<tr>
+<td><code>num_acceptors.ssl</code></td>
+<td>
+Number of Erlang processes that will accept TLS connections from clients.
+<p>
+Default:
 ```ini
 num_acceptors.ssl = 10
 ```
-      </p>
-    </td>
-  </tr>
+</p>
+</td>
+</tr>
 
-  <tr>
-    <td><code>ssl_options</code></td>
-    <td>
-      TLS configuration. See the <a href="ssl.html#enabling-ssl">TLS guide</a>.
-      <p>
-        Default:
+<tr>
+<td><code>ssl_options</code></td>
+<td>
+TLS configuration. See the <a href="ssl.html#enabling-ssl">TLS guide</a>.
+<p>
+Default:
 ```ini
 ssl_options = none
 ```
-        </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>ssl_handshake_timeout</code></td>
-    <td>
-      TLS handshake timeout, in milliseconds.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>ssl_handshake_timeout</code></td>
+<td>
+TLS handshake timeout, in milliseconds.
+<p>
+Default:
 ```ini
 ssl_handshake_timeout = 5000
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>vm_memory_high_watermark</code></td>
-    <td>
-      Memory threshold at which the flow control is
-      triggered. Can be absolute or relative to the amount of RAM available
-      to the OS:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>vm_memory_high_watermark</code></td>
+<td>
+Memory threshold at which the flow control is
+triggered. Can be absolute or relative to the amount of RAM available
+to the OS:
 
 ```ini
 vm_memory_high_watermark.relative = 0.6
@@ -717,249 +717,250 @@ vm_memory_high_watermark.relative = 0.6
 vm_memory_high_watermark.absolute = 2GB
 ```
 
-      See the <a href="memory.html">memory-based flow
-      control</a> and <a href="alarms.html">alarms</a>
-      documentation.
+See the <a href="memory.html">memory-based flow
+control</a> and <a href="alarms.html">alarms</a>
+documentation.
 
-      <p>
-        Default:
-
+<p>
+Default:
 ```ini
 vm_memory_high_watermark.relative = 0.4
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>vm_memory_calculation_strategy</code></td>
-    <td>
-      Strategy for memory usage reporting. Can be one of the following:
-      <ul class="plain">
-        <li><code>allocated</code>: uses Erlang memory allocator statistics</li>
-        <li><code>rss</code>: uses operating system RSS memory reporting. This uses OS-specific means and may start short lived child processes.</li>
-        <li><code>legacy</code>: uses legacy memory reporting (how much memory is considered to be used by the runtime). This strategy is fairly inaccurate.</li>
-        <li><code>erlang</code>: same as <code>legacy</code>, preserved for backwards compatibility</li>
-      </ul>
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>vm_memory_calculation_strategy</code></td>
+<td>
+Strategy for memory usage reporting. Can be one of the following:
+<ul class="plain">
+<li><code>allocated</code>: uses Erlang memory allocator statistics</li>
+<li><code>rss</code>: uses operating system RSS memory reporting. This uses OS-specific means and may start short lived child processes.</li>
+<li><code>legacy</code>: uses legacy memory reporting (how much memory is considered to be used by the runtime). This strategy is fairly inaccurate.</li>
+<li><code>erlang</code>: same as <code>legacy</code>, preserved for backwards compatibility</li>
+</ul>
+<p>
+Default:
 ```ini
 vm_memory_calculation_strategy = allocated
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>vm_memory_high_watermark_paging_ratio</code></td>
-    <td>
-      Fraction of the high watermark limit at which queues
-      start to page messages out to disc to free up
-      memory. See the <a href="memory.html">memory-based flow control</a> documentation.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>vm_memory_high_watermark_paging_ratio</code></td>
+<td>
+Fraction of the high watermark limit at which queues
+start to page messages out to disc to free up
+memory. See the <a href="memory.html">memory-based flow control</a> documentation.
+<p>
+Default:
 ```ini
 vm_memory_high_watermark_paging_ratio = 0.5
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>total_memory_available_override_value</code></td>
-    <td>
-      Makes it possible to override the total amount of memory
-      available, as opposed to inferring it from the environment using
-      OS-specific means. This should only be used when actual
-      maximum amount of RAM available to the node doesn't match the value
-      that will be inferred by the node, e.g. due to containerization or similar
-      constraints the node cannot be aware of. The value may be
-      set to an integer number of bytes or, alternatively, in
-      information units (e.g `8GB`). For example,
-      when the value is set to 4 GB, the node will believe it is
-      running on a machine with 4 GB of RAM.
-      <p>
-        Default: <code>undefined</code> (not set or used).
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>disk_free_limit</code></td>
-    <td>
-      Disk free space limit of the partition on which RabbitMQ
-      is storing data. When available disk space falls below
-      this limit, flow control is triggered. The value can be
-      set relative to the total amount of RAM or as an absolute value
-      in bytes or, alternatively, in
-      information units (e.g `50MB` or `5GB`):
+</p>
+</td>
+</tr>
+<tr>
+<td><code>total_memory_available_override_value</code></td>
+<td>
+Makes it possible to override the total amount of memory
+available, as opposed to inferring it from the environment using
+OS-specific means. This should only be used when actual
+maximum amount of RAM available to the node doesn't match the value
+that will be inferred by the node, e.g. due to containerization or similar
+constraints the node cannot be aware of. The value may be
+set to an integer number of bytes or, alternatively, in
+information units (e.g `8GB`). For example,
+when the value is set to 4 GB, the node will believe it is
+running on a machine with 4 GB of RAM.
+<p>
+Default: <code>undefined</code> (not set or used).
+</p>
+</td>
+</tr>
+<tr>
+<td><code>disk_free_limit</code></td>
+<td>
+Disk free space limit of the partition on which RabbitMQ
+is storing data. When available disk space falls below
+this limit, flow control is triggered. The value can be
+set relative to the total amount of RAM or as an absolute value
+in bytes or, alternatively, in
+information units (e.g `50MB` or `5GB`):
 
 ```ini
-disk_free_limit.relative = 3.0```
+disk_free_limit.relative = 3.0
+```
 ```ini
-disk_free_limit.absolute = 2GB```
+disk_free_limit.absolute = 2GB
+```
 
-      By default free disk space must exceed 50MB. See the <a
-      href="disk-alarms.html">Disk Alarms</a> documentation.
-      <p>
-        Default:
+By default free disk space must exceed 50MB. See the <a
+href="disk-alarms.html">Disk Alarms</a> documentation.
+<p>
+Default:
 ```ini
 disk_free_limit.absolute = 50MB
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>log.file.level</code></td>
-    <td>
-      Controls the granularity of logging. The value is a list
-      of log event category and log level pairs.
+</p>
+</td>
+</tr>
+<tr>
+<td><code>log.file.level</code></td>
+<td>
+Controls the granularity of logging. The value is a list
+of log event category and log level pairs.
 
-      <p>
-				The level can be one of <code>error</code> (only errors are
-				logged), <code>warning</code> (only errors and warning are
-				logged), <code>info</code> (errors, warnings and informational
-				messages are logged), or <code>debug</code> (errors, warnings,
-        informational messages and debugging messages are
-        logged).
-      </p>
+<p>
+The level can be one of <code>error</code> (only errors are
+logged), <code>warning</code> (only errors and warning are
+logged), <code>info</code> (errors, warnings and informational
+messages are logged), or <code>debug</code> (errors, warnings,
+informational messages and debugging messages are
+logged).
+</p>
 
-      <p>
-        Default:
+<p>
+Default:
 ```ini
 log.file.level = info
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>channel_max</code></td>
-    <td>
-      Maximum permissible number of channels to
-      negotiate with clients, not including a special channel number 0 used in the protocol.
-      Setting to 0 means "unlimited", a dangerous value since applications sometimes have channel leaks.
-      Using more channels increases memory footprint of the broker.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>channel_max</code></td>
+<td>
+Maximum permissible number of channels to
+negotiate with clients, not including a special channel number 0 used in the protocol.
+Setting to 0 means "unlimited", a dangerous value since applications sometimes have channel leaks.
+Using more channels increases memory footprint of the broker.
+<p>
+Default:
 ```ini
 channel_max = 2047
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>channel_operation_timeout</code></td>
-    <td>
-      Channel operation timeout in milliseconds (used internally, not directly
-      exposed to clients due to messaging protocol differences and limitations).
+</p>
+</td>
+</tr>
+<tr>
+<td><code>channel_operation_timeout</code></td>
+<td>
+Channel operation timeout in milliseconds (used internally, not directly
+exposed to clients due to messaging protocol differences and limitations).
 
-      <p>
-        Default:
+<p>
+Default:
 ```ini
 channel_operation_timeout = 15000
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>max_message_size</code></td>
-    <td>
-        The largest allowed message payload size in bytes. Messages
-        of larger size will be rejected with a suitable channel exception.
-        <p>Default: <code>134217728</code></p>
-        <p>Max value: <code>536870912</code></p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>heartbeat</code></td>
-    <td>
-      Value representing the heartbeat timeout suggested by the server during
-      connection parameter negotiation.
-      If set to 0 on both ends, heartbeats are deactivated (this is not recommended).
-      See the <a href="./heartbeats.html">Heartbeats guide</a> for details.
+</p>
+</td>
+</tr>
+<tr>
+<td><code>max_message_size</code></td>
+<td>
+The largest allowed message payload size in bytes. Messages
+of larger size will be rejected with a suitable channel exception.
+<p>Default: <code>134217728</code></p>
+<p>Max value: <code>536870912</code></p>
+</td>
+</tr>
+<tr>
+<td><code>heartbeat</code></td>
+<td>
+Value representing the heartbeat timeout suggested by the server during
+connection parameter negotiation.
+If set to 0 on both ends, heartbeats are deactivated (this is not recommended).
+See the <a href="./heartbeats.html">Heartbeats guide</a> for details.
 
-      <p>
-        Default:
+<p>
+Default:
 ```ini
 heartbeat = 60
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>default_vhost</code></td>
-    <td>
-      Virtual host to create when RabbitMQ creates a new
-      database from scratch. The
-      exchange `amq.rabbitmq.log` will exist in
-      this virtual host.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>default_vhost</code></td>
+<td>
+Virtual host to create when RabbitMQ creates a new
+database from scratch. The
+exchange `amq.rabbitmq.log` will exist in
+this virtual host.
+<p>
+Default:
 ```ini
 default_vhost = /
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>default_user</code></td>
-    <td>
-      User name to create when RabbitMQ creates a new database
-      from scratch.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>default_user</code></td>
+<td>
+User name to create when RabbitMQ creates a new database
+from scratch.
+<p>
+Default:
 ```ini
 default_user = guest
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>default_pass</code></td>
-    <td>
-      Password for the default user.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>default_pass</code></td>
+<td>
+Password for the default user.
+<p>
+Default:
 ```ini
 default_pass = guest
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>default_user_tags</code></td>
-    <td>
-      Tags for the default user.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>default_user_tags</code></td>
+<td>
+Tags for the default user.
+<p>
+Default:
 ```ini
 default_user_tags.administrator = true
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>default_permissions</code></td>
-    <td>
-      <a href="access-control.html">Permissions</a>
-      to assign to the default user when creating it.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>default_permissions</code></td>
+<td>
+<a href="access-control.html">Permissions</a>
+to assign to the default user when creating it.
+<p>
+Default:
 
 ```ini
 default_permissions.configure = .*
 default_permissions.read = .*
 default_permissions.write = .*
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>loopback_users</code></td>
-    <td>
-      List of users which are only permitted to connect to the
-      broker via a loopback interface (i.e. `localhost`).
+</p>
+</td>
+</tr>
+<tr>
+<td><code>loopback_users</code></td>
+<td>
+List of users which are only permitted to connect to the
+broker via a loopback interface (i.e. `localhost`).
 
-      <p>
-        To allow the default `guest`
-        user to connect remotely (a security practice <a href="./production-checklist.html">unsuitable for production use</a>),
-        set this to `none`:
+<p>
+To allow the default `guest`
+user to connect remotely (a security practice <a href="./production-checklist.html">unsuitable for production use</a>),
+set this to `none`:
 
 ```ini
 # awful security practice,
@@ -967,16 +968,16 @@ default_permissions.write = .*
 # user with secure generated credentials!
 loopback_users = none
 ```
-      </p>
-      <p>
-        To restrict another user to localhost-only connections,
-        do it like so (`monitoring` is the name of the user):
+</p>
+<p>
+To restrict another user to localhost-only connections,
+do it like so (`monitoring` is the name of the user):
 ```ini
 loopback_users.monitoring = true
 ```
-      </p>
-      <p>
-        Default:
+</p>
+<p>
+Default:
 ```ini
 # guest uses well known
 # credentials and can only
@@ -984,140 +985,149 @@ loopback_users.monitoring = true
 # by default
 loopback_users.guest = true
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>cluster_formation.classic_config.nodes</code></td>
-    <td>
-      Classic <a href="./cluster-formation.html">peer discovery</a> backend's list of nodes to contact.
+</p>
+</td>
+</tr>
+<tr>
+<td><code>cluster_formation.classic_config.nodes</code></td>
+<td>
+Classic <a href="./cluster-formation.html">peer discovery</a> backend's list of nodes to contact.
 
-      For example, to cluster with nodes `rabbit@hostname1` and `rabbit@hostname2` on first boot:
+For example, to cluster with nodes `rabbit@hostname1` and `rabbit@hostname2` on first boot:
 
 ```ini
 cluster_formation.classic_config.nodes.1 = rabbit@hostname1
 cluster_formation.classic_config.nodes.2 = rabbit@hostname2
 ```
-      <p>Default: `none` (not set)</p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>collect_statistics</code></td>
-    <td>
-      Statistics collection mode. Primarily relevant for the
-      management plugin. Options are:
-      <ul>
-        <li>`none` (do not emit statistics events)</li>
-        <li>`coarse` (emit per-queue / per-channel / per-connection statistics)</li>
-        <li>`fine` (also emit per-message statistics)</li>
-        </ul>
-      <p>
-        Default:
+<p>Default: `none` (not set)</p>
+</td>
+</tr>
+<tr>
+<td><code>collect_statistics</code></td>
+<td>
+Statistics collection mode. Primarily relevant for the
+management plugin. Options are:
+<ul>
+<li>`none` (do not emit statistics events)</li>
+<li>`coarse` (emit per-queue / per-channel / per-connection statistics)</li>
+<li>`fine` (also emit per-message statistics)</li>
+</ul>
+<p>
+Default:
 ```ini
 collect_statistics = none
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>collect_statistics_interval</code></td>
-    <td>
-      Statistics collection interval in
-      milliseconds. Primarily relevant for
-      the <a href="management.html#statistics-interval">management
-      plugin</a>.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>collect_statistics_interval</code></td>
+<td>
+Statistics collection interval in
+milliseconds. Primarily relevant for
+the <a href="management.html#statistics-interval">management
+plugin</a>.
+<p>
+Default:
 ```ini
 collect_statistics_interval = 5000
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>management_db_cache_multiplier</code></td>
-    <td>
-      Affects the amount of time the <a href="management.html#statistics-interval">management plugin</a>
-      will cache expensive management queries such as
-      queue listings. The cache will multiply the elapsed time of
-      the last query by this value and cache the result for
-      this amount of time.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>management_db_cache_multiplier</code></td>
+<td>
+Affects the amount of time the <a href="management.html#statistics-interval">management plugin</a>
+will cache expensive management queries such as
+queue listings. The cache will multiply the elapsed time of
+the last query by this value and cache the result for
+this amount of time.
+<p>
+Default:
 ```ini
 management_db_cache_multiplier = 5
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>auth_mechanisms</code></td>
-    <td>
-      <a href="authentication.html">SASL authentication
-      mechanisms</a> to offer to clients.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>auth_mechanisms</code></td>
+<td>
+<a href="authentication.html">SASL authentication
+mechanisms</a> to offer to clients.
+<p>
+Default:
 ```ini
 auth_mechanisms.1 = PLAIN
 auth_mechanisms.2 = AMQPLAIN
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>auth_backends</code></td>
-    <td>
-      <p>
-        List of <a href="./access-control.html">authentication and authorisation backends</a> to
-        use. See the <a href="./access-control.html">access control guide</a> for details and examples.
-      </p>
-      <p>
-        Other databases
-        than `rabbit_auth_backend_internal` are
-        available through <a href="plugins.html">plugins</a>.
-      </p>
-      <p>Default: ```ini
-auth_backends.1 = internal```</p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>reverse_dns_lookups</code></td>
-    <td>
-      Set to `true` to have RabbitMQ perform a
-      reverse DNS lookup on client connections, and present
-      that information through `rabbitmqctl` and
-      the management plugin.
-      <p>Default: ```ini
-reverse_dns_lookups = false```</p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>delegate_count</code></td>
-    <td>
-      Number of delegate processes to use for intra-cluster
-      communication. On a machine which has a very large
-      number of cores and is also part of a cluster, you may
-      wish to increase this value.
+</p>
+</td>
+</tr>
+<tr>
+<td><code>auth_backends</code></td>
+<td>
+<p>
+List of <a href="./access-control.html">authentication and authorisation backends</a> to
+use. See the <a href="./access-control.html">access control guide</a> for details and examples.
+</p>
+<p>
+Other databases
+than `rabbit_auth_backend_internal` are
+available through <a href="plugins.html">plugins</a>.
+</p>
+<p>Default:
+```ini
+auth_backends.1 = internal
+```
+</p>
+</td>
+</tr>
+<tr>
+<td><code>reverse_dns_lookups</code></td>
+<td>
+Set to `true` to have RabbitMQ perform a
+reverse DNS lookup on client connections, and present
+that information through `rabbitmqctl` and
+the management plugin.
+<p>Default:
+```ini
+reverse_dns_lookups = false
+```
+</p>
+</td>
+</tr>
+<tr>
+<td><code>delegate_count</code></td>
+<td>
+Number of delegate processes to use for intra-cluster
+communication. On a machine which has a very large
+number of cores and is also part of a cluster, you may
+wish to increase this value.
 
-      <p>Default: ```ini
-delegate_count = 16```</p>
-    </td>
-  </tr>
+<p>Default:
+```ini
+delegate_count = 16
+```
+</p>
+</td>
+</tr>
 
-  <tr>
-    <td><code>tcp_listen_options</code></td>
-    <td>
-      Default socket options. You may want to change these
-      when you troubleshoot network issues.
-      <p>
-        Default:
+<tr>
+<td><code>tcp_listen_options</code></td>
+<td>
+Default socket options. You may want to change these
+when you troubleshoot network issues.
+<p>
+Default:
 ```ini
 tcp_listen_options.backlog = 128
 tcp_listen_options.nodelay = true
 tcp_listen_options.linger.on = true
 tcp_listen_options.linger.timeout = 0
 ```
-      </p>
+</p>
 
 <br/>
 ```ini
@@ -1130,170 +1140,174 @@ release by the kernel.
 
 <br/>
 ```ini
-tcp_listen_options.keepalive = false```
+tcp_listen_options.keepalive = false
+```
 <p>
-  Set `tcp_listen_options.keepalive` to `true` to enable <a href="networking.html#tcp-keepalives">TCP keepalives</a>.
-  <br/>
-  </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>cluster_partition_handling</code></td>
-    <td>
-      How to handle network partitions. Available modes are:
-      <ul>
-        <li><code>ignore</code></li>
-        <li><code>autoheal</code></li>
-        <li><code>pause_minority</code></li>
-        <li><code>pause_if_all_down</code></li>
-      </ul>
-      <code>pause_if_all_down</code> mode requires additional parameters:
-      <ul>
-        <li><code>nodes</code></li>
-        <li><code>recover</code></li>
-      </ul>
-      See the
-      <a href="partitions.html#automatic-handling">documentation
-      on partitions</a> for more information.
+Set `tcp_listen_options.keepalive` to `true` to enable <a href="networking.html#tcp-keepalives">TCP keepalives</a>.
+<br/>
+</p>
+</td>
+</tr>
+<tr>
+<td><code>cluster_partition_handling</code></td>
+<td>
+How to handle network partitions. Available modes are:
+<ul>
+<li><code>ignore</code></li>
+<li><code>autoheal</code></li>
+<li><code>pause_minority</code></li>
+<li><code>pause_if_all_down</code></li>
+</ul>
+<code>pause_if_all_down</code> mode requires additional parameters:
+<ul>
+<li><code>nodes</code></li>
+<li><code>recover</code></li>
+</ul>
+See the
+<a href="partitions.html#automatic-handling">documentation
+on partitions</a> for more information.
 
-      <p>Default: ```ini
-cluster_partition_handling = ignore```</p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>cluster_keepalive_interval</code></td>
-    <td>
-      How frequently nodes should send keepalive messages to
-      other nodes (in milliseconds). Note that this is not the
-      same thing as <a href="nettick.html"><code>net_ticktime</code></a>;
-      missed keepalive messages will not cause nodes to be
-      considered down.
+<p>Default:
+```ini
+cluster_partition_handling = ignore
+```
+</p>
+</td>
+</tr>
+<tr>
+<td><code>cluster_keepalive_interval</code></td>
+<td>
+How frequently nodes should send keepalive messages to
+other nodes (in milliseconds). Note that this is not the
+same thing as <a href="nettick.html"><code>net_ticktime</code></a>;
+missed keepalive messages will not cause nodes to be
+considered down.
 
-      <p>
-        Default:
+<p>
+Default:
 ```ini
 cluster_keepalive_interval = 10000
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>queue_index_embed_msgs_below</code></td>
-    <td>
-      Size in bytes of message below which messages will
-      be embedded directly in the queue index. You are advised
-      to read the <a href="persistence-conf.html">persister
-      tuning</a> documentation before changing this.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>queue_index_embed_msgs_below</code></td>
+<td>
+Size in bytes of message below which messages will
+be embedded directly in the queue index. You are advised
+to read the <a href="persistence-conf.html">persister
+tuning</a> documentation before changing this.
+<p>
+Default:
 ```ini
 queue_index_embed_msgs_below = 4096
 ```
-      </p>
-    </td>
-  </tr>
+</p>
+</td>
+</tr>
 
-  <tr>
-    <td><code>mnesia_table_loading_retry_timeout</code></td>
-    <td>
-      Timeout used when waiting for Mnesia tables in a cluster to
-      become available.
-      <p>
-        Default:
+<tr>
+<td><code>mnesia_table_loading_retry_timeout</code></td>
+<td>
+Timeout used when waiting for Mnesia tables in a cluster to
+become available.
+<p>
+Default:
 ```ini
 mnesia_table_loading_retry_timeout = 30000
 ```
 </p>
-    </td>
-  </tr>
+</td>
+</tr>
 
-  <tr>
-    <td><code>mnesia_table_loading_retry_limit</code></td>
-    <td>
-      Retries when waiting for Mnesia tables in the cluster startup. Note that
-      this setting is not applied to Mnesia upgrades or node deletions.
-      <p>Default:
+<tr>
+<td><code>mnesia_table_loading_retry_limit</code></td>
+<td>
+Retries when waiting for Mnesia tables in the cluster startup. Note that
+this setting is not applied to Mnesia upgrades or node deletions.
+<p>Default:
 ```ini
 mnesia_table_loading_retry_limit = 10
 ```
-      </p>
-    </td>
-  </tr>
+</p>
+</td>
+</tr>
 
-  <tr>
-    <td><code>mirroring_sync_batch_size</code></td>
-    <td>
-      Batch size used to transfer messages to an unsynchronised replica (queue mirror).
-      See <a href="./ha.html#batch-sync">documentation on eager batch synchronization</a>.
-      <p>
-        Default:
+<tr>
+<td><code>mirroring_sync_batch_size</code></td>
+<td>
+Batch size used to transfer messages to an unsynchronised replica (queue mirror).
+See <a href="./ha.html#batch-sync">documentation on eager batch synchronization</a>.
+<p>
+Default:
 ```ini
 mirroring_sync_batch_size = 4096
 ```
-      </p>
-    </td>
-  </tr>
+</p>
+</td>
+</tr>
 
-  <tr>
-    <td><code>queue_leader_locator</code></td>
-    <td>
-      queue leader location strategy. Available strategies are:
-      <ul>
-        <li><code>balanced</code></li>
-        <li><code>client-local</code></li>
-      </ul>
-      See the
-      <a href="./ha.html#queue-leader-location">documentation
-      on queue leader location</a> for more information.
-      <p>
-        Default:
+<tr>
+<td><code>queue_leader_locator</code></td>
+<td>
+queue leader location strategy. Available strategies are:
+<ul>
+<li><code>balanced</code></li>
+<li><code>client-local</code></li>
+</ul>
+See the
+<a href="./ha.html#queue-leader-location">documentation
+on queue leader location</a> for more information.
+<p>
+Default:
 ```ini
 queue_leader_locator = balanced
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>proxy_protocol</code></td>
-    <td>
-      If set to <code>true</code>, RabbitMQ will expect a <a
-      href="http://www.haproxy.org/download/1.8/doc/proxy-protocol.txt">proxy
-      protocol</a> header to be sent first when an AMQP
-      connection is opened.  This implies to set up a proxy
-      protocol-compliant reverse proxy (e.g. <a
-      href="http://www.haproxy.org/download/1.8/doc/proxy-protocol.txt">HAproxy</a>
-      or <a
-      href="http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/enable-proxy-protocol.html">AWS
-      ELB</a>) in front of RabbitMQ.  Clients can't directly
-      connect to RabbitMQ when proxy protocol is enabled, so
-      all connections must go through the reverse proxy.
+</p>
+</td>
+</tr>
+<tr>
+<td><code>proxy_protocol</code></td>
+<td>
+If set to <code>true</code>, RabbitMQ will expect a <a
+href="http://www.haproxy.org/download/1.8/doc/proxy-protocol.txt">proxy
+protocol</a> header to be sent first when an AMQP
+connection is opened.  This implies to set up a proxy
+protocol-compliant reverse proxy (e.g. <a
+href="http://www.haproxy.org/download/1.8/doc/proxy-protocol.txt">HAproxy</a>
+or <a
+href="http://docs.aws.amazon.com/elasticloadbalancing/latest/classic/enable-proxy-protocol.html">AWS
+ELB</a>) in front of RabbitMQ.  Clients can't directly
+connect to RabbitMQ when proxy protocol is enabled, so
+all connections must go through the reverse proxy.
 
-      <p>
-        See <a href="networking.html#proxy-protocol">the
-        networking guide</a> for more information.
-      </p>
+<p>
+See <a href="networking.html#proxy-protocol">the
+networking guide</a> for more information.
+</p>
 
-      <p>
-        Default:
+<p>
+Default:
 ```ini
 proxy_protocol = false
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>cluster_name</code></td>
-    <td>
-      Operator-controlled cluster name. This name is used to identify a cluster, and by
-      the federation and Shovel plugins to record the origin or path of transferred messages.
-      Can be set to any arbitrary string to help identify the cluster (eg. <code>london</code>).
-      This name can be inspected by AMQP 0-9-1 clients in the server properties map.
+</p>
+</td>
+</tr>
+<tr>
+<td><code>cluster_name</code></td>
+<td>
+Operator-controlled cluster name. This name is used to identify a cluster, and by
+the federation and Shovel plugins to record the origin or path of transferred messages.
+Can be set to any arbitrary string to help identify the cluster (eg. <code>london</code>).
+This name can be inspected by AMQP 0-9-1 clients in the server properties map.
 
-      <p>
-        Default: by default the name is derived from the first (seed) node in the cluster.
-      </p>
-    </td>
-  </tr>
+<p>
+Default: by default the name is derived from the first (seed) node in the cluster.
+</p>
+</td>
+</tr>
 </table>
 
 The following configuration settings can be set in
@@ -1301,160 +1315,159 @@ the [advanced config file](#advanced-config-file) only,
 under the `rabbit` section.
 
 <table class="name-description">
-  <thead>
-    <tr>
-      <th><strong>Key</strong></th>
-      <th><strong>Documentation</strong></th>
-    </tr>
-  </thead>
+<thead>
+<tr>
+<th><strong>Key</strong></th>
+<th><strong>Documentation</strong></th>
+</tr>
+</thead>
 
-  <tr>
-    <td><code>msg_store_index_module</code></td>
-    <td>
-      Implementation module for queue indexing. You are
-      advised to read the <a
-      href="persistence-conf.html">message store tuning</a>
-      documentation before changing this.
-      <p>
-        Default: <code>rabbit_msg_store_ets_index</code>
+<tr>
+<td><code>msg_store_index_module</code></td>
+<td>
+Implementation module for queue indexing. You are
+advised to read the <a
+href="persistence-conf.html">message store tuning</a>
+documentation before changing this.
+<p>
+Default: <code>rabbit_msg_store_ets_index</code>
 ```erlang
 {rabbit, [
 {msg_store_index_module, rabbit_msg_store_ets_index}
 ]}
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>backing_queue_module</code></td>
-    <td>
-      Implementation module for queue contents.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>backing_queue_module</code></td>
+<td>
+Implementation module for queue contents.
+<p>
+Default:
 ```erlang
 {rabbit, [
 {backing_queue_module, rabbit_variable_queue}
 ]}
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>msg_store_file_size_limit</code></td>
-    <td>
-      Message store segment file size. Changing this for a node
-      with an existing (initialised) database is dangerous can
-      lead to data loss!
-      <p>
-        Default: <code>16777216</code>
+</p>
+</td>
+</tr>
+<tr>
+<td><code>msg_store_file_size_limit</code></td>
+<td>
+Message store segment file size. Changing this for a node
+with an existing (initialised) database is dangerous can
+lead to data loss!
+<p>
+Default: <code>16777216</code>
 ```erlang
-{rabbit, [
-%% Changing this for a node
-%% with an existing (initialised) database is dangerous can
-%% lead to data loss!
+&lcub;rabbit, [
+%% Changing this for a node with an existing (initialised) database is
+%% dangerous can lead to data loss!
 {msg_store_file_size_limit, 16777216}
 ]}
 ```
-      </p>
-    </td>
-  </tr>
-    <tr>
-      <td><code>trace_vhosts</code></td>
-      <td>
-        Used internally by
-        the <a href="firehose.html">tracer</a>. You shouldn't
-        change this.
-        <p>
-          Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>trace_vhosts</code></td>
+<td>
+Used internally by
+the <a href="firehose.html">tracer</a>. You shouldn't
+change this.
+<p>
+Default:
 ```erlang
-{rabbit, [
+&lcub;rabbit, [
 {trace_vhosts, []}
 ]}
 ```
-        </p>
-      </td>
-    </tr>
-  <tr>
-    <td><code>msg_store_credit_disc_bound</code></td>
-    <td>
-      The credits that a queue process is given by the message store.
-      <p>
-        By default, a queue process is given 4000 message store credits, and then 800 for every 800 messages that it processes.
-      </p>
-      <p>
-        Messages which need to be paged out due to memory pressure will also use this credit.
-      </p>
-      <p>
-        The Message Store is the last component in the credit flow chain. <a href="https://blog.rabbitmq.com/posts/2015/10/new-credit-flow-settings-on-rabbitmq-3-5-5/" target="_blank" rel="noopener noreferrer">Learn about credit flow.</a>
-      </p>
-      <p>
-        This value only takes effect when messages are persisted to the message store.
-        If messages are embedded on the queue index, then modifying this setting has no effect because credit_flow is NOT used when writing to the queue index.
-      </p>
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>msg_store_credit_disc_bound</code></td>
+<td>
+The credits that a queue process is given by the message store.
+<p>
+By default, a queue process is given 4000 message store credits, and then 800 for every 800 messages that it processes.
+</p>
+<p>
+Messages which need to be paged out due to memory pressure will also use this credit.
+</p>
+<p>
+The Message Store is the last component in the credit flow chain. <a href="https://blog.rabbitmq.com/posts/2015/10/new-credit-flow-settings-on-rabbitmq-3-5-5/" target="_blank" rel="noopener noreferrer">Learn about credit flow.</a>
+</p>
+<p>
+This value only takes effect when messages are persisted to the message store.
+If messages are embedded on the queue index, then modifying this setting has no effect because credit_flow is NOT used when writing to the queue index.
+</p>
+<p>
+Default:
 ```erlang
-{rabbit, [
-{msg_store_credit_disc_bound, {4000, 800}}
+&lcub;rabbit, [
+&lcub;msg_store_credit_disc_bound, {4000, 800}}
 ]}
 ```
-      </p>
-    </td>
-  </tr>
-  <tr>
-    <td><code>queue_index_max_journal_entries</code></td>
-    <td>
-      After how many queue index journal entries it will be
-      flushed to disk.
-      <p>
-        Default:
+</p>
+</td>
+</tr>
+<tr>
+<td><code>queue_index_max_journal_entries</code></td>
+<td>
+After how many queue index journal entries it will be
+flushed to disk.
+<p>
+Default:
 ```erlang
-{rabbit, [
-{queue_index_max_journal_entries, 32768}
+&lcub;rabbit, [
+&lcub;queue_index_max_journal_entries, 32768}
 ]}
 ```
-      </p>
-    </td>
-  </tr>
+</p>
+</td>
+</tr>
 
-  <tr>
-    <td>
-      <code>lazy_queue_explicit_gc_run_operation_threshold</code>
-    </td>
-    <td>
-     Tunable value only for lazy queues when under memory pressure.
-     This is the threshold at which the garbage collector and other memory reduction activities are triggered.
-     A low value could reduce performance, and a high one can improve performance, but cause higher memory consumption.
-     You almost certainly should not change this.
-    <p>
-      Default:
+<tr>
+<td>
+<code>lazy_queue_explicit_gc_run_operation_threshold</code>
+</td>
+<td>
+Tunable value only for lazy queues when under memory pressure.
+This is the threshold at which the garbage collector and other memory reduction activities are triggered.
+A low value could reduce performance, and a high one can improve performance, but cause higher memory consumption.
+You almost certainly should not change this.
+<p>
+Default:
 ```ini
-{rabbit, [
-{lazy_queue_explicit_gc_run_operation_threshold, 1000}
+&lcub;rabbit, [
+&lcub;lazy_queue_explicit_gc_run_operation_threshold, 1000}
 ]}
 ```
-    </p>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <code>queue_explicit_gc_run_operation_threshold</code>
-    </td>
-    <td>
-     Tunable value only for normal queues when under memory pressure.
-     This is the threshold at which the garbage collector and other memory reduction activities are triggered.
-     A low value could reduce performance, and a high one can improve performance, but cause higher memory consumption.
-     You almost certainly should not change this.
-    <p>
-      Default:
+</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>queue_explicit_gc_run_operation_threshold</code>
+</td>
+<td>
+Tunable value only for normal queues when under memory pressure.
+This is the threshold at which the garbage collector and other memory reduction activities are triggered.
+A low value could reduce performance, and a high one can improve performance, but cause higher memory consumption.
+You almost certainly should not change this.
+<p>
+Default:
 ```ini
-{rabbit, [
-{queue_explicit_gc_run_operation_threshold, 1000}
+&lcub;rabbit, [
+&lcub;queue_explicit_gc_run_operation_threshold, 1000}
 ]}
 ```
-    </p>
-    </td>
-  </tr>
+</p>
+</td>
+</tr>
 </table>
 
 Several [plugins](./plugins.html) that ship with RabbitMQ have
@@ -1659,7 +1672,7 @@ Its [location](#config-location) is configurable
 using the `RABBITMQ_CONF_ENV_FILE` environment variable.
 
 Windows service users will need to **re-install the service** if configuration file location
-or any values in ``rabbitmq-env-conf.bat` changed. Environment variables used by
+or any values in `rabbitmq-env-conf.bat` changed. Environment variables used by
 the service would not be updated otherwise.
 
 This can be done using the installer or on the command line
@@ -1669,8 +1682,10 @@ with administrator permissions:
  * cd into the sbin folder under the RabbitMQ server installation directory (such as `C:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-{version}\sbin`)
  * Run `rabbitmq-service.bat stop` to stop the service
  * Run `rabbitmq-service.bat remove` to remove the Windows service (this will *not* remove RabbitMQ or its data directory)
- * Set environment variables via command line, i.e. run commands like the following: ```powershell
-set RABBITMQ_BASE=C:\Data\RabbitMQ```
+ * Set environment variables via command line, i.e. run commands like the following:
+   ```powershell
+   set RABBITMQ_BASE=C:\Data\RabbitMQ
+   ```
  * Run `rabbitmq-service.bat install`
  * Run `rabbitmq-service.bat start`
 
@@ -1694,502 +1709,502 @@ The table below describes key environment variables that can be used to configur
 More variables are covered in the [File and Directory Locations guide](./relocate.html).
 
 <table class="name-description">
-  <tr>
-    <th>Name</th>
-    <th>Description</th>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_NODE_IP_ADDRESS</td>
-    <td>
-      Change this if you only want to bind to one network interface.
-      Binding to two or more interfaces can be set up in the configuration file.
-
-      <p>
-        <strong>Default</strong>: an empty string, meaning "bind to all network interfaces".
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_NODE_PORT</td>
-    <td>
-      See <a href="./networking.html">Networking guide</a> for more information on ports used by various
-      parts of RabbitMQ.
-
-      <p>
-        <strong>Default</strong>: 5672.
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_DIST_PORT</td>
-    <td>
-      Port used for inter-node and CLI tool communication. Ignored if node config
-      file sets <code>kernel.inet_dist_listen_min</code> or
-      <code>kernel.inet_dist_listen_max</code> keys.
-      See <a href="./networking.html">Networking</a> for details, and
-      <a href="./windows-quirks.html">Windows Quirks</a> for Windows-specific details.
-
-      <p>
-        <strong>Default</strong>: <code>RABBITMQ_NODE_PORT + 20000</code>
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>ERL_EPMD_ADDRESS</td>
-    <td>
-      Interface(s) used by <a href="./networking.html#epmd">epmd</a>, a component in inter-node and CLI tool communication.
-
-      <p>
-        <strong>Default</strong>: all available interfaces, both IPv6 and IPv4.
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>ERL_EPMD_PORT</td>
-    <td>
-      Port used by <a href="./networking.html#epmd">epmd</a>, a component in inter-node and CLI tool communication.
-
-      <p>
-        <strong>Default</strong>: <code>4369</code>
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_DISTRIBUTION_BUFFER_SIZE</td>
-    <td>
-      <a href="https://erlang.org/doc/man/erl.html#+zdbbl">Outgoing data buffer size limit</a>
-      to use for inter-node communication connections, in kilobytes. Values lower than
-      64 MB are not recommended.
-
-      <p>
-        <strong>Default</strong>: 128000
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_NODENAME</td>
-    <td>
-      The node name should be unique per Erlang-node-and-machine combination.
-      To run multiple nodes, see the <a href="./clustering.html">clustering guide</a>.
-
-      <p>
-        <strong>Default</strong>:
-
-        <ul>
-          <li>
-            <b>Unix*:</b>
-            <code>rabbit@$HOSTNAME</code>
-          </li>
-          <li>
-            <b>Windows:</b>
-            <code>rabbit@%COMPUTERNAME%</code>
-          </li>
-        </ul>
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_CONFIG_FILE</td>
-    <td>
-      Main RabbitMQ config file path, for example,
-      <code>/etc/rabbitmq/rabbitmq.conf</code> or <code>/data/configuration/rabbitmq.conf</code> for new style configuration format files.
-      If classic config format it used, the extension must be <code>.config</code>
-
-      <p>
-        <strong>Default</strong>:
-
-        <ul>
-          <li><b>Generic UNIX</b>: <code>$RABBITMQ_HOME/etc/rabbitmq/rabbitmq.conf</code>
-          </li>
-          <li><b>Debian</b>: <code>/etc/rabbitmq/rabbitmq.conf</code></li>
-          <li><b>RPM</b>: <code>/etc/rabbitmq/rabbitmq.conf</code></li>
-          <li>
-            <b>MacOS(Homebrew)</b>: <code>${install_prefix}/etc/rabbitmq/rabbitmq.conf</code>,
-            the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
-          </li>
-          <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\rabbitmq.conf</code></li>
-        </ul>
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_CONFIG_FILES</td>
-    <td>
-      Path to a directory of RabbitMQ configuration files in the new-style (.conf) format.
-      The files will be loaded in alphabetical order. Prefixing each files with a number
-      is a common practice.
-
-      <p>
-        <strong>Default</strong>:
-
-        <ul>
-          <li><b>Generic UNIX</b>: <code>$RABBITMQ_HOME/etc/rabbitmq/conf.d</code>
-          </li>
-          <li><b>Debian</b>: <code>/etc/rabbitmq/conf.d</code></li>
-          <li><b>RPM</b>: <code>/etc/rabbitmq/conf.d</code></li>
-          <li>
-            <b>MacOS(Homebrew)</b>: <code>${install_prefix}/etc/rabbitmq/conf.d</code>,
-            the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
-          </li>
-          <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\conf.d</code></li>
-        </ul>
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_ADVANCED_CONFIG_FILE</td>
-    <td>
-      "Advanced" (Erlang term-based) RabbitMQ config file path with a <code>.config</code> file extension.
-      For example, <code>/data/rabbitmq/advanced.config</code>.
-
-      <p>
-        <strong>Default</strong>:
-
-        <ul>
-          <li>
-            <b>Generic UNIX</b>: <code>$RABBITMQ_HOME/etc/rabbitmq/advanced.config</code>
-          </li>
-          <li><b>Debian</b>: <code>/etc/rabbitmq/advanced.config</code></li>
-          <li><b>RPM</b>: <code>/etc/rabbitmq/advanced.config</code></li>
-          <li>
-            <b>MacOS (Homebrew)</b>: <code>${install_prefix}/etc/rabbitmq/advanced.config</code>,
-            the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
-          </li>
-          <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\advanced.config</code></li>
-        </ul>
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_CONF_ENV_FILE</td>
-    <td>
-      Location of the file that contains environment variable definitions (without the <code>RABBITMQ_</code>
-      prefix). Note that the file name on Windows is different from other operating systems.
-
-      <p>
-        <strong>Default</strong>:
-
-        <ul>
-          <li><b>Generic UNIX package</b>: <code>$RABBITMQ_HOME/etc/rabbitmq/rabbitmq-env.conf</code></li>
-          <li><b>Ubuntu and Debian</b>: <code>/etc/rabbitmq/rabbitmq-env.conf</code></li>
-          <li><b>RPM</b>: <code>/etc/rabbitmq/rabbitmq-env.conf</code></li>
-          <li>
-            <b>MacOS (Homebrew)</b>: <code>${install_prefix}/etc/rabbitmq/rabbitmq-env.conf</code>,
-            the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
-          </li>
-          <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\rabbitmq-env-conf.bat</code></li>
-        </ul>
-      </p>
-    </td>
-  </tr>
-
-  <li>
-    <td>RABBITMQ_LOG_BASE</td>
-    <td>
-      Can be used to override log files directory location.
-
-      <p>
-        <strong>Default</strong>:
-
-        <ul>
-          <li><b>Generic UNIX package</b>: <code>$RABBITMQ_HOME/var/log/rabbitmq</code></li>
-          <li><b>Ubuntu and Debian</b> packages: <code>/var/log/rabbitmq</code></li>
-          <li><b>RPM</b>: <code>/var/log/rabbitmq</code></li>
-          <li>
-            <b>MacOS (Homebrew)</b>: <code>${install_prefix}/var/log/rabbitmq</code>,
-            the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
-          </li>
-          <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\log</code></li>
-        </ul>
-      </p>
-    </td>
-  </li>
-
-  <tr>
-    <td>RABBITMQ_MNESIA_BASE</td>
-    <td>
-      This base directory contains sub-directories for the RabbitMQ
-      server's node database, message store and cluster state files, one for each node,
-      unless <b>RABBITMQ_MNESIA_DIR</b> is set explicitly.
-      It is important that effective RabbitMQ user has sufficient permissions
-      to read, write and create files and subdirectories in this directory
-      at any time. This variable is typically not overridden.
-      Usually <code>RABBITMQ_MNESIA_DIR</code> is overridden instead.
-
-      <p>
-        <strong>Default</strong>:
-
-        <ul>
-          <li><b>Generic UNIX package</b>: <code>$RABBITMQ_HOME/var/lib/rabbitmq/mnesia</code></li>
-          <li><b>Ubuntu and Debian</b> packages: <code>/var/lib/rabbitmq/mnesia/</code></li>
-          <li><b>RPM</b>: <code>/var/lib/rabbitmq/plugins</code></li>
-          <li>
-            <b>MacOS (Homebrew)</b>: <code>${install_prefix}/var/lib/rabbitmq/mnesia</code>,
-            the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
-          </li>
-          <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ</code></li>
-        </ul>
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_MNESIA_DIR</td>
-    <td>
-      The directory where this RabbitMQ node's data is stored. This includes
-      a schema database, message stores, cluster member information and other
-      persistent node state.
-
-      <p>
-        <strong>Default</strong>:
-
-        <ul>
-          <li><b>Generic UNIX package</b>: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME</code></li>
-          <li><b>Ubuntu and Debian</b> packages: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME</code></li>
-          <li><b>RPM</b>: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME</code></li>
-          <li>
-            <b>MacOS (Homebrew)</b>: <code>${install_prefix}/var/lib/rabbitmq/mnesia/$RABBITMQ_NODENAME</code>,
-            the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
-          </li>
-          <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\$RABBITMQ_NODENAME</code></li>
-        </ul>
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_PLUGINS_DIR</td>
-    <td>
-      The list of directories where <a
-      href="./plugins.html">plugin</a> archive files are located and extracted
-      from. This is <code>PATH</code>-like variable, where
-      different paths are separated by an OS-specific separator
-      (<code>:</code> for Unix, <code>;</code> for Windows).
-      Plugins can be <a href="plugins.html">installed</a> to any of the directories listed here.
-      Must not contain any characters mentioned in the <a href="#directory-and-path-restrictions">path restriction section</a>.
-      See <a href="cli.html#rabbitmq-plugins">CLI tools guide</a> to learn about the effects of changing
-      this variable on <code>rabbitmq-plugins</code>.
-
-      <p>
-        <strong>Default</strong>:
-
-        <ul>
-          <li><b>Generic UNIX package</b>: <code>$RABBITMQ_HOME/plugins</code></li>
-          <li><b>Ubuntu and Debian</b> packages: <code>/var/lib/rabbitmq/plugins</code></li>
-          <li><b>RPM</b>: <code>/var/lib/rabbitmq/plugins</code></li>
-          <li>
-            <b>MacOS (Homebrew)</b>: <code>${install_prefix}/Cellar/rabbitmq/${version}/plugins</code>,
-            the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
-          </li>
-          <li><b>Windows</b>: <code>%RABBITMQ_HOME%\plugins</code></li>
-        </ul>
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_PLUGINS_EXPAND_DIR</td>
-    <td>
-      The directory the node expand (unpack) <a href="./plugins.html">plugins</a> to and use it as a code path location.
-      Must not contain any characters mentioned in the <a href="#directory-and-path-restrictions">path restriction section</a>.
-
-      <p>
-        <strong>Default</strong>:
-
-        <ul>
-          <li><b>Generic UNIX package</b>: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME-plugins-expand</code></li>
-          <li><b>Ubuntu and Debian</b> packages: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME-plugins-expand</code></li>
-          <li><b>RPM</b>: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME-plugins-expand</code></li>
-          <li>
-            <b>MacOS (Homebrew)</b>:
-              <code>${install_prefix}/var/lib/rabbitmq/mnesia/$RABBITMQ_NODENAME-plugins-expand</code>
-          </li>
-          <li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\$RABBITMQ_NODENAME-plugins-expand</code></li>
-        </ul>
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_USE_LONGNAME</td>
-    <td>
-      When set to <code>true</code> this will cause RabbitMQ
-      to use fully qualified names to identify nodes. This
-      may prove useful in environments that use fully-qualified domain names or use IP addresses
-      as hostnames or part of node names.
-      Note that it is not possible to switch a node from short name to long name without
-      resetting it.
-
-      <p>
-        <strong>Default</strong>: <code>false</code>
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_SERVICENAME</td>
-    <td>
-      The name of the installed Windows service. This will appear in
-      <code>services.msc</code>.
-
-      <p>
-        <strong>Default</strong>: RabbitMQ.
-      </p>
-  </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_CONSOLE_LOG</td>
-    <td>
-      Set this variable to <code>new</code> or <code>reuse</code>
-      to redirect console output from the server to a file named
-      <code>%RABBITMQ_SERVICENAME%</code> in the
-      default <code>RABBITMQ_BASE</code> directory.
-      <ul>
-        <li>If not set, console output from the server will be discarded (default).</li>
-        <li><code>new</code>: a new file will be created each time the service starts.</li>
-        <li><code>reuse</code>: the file will be overwritten each time the service starts.</li>
-      </ul>
-
-      <p>
-        <strong>Default</strong>: (none)
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_SERVER_CODE_PATH</td>
-    <td>
-      <p>
-        Extra code path (a directory) to be specified when starting the runtime.
-        Will be passed to the <code>erl</code> command when a node is started.
-      </p>
-
-      <p>
-        <strong>Default</strong>: (none)
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_CTL_ERL_ARGS</td>
-    <td>
-      Parameters for the <code>erl</code> command used when invoking
-      <code>rabbitmqctl</code>. This could be set to specify a range
-      of ports to use for Erlang distribution:<br/>
-      <code>-kernel inet_dist_listen_min 35672</code><br/>
-      <code>-kernel inet_dist_listen_max 35680</code>
-
-      <p>
-        <strong>Default</strong>: (none)
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_SERVER_ERL_ARGS</td>
-    <td>
-      Standard parameters for the <code>erl</code> command used when
-      invoking the RabbitMQ Server. This should be overridden for
-      debugging purposes only. Overriding this variable
-      <em>replaces</em> the default value.
-
-      <p>
-        <strong>Default</strong>:
-
-        <ul>
-          <li><b>Unix*:</b>
-            <code>+P 1048576 +t 5000000 +stbt db +zdbbl 128000</code>
-          </li>
-          <li><b>Windows:</b> None</li>
-        </ul>
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS</td>
-    <td>
-      Additional parameters for the <code>erl</code> command used when
-      invoking the RabbitMQ Server. The value of this variable
-      is appended to the default list of arguments (<code>RABBITMQ_SERVER_ERL_ARGS</code>).
-
-      <p>
-        <strong>Default</strong>:
-
-        <ul>
-          <li><b>Unix*:</b> None</li>
-          <li><b>Windows:</b> None</li>
-        </ul>
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_SERVER_START_ARGS</td>
-    <td>
-      Extra parameters for the <code>erl</code> command used when
-      invoking the RabbitMQ Server. This will not override
-      <code>RABBITMQ_SERVER_ERL_ARGS</code>.
-
-      <p>
-        <strong>Default</strong>: (none)
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_DEFAULT_USER</td>
-    <td>
-      This environment variable is <strong>only meant to be used in development and CI environments</strong>.
-      This has the same meaning as <code>default_user</code> in <code>rabbitmq.conf</code> but higher
-      priority. This option may be more convenient in cases where providing a config file is impossible,
-      and environment variables is the only way to <a href="access-control.html#seeding">seed a user</a>.
-
-      <p>
-        <strong>Default</strong>: (none)
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_DEFAULT_PASS</td>
-    <td>
-      This environment variable is <strong>only meant to be used in development and CI environments</strong>.
-      This has the same meaning as <code>default_pass</code> in <code>rabbitmq.conf</code> but higher
-      priority. This option may be more convenient in cases where providing a config file is impossible,
-      and environment variables is the only way to <a href="access-control.html#seeding">seed a user</a>.
-
-      <p>
-        <strong>Default</strong>: (none)
-      </p>
-    </td>
-  </tr>
-
-  <tr>
-    <td>RABBITMQ_DEFAULT_VHOST</td>
-    <td>
-      This environment variable is <strong>only meant to be used in development and CI environments</strong>.
-      This has the same meaning as <code>default_vhost</code> in <code>rabbitmq.conf</code> but higher
-      priority. This option may be more convenient in cases where providing a config file is impossible,
-      and environment variables is the only way to <a href="access-control.html#seeding">seed users</a> and virtual hosts.
-
-      <p>
-        <strong>Default</strong>: (none)
-      </p>
-    </td>
-  </tr>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td>RABBITMQ_NODE_IP_ADDRESS</td>
+<td>
+Change this if you only want to bind to one network interface.
+Binding to two or more interfaces can be set up in the configuration file.
+
+<p>
+<strong>Default</strong>: an empty string, meaning "bind to all network interfaces".
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_NODE_PORT</td>
+<td>
+See <a href="./networking.html">Networking guide</a> for more information on ports used by various
+parts of RabbitMQ.
+
+<p>
+<strong>Default</strong>: 5672.
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_DIST_PORT</td>
+<td>
+Port used for inter-node and CLI tool communication. Ignored if node config
+file sets <code>kernel.inet_dist_listen_min</code> or
+<code>kernel.inet_dist_listen_max</code> keys.
+See <a href="./networking.html">Networking</a> for details, and
+<a href="./windows-quirks.html">Windows Quirks</a> for Windows-specific details.
+
+<p>
+<strong>Default</strong>: <code>RABBITMQ_NODE_PORT + 20000</code>
+</p>
+</td>
+</tr>
+
+<tr>
+<td>ERL_EPMD_ADDRESS</td>
+<td>
+Interface(s) used by <a href="./networking.html#epmd">epmd</a>, a component in inter-node and CLI tool communication.
+
+<p>
+<strong>Default</strong>: all available interfaces, both IPv6 and IPv4.
+</p>
+</td>
+</tr>
+
+<tr>
+<td>ERL_EPMD_PORT</td>
+<td>
+Port used by <a href="./networking.html#epmd">epmd</a>, a component in inter-node and CLI tool communication.
+
+<p>
+<strong>Default</strong>: <code>4369</code>
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_DISTRIBUTION_BUFFER_SIZE</td>
+<td>
+<a href="https://erlang.org/doc/man/erl.html#+zdbbl">Outgoing data buffer size limit</a>
+to use for inter-node communication connections, in kilobytes. Values lower than
+64 MB are not recommended.
+
+<p>
+<strong>Default</strong>: 128000
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_NODENAME</td>
+<td>
+The node name should be unique per Erlang-node-and-machine combination.
+To run multiple nodes, see the <a href="./clustering.html">clustering guide</a>.
+
+<p>
+<strong>Default</strong>:
+
+<ul>
+<li>
+<b>Unix*:</b>
+<code>rabbit@$HOSTNAME</code>
+</li>
+<li>
+<b>Windows:</b>
+<code>rabbit@%COMPUTERNAME%</code>
+</li>
+</ul>
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_CONFIG_FILE</td>
+<td>
+Main RabbitMQ config file path, for example,
+<code>/etc/rabbitmq/rabbitmq.conf</code> or <code>/data/configuration/rabbitmq.conf</code> for new style configuration format files.
+If classic config format it used, the extension must be <code>.config</code>
+
+<p>
+<strong>Default</strong>:
+
+<ul>
+<li><b>Generic UNIX</b>: <code>$RABBITMQ_HOME/etc/rabbitmq/rabbitmq.conf</code>
+</li>
+<li><b>Debian</b>: <code>/etc/rabbitmq/rabbitmq.conf</code></li>
+<li><b>RPM</b>: <code>/etc/rabbitmq/rabbitmq.conf</code></li>
+<li>
+<b>MacOS(Homebrew)</b>: <code>${install_prefix}/etc/rabbitmq/rabbitmq.conf</code>,
+the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
+</li>
+<li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\rabbitmq.conf</code></li>
+</ul>
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_CONFIG_FILES</td>
+<td>
+Path to a directory of RabbitMQ configuration files in the new-style (.conf) format.
+The files will be loaded in alphabetical order. Prefixing each files with a number
+is a common practice.
+
+<p>
+<strong>Default</strong>:
+
+<ul>
+<li><b>Generic UNIX</b>: <code>$RABBITMQ_HOME/etc/rabbitmq/conf.d</code>
+</li>
+<li><b>Debian</b>: <code>/etc/rabbitmq/conf.d</code></li>
+<li><b>RPM</b>: <code>/etc/rabbitmq/conf.d</code></li>
+<li>
+<b>MacOS(Homebrew)</b>: <code>${install_prefix}/etc/rabbitmq/conf.d</code>,
+the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
+</li>
+<li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\conf.d</code></li>
+</ul>
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_ADVANCED_CONFIG_FILE</td>
+<td>
+"Advanced" (Erlang term-based) RabbitMQ config file path with a <code>.config</code> file extension.
+For example, <code>/data/rabbitmq/advanced.config</code>.
+
+<p>
+<strong>Default</strong>:
+
+<ul>
+<li>
+<b>Generic UNIX</b>: <code>$RABBITMQ_HOME/etc/rabbitmq/advanced.config</code>
+</li>
+<li><b>Debian</b>: <code>/etc/rabbitmq/advanced.config</code></li>
+<li><b>RPM</b>: <code>/etc/rabbitmq/advanced.config</code></li>
+<li>
+<b>MacOS (Homebrew)</b>: <code>${install_prefix}/etc/rabbitmq/advanced.config</code>,
+the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
+</li>
+<li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\advanced.config</code></li>
+</ul>
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_CONF_ENV_FILE</td>
+<td>
+Location of the file that contains environment variable definitions (without the <code>RABBITMQ_</code>
+prefix). Note that the file name on Windows is different from other operating systems.
+
+<p>
+<strong>Default</strong>:
+
+<ul>
+<li><b>Generic UNIX package</b>: <code>$RABBITMQ_HOME/etc/rabbitmq/rabbitmq-env.conf</code></li>
+<li><b>Ubuntu and Debian</b>: <code>/etc/rabbitmq/rabbitmq-env.conf</code></li>
+<li><b>RPM</b>: <code>/etc/rabbitmq/rabbitmq-env.conf</code></li>
+<li>
+<b>MacOS (Homebrew)</b>: <code>${install_prefix}/etc/rabbitmq/rabbitmq-env.conf</code>,
+the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
+</li>
+<li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\rabbitmq-env-conf.bat</code></li>
+</ul>
+</p>
+</td>
+</tr>
+
+<li>
+<td>RABBITMQ_LOG_BASE</td>
+<td>
+Can be used to override log files directory location.
+
+<p>
+<strong>Default</strong>:
+
+<ul>
+<li><b>Generic UNIX package</b>: <code>$RABBITMQ_HOME/var/log/rabbitmq</code></li>
+<li><b>Ubuntu and Debian</b> packages: <code>/var/log/rabbitmq</code></li>
+<li><b>RPM</b>: <code>/var/log/rabbitmq</code></li>
+<li>
+<b>MacOS (Homebrew)</b>: <code>${install_prefix}/var/log/rabbitmq</code>,
+the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
+</li>
+<li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\log</code></li>
+</ul>
+</p>
+</td>
+</li>
+
+<tr>
+<td>RABBITMQ_MNESIA_BASE</td>
+<td>
+This base directory contains sub-directories for the RabbitMQ
+server's node database, message store and cluster state files, one for each node,
+unless <b>RABBITMQ_MNESIA_DIR</b> is set explicitly.
+It is important that effective RabbitMQ user has sufficient permissions
+to read, write and create files and subdirectories in this directory
+at any time. This variable is typically not overridden.
+Usually <code>RABBITMQ_MNESIA_DIR</code> is overridden instead.
+
+<p>
+<strong>Default</strong>:
+
+<ul>
+<li><b>Generic UNIX package</b>: <code>$RABBITMQ_HOME/var/lib/rabbitmq/mnesia</code></li>
+<li><b>Ubuntu and Debian</b> packages: <code>/var/lib/rabbitmq/mnesia/</code></li>
+<li><b>RPM</b>: <code>/var/lib/rabbitmq/plugins</code></li>
+<li>
+<b>MacOS (Homebrew)</b>: <code>${install_prefix}/var/lib/rabbitmq/mnesia</code>,
+the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
+</li>
+<li><b>Windows</b>: <code>%APPDATA%\RabbitMQ</code></li>
+</ul>
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_MNESIA_DIR</td>
+<td>
+The directory where this RabbitMQ node's data is stored. This includes
+a schema database, message stores, cluster member information and other
+persistent node state.
+
+<p>
+<strong>Default</strong>:
+
+<ul>
+<li><b>Generic UNIX package</b>: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME</code></li>
+<li><b>Ubuntu and Debian</b> packages: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME</code></li>
+<li><b>RPM</b>: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME</code></li>
+<li>
+<b>MacOS (Homebrew)</b>: <code>${install_prefix}/var/lib/rabbitmq/mnesia/$RABBITMQ_NODENAME</code>,
+the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
+</li>
+<li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\$RABBITMQ_NODENAME</code></li>
+</ul>
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_PLUGINS_DIR</td>
+<td>
+The list of directories where <a
+href="./plugins.html">plugin</a> archive files are located and extracted
+from. This is <code>PATH</code>-like variable, where
+different paths are separated by an OS-specific separator
+(<code>:</code> for Unix, <code>;</code> for Windows).
+Plugins can be <a href="plugins.html">installed</a> to any of the directories listed here.
+Must not contain any characters mentioned in the <a href="#directory-and-path-restrictions">path restriction section</a>.
+See <a href="cli.html#rabbitmq-plugins">CLI tools guide</a> to learn about the effects of changing
+this variable on <code>rabbitmq-plugins</code>.
+
+<p>
+<strong>Default</strong>:
+
+<ul>
+<li><b>Generic UNIX package</b>: <code>$RABBITMQ_HOME/plugins</code></li>
+<li><b>Ubuntu and Debian</b> packages: <code>/var/lib/rabbitmq/plugins</code></li>
+<li><b>RPM</b>: <code>/var/lib/rabbitmq/plugins</code></li>
+<li>
+<b>MacOS (Homebrew)</b>: <code>${install_prefix}/Cellar/rabbitmq/${version}/plugins</code>,
+the Homebrew prefix is usually <code>/usr/local</code> or <code>/opt/homebrew</code>
+</li>
+<li><b>Windows</b>: <code>%RABBITMQ_HOME%\plugins</code></li>
+</ul>
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_PLUGINS_EXPAND_DIR</td>
+<td>
+The directory the node expand (unpack) <a href="./plugins.html">plugins</a> to and use it as a code path location.
+Must not contain any characters mentioned in the <a href="#directory-and-path-restrictions">path restriction section</a>.
+
+<p>
+<strong>Default</strong>:
+
+<ul>
+<li><b>Generic UNIX package</b>: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME-plugins-expand</code></li>
+<li><b>Ubuntu and Debian</b> packages: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME-plugins-expand</code></li>
+<li><b>RPM</b>: <code>$RABBITMQ_MNESIA_BASE/$RABBITMQ_NODENAME-plugins-expand</code></li>
+<li>
+<b>MacOS (Homebrew)</b>:
+<code>${install_prefix}/var/lib/rabbitmq/mnesia/$RABBITMQ_NODENAME-plugins-expand</code>
+</li>
+<li><b>Windows</b>: <code>%APPDATA%\RabbitMQ\$RABBITMQ_NODENAME-plugins-expand</code></li>
+</ul>
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_USE_LONGNAME</td>
+<td>
+When set to <code>true</code> this will cause RabbitMQ
+to use fully qualified names to identify nodes. This
+may prove useful in environments that use fully-qualified domain names or use IP addresses
+as hostnames or part of node names.
+Note that it is not possible to switch a node from short name to long name without
+resetting it.
+
+<p>
+<strong>Default</strong>: <code>false</code>
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_SERVICENAME</td>
+<td>
+The name of the installed Windows service. This will appear in
+<code>services.msc</code>.
+
+<p>
+<strong>Default</strong>: RabbitMQ.
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_CONSOLE_LOG</td>
+<td>
+Set this variable to <code>new</code> or <code>reuse</code>
+to redirect console output from the server to a file named
+<code>%RABBITMQ_SERVICENAME%</code> in the
+default <code>RABBITMQ_BASE</code> directory.
+<ul>
+<li>If not set, console output from the server will be discarded (default).</li>
+<li><code>new</code>: a new file will be created each time the service starts.</li>
+<li><code>reuse</code>: the file will be overwritten each time the service starts.</li>
+</ul>
+
+<p>
+<strong>Default</strong>: (none)
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_SERVER_CODE_PATH</td>
+<td>
+<p>
+Extra code path (a directory) to be specified when starting the runtime.
+Will be passed to the <code>erl</code> command when a node is started.
+</p>
+
+<p>
+<strong>Default</strong>: (none)
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_CTL_ERL_ARGS</td>
+<td>
+Parameters for the <code>erl</code> command used when invoking
+<code>rabbitmqctl</code>. This could be set to specify a range
+of ports to use for Erlang distribution:<br/>
+<code>-kernel inet_dist_listen_min 35672</code><br/>
+<code>-kernel inet_dist_listen_max 35680</code>
+
+<p>
+<strong>Default</strong>: (none)
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_SERVER_ERL_ARGS</td>
+<td>
+Standard parameters for the <code>erl</code> command used when
+invoking the RabbitMQ Server. This should be overridden for
+debugging purposes only. Overriding this variable
+<em>replaces</em> the default value.
+
+<p>
+<strong>Default</strong>:
+
+<ul>
+<li><b>Unix*:</b>
+<code>+P 1048576 +t 5000000 +stbt db +zdbbl 128000</code>
+</li>
+<li><b>Windows:</b> None</li>
+</ul>
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS</td>
+<td>
+Additional parameters for the <code>erl</code> command used when
+invoking the RabbitMQ Server. The value of this variable
+is appended to the default list of arguments (<code>RABBITMQ_SERVER_ERL_ARGS</code>).
+
+<p>
+<strong>Default</strong>:
+
+<ul>
+<li><b>Unix*:</b> None</li>
+<li><b>Windows:</b> None</li>
+</ul>
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_SERVER_START_ARGS</td>
+<td>
+Extra parameters for the <code>erl</code> command used when
+invoking the RabbitMQ Server. This will not override
+<code>RABBITMQ_SERVER_ERL_ARGS</code>.
+
+<p>
+<strong>Default</strong>: (none)
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_DEFAULT_USER</td>
+<td>
+This environment variable is <strong>only meant to be used in development and CI environments</strong>.
+This has the same meaning as <code>default_user</code> in <code>rabbitmq.conf</code> but higher
+priority. This option may be more convenient in cases where providing a config file is impossible,
+and environment variables is the only way to <a href="access-control.html#seeding">seed a user</a>.
+
+<p>
+<strong>Default</strong>: (none)
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_DEFAULT_PASS</td>
+<td>
+This environment variable is <strong>only meant to be used in development and CI environments</strong>.
+This has the same meaning as <code>default_pass</code> in <code>rabbitmq.conf</code> but higher
+priority. This option may be more convenient in cases where providing a config file is impossible,
+and environment variables is the only way to <a href="access-control.html#seeding">seed a user</a>.
+
+<p>
+<strong>Default</strong>: (none)
+</p>
+</td>
+</tr>
+
+<tr>
+<td>RABBITMQ_DEFAULT_VHOST</td>
+<td>
+This environment variable is <strong>only meant to be used in development and CI environments</strong>.
+This has the same meaning as <code>default_vhost</code> in <code>rabbitmq.conf</code> but higher
+priority. This option may be more convenient in cases where providing a config file is impossible,
+and environment variables is the only way to <a href="access-control.html#seeding">seed users</a> and virtual hosts.
+
+<p>
+<strong>Default</strong>: (none)
+</p>
+</td>
+</tr>
 </table>
 
 Besides the variables listed above, there are several environment variables which
@@ -2198,57 +2213,57 @@ tell RabbitMQ [where to locate its database, log files, plugins, configuration a
 Finally, some environment variables are operating system-specific.
 
 <table class="name-description">
-  <tr>
-    <th>Name</th>
-    <th>Description</th>
-  </tr>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
 
-  <tr>
-    <td>HOSTNAME</td>
-    <td>
-      The name of the current machine.
+<tr>
+<td>HOSTNAME</td>
+<td>
+The name of the current machine.
 
-      <p>
-        <strong>Default</strong>:
+<p>
+<strong>Default</strong>:
 
-        <ul>
-          <li>Unix, Linux: <code>env hostname</code></li>
-          <li>MacOS: <code>env hostname -s</code></li>
-        </ul>
-      </p>
-    </td>
-  </tr>
+<ul>
+<li>Unix, Linux: <code>env hostname</code></li>
+<li>MacOS: <code>env hostname -s</code></li>
+</ul>
+</p>
+</td>
+</tr>
 
-  <tr>
-    <td>COMPUTERNAME</td>
-    <td>
-      The name of the current machine.
+<tr>
+<td>COMPUTERNAME</td>
+<td>
+The name of the current machine.
 
-      <p>
-        <strong>Default</strong>:
+<p>
+<strong>Default</strong>:
 
-        <ul>
-          <li>Windows: <code>localhost</code></li>
-        </ul>
-      </p>
-    </td>
-  </tr>
+<ul>
+<li>Windows: <code>localhost</code></li>
+</ul>
+</p>
+</td>
+</tr>
 
-  <tr>
-    <td>ERLANG_SERVICE_MANAGER_PATH</td>
-    <td>
-      This path is the location of <code>erlsrv.exe</code>,
-      the Erlang service wrapper script.
+<tr>
+<td>ERLANG_SERVICE_MANAGER_PATH</td>
+<td>
+This path is the location of <code>erlsrv.exe</code>,
+the Erlang service wrapper script.
 
-      <p>
-        <strong>Default</strong>:
+<p>
+<strong>Default</strong>:
 
-        <ul>
-          <li>Windows Service: <code>%ERLANG_HOME%\erts-<var>x.x.x</var>\bin</code></li>
-        </ul>
-      </p>
-    </td>
-  </tr>
+<ul>
+<li>Windows Service: <code>%ERLANG_HOME%\erts-<var>x.x.x</var>\bin</code></li>
+</ul>
+</p>
+</td>
+</tr>
 </table>
 
 

@@ -398,7 +398,7 @@ of TLS-related errors. What follows is a list of the most common error entries:
 
   <tr>
     <td>
-      Entries containing <code>{undef, [{crypto,hash,...</code>
+      Entries containing <code>&lcub;undef, [&lcub;crypto,hash,...</code>
     </td>
     <td>
       The <code>crypto</code> module is missing in the Erlang/OTP installation
@@ -409,8 +409,8 @@ of TLS-related errors. What follows is a list of the most common error entries:
 
   <tr>
     <td>
-      Entries containing <code>{ssl_upgrade_error, ekeyfile}</code>
-      or <code>{ssl_upgrade_error, ecertfile}</code>
+      Entries containing <code>&lcub;ssl_upgrade_error, ekeyfile}</code>
+      or <code>&lcub;ssl_upgrade_error, ecertfile}</code>
     </td>
     <td>
       This means the broker keyfile or certificate file is invalid.
@@ -425,7 +425,7 @@ of TLS-related errors. What follows is a list of the most common error entries:
 
   <tr>
     <td>
-      Entries containing <code>{ssl_upgrade_failure, ... certify ...}</code>
+      Entries containing <code>&lcub;ssl_upgrade_failure, ... certify ...}</code>
     </td>
     <td>
       This error is related to client verification. The client is presenting an invalid
@@ -438,7 +438,7 @@ of TLS-related errors. What follows is a list of the most common error entries:
 
   <tr>
     <td>
-      Entries containing <code>{ssl_upgrade_error, ...}</code>
+      Entries containing <code>&lcub;ssl_upgrade_error, ...}</code>
     </td>
     <td>
       This is a generic error that could have many causes. Make sure you are
@@ -448,7 +448,7 @@ of TLS-related errors. What follows is a list of the most common error entries:
 
   <tr>
     <td>
-      Entries containing <code>{tls_alert,"bad record mac"}</code>
+      Entries containing <code>&lcub;tls_alert,"bad record mac"}</code>
     </td>
     <td>
       The server has tried verifying integrity of a piece of data it received

@@ -76,7 +76,7 @@ good practices and are thus recommended.
 When RabbitMQ is integrated with Prometheus and Grafana, this is what the
 RabbitMQ Overview dashboard looks like:
 
-![RabbitMQ Overview Dashboard](./img/rabbitmq-overview-dashboard.png)
+![RabbitMQ Overview Dashboard](/img/rabbitmq-overview-dashboard.png)
 
 
 ## <a id="quick-start" class="anchor" href="#quick-start">Quick Start</a>
@@ -154,7 +154,7 @@ Grafana will suggest changing your password. For the sake of this example, we su
 
 Navigate to the **RabbitMQ-Overview** dashboard that will look like this:
 
-![RabbitMQ Overview Dashboard Localhost](./img/rabbitmq-overview-dashboard-localhost.png)
+![RabbitMQ Overview Dashboard Localhost](/img/rabbitmq-overview-dashboard-localhost.png)
 
 Congratulations! You now have a 3-nodes RabbitMQ cluster integrated with
 Prometheus & Grafana running locally. This is a perfect time to learn more
@@ -181,7 +181,7 @@ metric states:
 * **Blue** means under-utilisation or some form of degradation
 * **Red** means the value of the metric is below or above the range that is considered healthy
 
-![RabbitMQ Overview Dashboard Single-stat](./img/rabbitmq-overview-dashboard-single-stat.png)
+![RabbitMQ Overview Dashboard Single-stat](/img/rabbitmq-overview-dashboard-single-stat.png)
 
 Default ranges for the [single stat metrics](https://grafana.com/docs/features/panels/singlestat/) **will not be optimal for all**
 RabbitMQ deployments. For example, in environments with many consumers and/or
@@ -209,7 +209,7 @@ a minority of nodes perform the majority of work.
 
 In the example below, connections are spread out evenly across all nodes most of the time:
 
-![RabbitMQ Overview Dashboard CONNECTIONS](./img/rabbitmq-overview-dashboard-connections.png)
+![RabbitMQ Overview Dashboard CONNECTIONS](/img/rabbitmq-overview-dashboard-connections.png)
 
 ### <a id="graph-colour-labelling" class="anchor" href="#graph-colour-labelling">Colour Labelling in Graphs</a>
 
@@ -231,7 +231,7 @@ Most metrics have pre-configured thresholds. They define expected operating boun
 On the graphs they appear as semi-transparent
 orange or red areas, as seen in the example below.
 
-![RabbitMQ Overview Dashboard Single-stat](./img/rabbitmq-overview-dashboard-memory-threshold.png)
+![RabbitMQ Overview Dashboard Single-stat](/img/rabbitmq-overview-dashboard-memory-threshold.png)
 
 Metric values in the **orange** area signal that some pre-defined threshold has been
 exceeded. This may be acceptable, especially if the metric recovers. A metric that
@@ -269,7 +269,7 @@ requirements.
 
 Most metrics have a help icon in the top-left corner of the panel.
 
-![RabbitMQ Overview Dashboard Single-stat](./img/rabbitmq-overview-dashboard-disk-documentation.png)
+![RabbitMQ Overview Dashboard Single-stat](/img/rabbitmq-overview-dashboard-disk-documentation.png)
 
 Some, like the available disk space metric, link to dedicated pages in [RabbitMQ documentation](./documentation.html).
 These pages contain information relevant to the metric. Getting familiar with the linked guides
@@ -287,7 +287,7 @@ and should be avoided where possible.
 
 It is a lot more and efficient to have RabbitMQ [push messages to the consumer](./consumers.html).
 
-![RabbitMQ Overview Dashboard Antipatterns](./img/rabbitmq-overview-dashboard-antipattern.png)
+![RabbitMQ Overview Dashboard Antipatterns](/img/rabbitmq-overview-dashboard-antipattern.png)
 
 ### <a id="example-workloads" class="anchor" href="#example-workloads">Example Workloads</a>
 
@@ -441,7 +441,7 @@ To confirm that Prometheus is scraping RabbitMQ metrics from all nodes, ensure
 that all RabbitMQ endpoints are **Up** on the Prometheus Targets page, as shown
 below:
 
-![Prometheus RabbitMQ Targets](./img/monitoring/prometheus/prometheus-targets.png)
+![Prometheus RabbitMQ Targets](/img/monitoring/prometheus/prometheus-targets.png)
 
 ### <a id="port" class="anchor" href="#listener">Network Interface and Port</a>
 
@@ -872,7 +872,7 @@ dashboards.
 1. Copy paste the file contents in Grafana, then click **Load**, as seen below:
     - Alternatively, paste the dashboard ID in the field **Grafana.com Dashboard**.
 
-![Grafana Import Dashboard](./img/grafana-import-dashboard.png)
+![Grafana Import Dashboard](/img/grafana-import-dashboard.png)
 
 Repeat the process for all other Grafana dashboards that you would like to use with
 this RabbitMQ deployment.
