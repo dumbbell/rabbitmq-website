@@ -1,6 +1,5 @@
 ---
 title: Contributing
-weight: 20
 description: How to contribute to the docs
 sidebar_position: 5
 ---
