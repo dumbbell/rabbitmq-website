@@ -32,6 +32,13 @@ const config = {
     locales: ['en'],
   },
 
+  customFields: {
+    versionPerBranch: {
+      'Next': '4.0.0-alpha.1',
+      '3.13.x': '3.13.0-beta.6'
+    },
+  },
+
   presets: [
     [
       'classic',
@@ -42,14 +49,14 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/dumbbell/rabbitmq-website/tree/main/docs/',
+            'https://github.com/dumbbell/rabbitmq-website/tree/main/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/dumbbell/rabbitmq-website/tree/main/blog/',
+            'https://github.com/dumbbell/rabbitmq-website/tree/main/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -134,6 +141,12 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
+        additionalLanguages: [
+          'bash',
+          'elixir',
+          'erlang',
+          'shell-session',
+        ],
       },
       algolia: {
         // The application ID provided by Algolia
